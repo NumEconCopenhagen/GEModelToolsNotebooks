@@ -194,14 +194,6 @@ lstinline{GEModelClass}
 \end_inset
 
  Python-package for solving general equilibrium models.
-\series bold
-
-\begin_inset Newline newline
-\end_inset
-
-
-\series default
-
 \begin_inset ERT
 status open
 
@@ -216,6 +208,10 @@ vspace{3mm}
 
 
 \series bold
+
+\begin_inset Newline newline
+\end_inset
+
 Code:
 \series default
  

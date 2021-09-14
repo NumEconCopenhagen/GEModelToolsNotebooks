@@ -3787,15 +3787,11 @@ where generically
 \end_layout
 
 \begin_layout Standard
-Once the Jacobians 
+Once the Jacobian 
 \begin_inset Formula $\boldsymbol{H}_{\boldsymbol{K}}$
 \end_inset
 
- and 
-\begin_inset Formula $\boldsymbol{H}_{Z}$
-\end_inset
-
-, collectively referred to as 
+, also referred to as 
 \begin_inset Quotes eld
 \end_inset
 
@@ -3803,8 +3799,8 @@ the full Jacobian
 \begin_inset Quotes erd
 \end_inset
 
-, are both calculated, the equation system can be solved with a quasi-Newton
- equation solver such as the Broyden-solver.
+, is calculated, the equation system can be solved with a quasi-Newton equation
+ solver such as the Broyden-solver.
  This is provided in the package with the method 
 \begin_inset ERT
 status open
