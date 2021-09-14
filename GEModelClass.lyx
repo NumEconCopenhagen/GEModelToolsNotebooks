@@ -1,0 +1,4254 @@
+#LyX 2.3 created this file. For more info see http://www.lyx.org/
+\lyxformat 544
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass article
+\begin_preamble
+% general
+\usepackage[titletoc]{appendix}
+\usepackage{graphicx}
+\usepackage{placeins}
+\usepackage{tikz}
+
+% algorithm
+\usepackage[ruled,vlined,linesnumbered]{algorithm2e}
+\IncMargin{2.5cm}
+\DecMargin{2cm}
+\usepackage{fullwidth}
+\usepackage{enumitem}
+\setlist{leftmargin=1.7cm}
+
+% tables
+\usepackage{tabularx, siunitx, multirow, booktabs}
+\begingroup
+% Allow `_` and `:` in macro names (LaTeX3 style)
+\catcode`\_=11
+\catcode`\:=11
+% Internal code of `S`
+\gdef\tabularxcolumn#1{%
+    >{\__siunitx_table_collect_begin:Nn S{} }%
+    p{#1}%  <- this is different (is `c` in normal `S`)
+    <{\__siunitx_table_print:}%
+}
+\endgroup
+
+% figures
+\usepackage{subfig}
+\usepackage{caption}
+\captionsetup[subfloat]{position=top}
+
+% footnotes
+\setlength{\skip\footins}{1cm}
+\usepackage[hang,splitrule]{footmisc}
+\setlength{\footnotemargin}{0.3cm} %.5
+\setlength{\footnotesep}{0.4cm}
+
+% links
+\hypersetup{colorlinks=true,citecolor=blue}
+\hypersetup{colorlinks=true,linkcolor=blue}
+\hypersetup{colorlinks=true,urlcolor=blue}
+
+% code
+\usepackage{xcolor}
+\usepackage{listings}
+
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{background}{HTML}{F5F5F5}
+\definecolor{keyword}{HTML}{4B69C6}
+\definecolor{string}{HTML}{448C27}
+\definecolor{comment}{HTML}{448C27}
+
+\usepackage{inconsolata}
+\lstdefinestyle{mystyle}{
+    commentstyle=\color{comment},
+    keywordstyle=\color{keyword},
+    stringstyle=\color{string},
+    basicstyle=\ttfamily,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,
+    tabsize=4,
+	showlines=true
+}
+
+\lstset{style=mystyle}
+
+% manual
+\usepackage{enumitem}
+\setlist[enumerate]{leftmargin=1cm}
+\setlist[itemize]{leftmargin=0.5cm}
+\end_preamble
+\use_default_options true
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman "lmodern" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\use_microtype false
+\use_dash_ligatures false
+\graphics default
+\default_output_format default
+\output_sync 1
+\bibtex_command default
+\index_command default
+\paperfontsize 12
+\spacing onehalf
+\use_hyperref false
+\papersize a4paper
+\use_geometry true
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine natbib
+\cite_engine_type authoryear
+\biblio_style plainnat
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date true
+\justification true
+\use_refstyle 1
+\use_minted 0
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\leftmargin 3cm
+\topmargin 3cm
+\rightmargin 3cm
+\bottommargin 3cm
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation skip
+\defskip smallskip
+\is_math_indent 0
+\math_numbering_side default
+\quotes_style english
+\dynamic_quotes 0
+\papercolumns 1
+\papersides 1
+\paperpagestyle plain
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Title
+
+\series bold
+The GEModelTools for
+\begin_inset Newline newline
+\end_inset
+
+Solving HANK Models in Python
+\end_layout
+
+\begin_layout Author
+Jeppe Druedahl
+\begin_inset Newline newline
+\end_inset
+
+Emil Holst Partsch
+\end_layout
+
+\begin_layout Abstract
+This note provides an overview of the 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{GEModelClass}
+\end_layout
+
+\end_inset
+
+ Python-package for solving general equilibrium models.
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+vspace{3mm}
+\end_layout
+
+\end_inset
+
+
+\series bold
+
+\begin_inset Newline newline
+\end_inset
+
+Code:
+\series default
+ 
+\begin_inset Newline newline
+\end_inset
+
+Package: 
+\begin_inset CommandInset href
+LatexCommand href
+name "github.com/JeppeDruedahl/GEModelTools"
+target "https://github.com/JeppeDruedahl/GEModelTools"
+literal "false"
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+Examples: 
+\begin_inset CommandInset href
+LatexCommand href
+name "github.com/JeppeDruedahl/GEModelToolsNotebooks"
+target "https://github.com/JeppeDruedahl/GEModelToolsNotebooks"
+literal "false"
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Section
+Overview
+\end_layout
+
+\begin_layout Standard
+The 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{GEModelClass}
+\end_layout
+
+\end_inset
+
+ is an add-on to the basic 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{EconModelClass}
+\end_layout
+
+\end_inset
+
+ (see 
+\begin_inset CommandInset href
+LatexCommand href
+name "here"
+target "https://github.com/NumEconCopenhagen/EconModel"
+literal "false"
+
+\end_inset
+
+).
+\end_layout
+
+\begin_layout Standard
+A 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{model}
+\end_layout
+
+\end_inset
+
+ consists of the following list of 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{namespaces}
+\end_layout
+
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+vspace{-1mm}
+\end_layout
+
+\end_inset
+
+
+\series bold
+Parameters:
+\series default
+ 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{.par}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+vspace{-3mm}
+\end_layout
+
+\end_inset
+
+
+\series bold
+Solution:
+\series default
+ 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{.sol}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+vspace{-3mm}
+\end_layout
+
+\end_inset
+
+
+\series bold
+Simulation:
+\series default
+ 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{.sim}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+vspace{-3mm}
+\end_layout
+
+\end_inset
+
+
+\series bold
+Steady state:
+\series default
+ 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{.ss}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+vspace{-3mm}
+\end_layout
+
+\end_inset
+
+
+\series bold
+Transition path:
+\series default
+ 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{.path}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+vspace{-3mm}
+\end_layout
+
+\end_inset
+
+
+\series bold
+Jacobians for household problem:
+\series default
+ 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{.jac_hh}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+vspace{-3mm}
+\end_layout
+
+\end_inset
+
+
+\series bold
+Full Jacobians:
+\series default
+ 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{.jac}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The user is required to specify some 
+\series bold
+variable lists
+\series default
+ in 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{.settings()}
+\end_layout
+
+\end_inset
+
+ for:
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+vspace{-1mm}
+\end_layout
+
+\end_inset
+
+
+\series bold
+Aggregate variables:
+\series default
+ 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{.varlist}
+\end_layout
+
+\end_inset
+
+.
+ Used as 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{path.VARNAME}
+\end_layout
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+vspace{-3mm}
+\end_layout
+
+\end_inset
+
+
+\series bold
+Household variables:
+\series default
+ 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{.varlist_hh}
+\end_layout
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+Used as 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{sol.VARNAME}
+\end_layout
+
+\end_inset
+
+ and 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{sol.path_VARNAME}
+\end_layout
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+Extra: 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{i}
+\end_layout
+
+\end_inset
+
+ and 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{w}
+\end_layout
+
+\end_inset
+
+ are used for saving indices and weights for use in simulation.
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+vspace{-3mm}
+\end_layout
+
+\end_inset
+
+
+\series bold
+Household grids:
+\series default
+ 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{.grid_hh}
+\end_layout
+
+\end_inset
+
+.
+ Used as 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{par.VARNAME_grid}
+\end_layout
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+vspace{-3mm}
+\end_layout
+
+\end_inset
+
+
+\series bold
+Household policy functions:
+\series default
+ 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{.pols_hh}
+\end_layout
+
+\end_inset
+
+.
+ Should be in 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{.varlist_hh}
+\end_layout
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+vspace{-3mm}
+\end_layout
+
+\end_inset
+
+
+\series bold
+Household inputs:
+\series default
+ 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{.inputs_hh}
+\end_layout
+
+\end_inset
+
+.
+ Should be in 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{.varlist}
+\end_layout
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+vspace{-3mm}
+\end_layout
+
+\end_inset
+
+
+\series bold
+Household outputs:
+\series default
+ 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{.outputs_hh}
+\end_layout
+
+\end_inset
+
+.
+ Should be in 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{.varlist_hh}
+\end_layout
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+vspace{-3mm}
+\end_layout
+
+\end_inset
+
+
+\series bold
+Exogenous inputs:
+\series default
+ 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{.inputs_exo}
+\end_layout
+
+\end_inset
+
+.
+ Should be in 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{.varlist}
+\end_layout
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+vspace{-3mm}
+\end_layout
+
+\end_inset
+
+
+\series bold
+Endogenous inputs:
+\series default
+ 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{.inputs_endo}
+\end_layout
+
+\end_inset
+
+.
+ Should be in 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{.varlist}
+\end_layout
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+vspace{-3mm}
+\end_layout
+
+\end_inset
+
+
+\series bold
+Targets:
+\series default
+ 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{.targets}
+\end_layout
+
+\end_inset
+
+.
+ Should be in 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{.varlist}
+\end_layout
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+And in 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{.setup()}
+\end_layout
+
+\end_inset
+
+ choose the following 
+\series bold
+settings
+\series default
+:
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+vspace{-1mm}
+\end_layout
+
+\end_inset
+
+
+\series bold
+Number of exogenous states:
+\series default
+ 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{par.Nz}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+vspace{-3mm}
+\end_layout
+
+\end_inset
+
+
+\series bold
+Number of grid points:
+\series default
+ 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{par.Nendo1}
+\end_layout
+
+\end_inset
+
+, 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{par.Nendo2}
+\end_layout
+
+\end_inset
+
+,
+\begin_inset Formula $\dots$
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+where 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{endo1}
+\end_layout
+
+\end_inset
+
+, 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{endo2}
+\end_layout
+
+\end_inset
+
+,
+\begin_inset Formula $\dots$
+\end_inset
+
+, is in 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{.grids_hh}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+vspace{-3mm}
+\end_layout
+
+\end_inset
+
+
+\series bold
+Length of transition period:
+\series default
+ 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{par.transition_T}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+vspace{-3mm}
+\end_layout
+
+\end_inset
+
+
+\series bold
+For each exogenous input:
+\series default
+ 
+\begin_inset Newline newline
+\end_inset
+
+Initial jump: 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{par.jump_VARNAME}
+\end_layout
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+Persistence: 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{par.rho_VARNAME}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+vspace{-3mm}
+\end_layout
+
+\end_inset
+
+
+\series bold
+Optional solver settings:
+\begin_inset Newline newline
+\end_inset
+
+ 
+\series default
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{par.max_iter_solve}
+\end_layout
+
+\end_inset
+
+, 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{par.max_iter_simulate}
+\end_layout
+
+\end_inset
+
+, 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{par.max_iter_broyden}
+\end_layout
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+ 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{par.tol_solve}
+\end_layout
+
+\end_inset
+
+, 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{par.tol_simulate}
+\end_layout
+
+\end_inset
+
+, 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{tol_broyden}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In in 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{.allocate()}
+\end_layout
+
+\end_inset
+
+ the internal 
+\series bold
+method 
+\series default
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{.allocate_GE(sol_shape)}
+\end_layout
+
+\end_inset
+
+ can now be called to allocate:
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+vspace{-1mm}
+\end_layout
+
+\end_inset
+
+
+\series bold
+Exogenous grids and transition matrices:
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{par.z_grid_ss}
+\end_layout
+
+\end_inset
+
+, 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{shape=(par.Nz,)}
+\end_layout
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{par.z_trans_ss}
+\end_layout
+
+\end_inset
+
+, 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{shape=(par.Nz,)}
+\end_layout
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{par.z_ergodic_ss}
+\end_layout
+
+\end_inset
+
+, 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{shape=(par.Nz,)}
+\end_layout
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{par.z_grid_path}
+\end_layout
+
+\end_inset
+
+, 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{shape=(par.transition_T,par.Nz)}
+\end_layout
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{par.z_trans_path}
+\end_layout
+
+\end_inset
+
+, 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{shape=(par.transition_T,par.Nz,par.Nz)}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+vspace{-3mm}
+\end_layout
+
+\end_inset
+
+
+\series bold
+Distribution:
+\series default
+ 
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{sim.D}
+\end_layout
+
+\end_inset
+
+, 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{shape=sol_shape}
+\end_layout
+
+\end_inset
+
+ 
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{sim.path_D}
+\end_layout
+
+\end_inset
+
+, 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{shape=(par.transition_T,*sol_shape)}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+vspace{-3mm}
+\end_layout
+
+\end_inset
+
+
+\series bold
+All variables in 
+\series default
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{.sol}
+\end_layout
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{sol.VARNAME}
+\end_layout
+
+\end_inset
+
+, 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{shape=sol_shape}
+\end_layout
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{sol.path_VARNAME}
+\end_layout
+
+\end_inset
+
+, 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{shape=(par.transition_T,*sol_shape)}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+vspace{-3mm}
+\end_layout
+
+\end_inset
+
+
+\series bold
+All variables in 
+\series default
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{.path}
+\end_layout
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{path.VARNAME}
+\end_layout
+
+\end_inset
+
+, 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{shape=(par.transition_T,)}
+\end_layout
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{ss.VARNAME}
+\end_layout
+
+\end_inset
+
+, scalar
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+vspace{-3mm}
+\end_layout
+
+\end_inset
+
+
+\series bold
+All variables in 
+\series default
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{.jac_hh}
+\end_layout
+
+\end_inset
+
+ 
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{OUTPUTNAME.upper()_INPUTNAME}
+\end_layout
+
+\end_inset
+
+,
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{shape=(par.transition_T,par.transition_T)}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The user must also provide the following 
+\series bold
+functions
+\series default
+:
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+vspace{-1mm}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{grids.py}
+\end_layout
+
+\end_inset
+
+ must contain 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{create_grids(model)}
+\end_layout
+
+\end_inset
+
+ which at a minimum creates the grids for the endogenous variables and the
+ grids and transition matrices for the exogenous variable.
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+vspace{-3mm}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{household_problem.py}
+\end_layout
+
+\end_inset
+
+ must contain the jitted
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+The function should be decorated with 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{@numba.njit}
+\end_layout
+
+\end_inset
+
+.
+\end_layout
+
+\end_inset
+
+ functions:
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{solve_hh_ss(par,sol,ss)}
+\end_layout
+
+\end_inset
+
+, result in 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{sol.VARNAME}
+\end_layout
+
+\end_inset
+
+.
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{solve_hh_path(par,sol,path)}
+\end_layout
+
+\end_inset
+
+, result in 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{sol.path_VARNAME}
+\end_layout
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+vspace{-3mm}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{find_strady_state.py}
+\end_layout
+
+\end_inset
+
+ must contain the function 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{find_ss(model,do_print)}
+\end_layout
+
+\end_inset
+
+, which fills 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{ss}
+\end_layout
+
+\end_inset
+
+, and solve and simulate the household problem in steady state.
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+vspace{-3mm}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{transition_path.py}
+\end_layout
+
+\end_inset
+
+ must contain the jitted function
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{evaluate_transition_path(par,sol,sim,ss,path,jac_hh,use_jac_hh)}
+\end_layout
+
+\end_inset
+
+, where 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{use_jac_hh}
+\end_layout
+
+\end_inset
+
+ is a boolean for whether or not to use the household Jacobians when evaluating
+ household behavior (used when calculating the full Jacobian).
+\end_layout
+
+\begin_layout Standard
+The following internal methods are now available:
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+vspace{-1mm}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{.solve_ss()}
+\end_layout
+
+\end_inset
+
+: Solve household problem at steady state, 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{sol.VARNAME}
+\end_layout
+
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+vspace{-3mm}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{.simulate_ss()}
+\end_layout
+
+\end_inset
+
+: Simulate household problem at steady state, 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{sim.D}
+\end_layout
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+vspace{-3mm}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{.solve_path()}
+\end_layout
+
+\end_inset
+
+: Solve household problem along transition path, 
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{sol.path_VARNAME}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+vspace{-3mm}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{.simulate_path()}
+\end_layout
+
+\end_inset
+
+:Simulate household problem along transition path, 
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{sim.path_D}
+\end_layout
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+vspace{-3mm}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{.compute_jac_hh()}
+\end_layout
+
+\end_inset
+
+: Compute the Jacobians of household problem, 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{jac_hh}
+\end_layout
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+vspace{-3mm}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{.compute_jac()}
+\end_layout
+
+\end_inset
+
+: Compute the full Jacobian, 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{jac}
+\end_layout
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+vspace{-3mm}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{.find_transition_path()}
+\end_layout
+
+\end_inset
+
+: Find transition for path for exogenous inputs, 
+\begin_inset Newline newline
+\end_inset
+
+everything in 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{path}
+\end_layout
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage newpage
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Example
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{lstlisting}[language=Python,caption=Example: Setup,label=lst:setup,basicst
+yle=
+\backslash
+linespread{1.3}
+\backslash
+ttfamily
+\backslash
+footnotesize,
+\end_layout
+
+\begin_layout Plain Layout
+
+numbers=left,frame=single,backgroundcolor=
+\backslash
+color{background}]
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+from EconModel import EconModelClass
+\end_layout
+
+\begin_layout Plain Layout
+
+from GEModelTools import GEModelClass
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+class HANKModelClass(EconModelClass,GEModelClass):
+\end_layout
+
+\begin_layout Plain Layout
+
+    
+\end_layout
+
+\begin_layout Plain Layout
+
+    def settings(self):
+\end_layout
+
+\begin_layout Plain Layout
+
+        """ fundamental settings """
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+        self.grids_hh = [] # grids
+\end_layout
+
+\begin_layout Plain Layout
+
+        self.pols_hh = [] # policy functions
+\end_layout
+
+\begin_layout Plain Layout
+
+        self.inputs_hh = [] # inputs to household problem
+\end_layout
+
+\begin_layout Plain Layout
+
+        self.outputs_hh = [] # output of household problem
+\end_layout
+
+\begin_layout Plain Layout
+
+        self.varlist_hh = [] # variables in household problem
+\end_layout
+
+\begin_layout Plain Layout
+
+        self.inputs_exo = [] # exogenous inputs
+\end_layout
+
+\begin_layout Plain Layout
+
+        self.inputs_endo = [] # endogenous inputs
+\end_layout
+
+\begin_layout Plain Layout
+
+        self.targets = [] # targets 
+\end_layout
+
+\begin_layout Plain Layout
+
+        self.varlist = [] # all variables
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+    def setup(self):
+\end_layout
+
+\begin_layout Plain Layout
+
+        """ set baseline parameters """
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+        par = self.par
+\end_layout
+
+\begin_layout Plain Layout
+
+        par.NVARNAME = 100 # number of grid points
+\end_layout
+
+\begin_layout Plain Layout
+
+        par.jump_VARNAME = -0.01 # initial jump in %
+\end_layout
+
+\begin_layout Plain Layout
+
+        par.rho_VARNAME = 0.8 # AR(1) coefficeint
+\end_layout
+
+\begin_layout Plain Layout
+
+        par.transition_T = 500 # length of path        
+\end_layout
+
+\begin_layout Plain Layout
+
+        
+\end_layout
+
+\begin_layout Plain Layout
+
+    def allocate(self):
+\end_layout
+
+\begin_layout Plain Layout
+
+        """ allocate model """
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+        par = self.par
+\end_layout
+
+\begin_layout Plain Layout
+
+        sol_shape = (par.Nfix,par.Nz,par.Nendo1)
+\end_layout
+
+\begin_layout Plain Layout
+
+        self.allocate_GE(sol_shape)
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{lstlisting}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Solution method
+\end_layout
+
+\begin_layout Standard
+In this section, we explain the non-linear sequence space solution method
+ implemented in the package for a simple model.
+\end_layout
+
+\begin_layout Subsection
+Model
+\end_layout
+
+\begin_layout Paragraph*
+Overview.
+ 
+\end_layout
+
+\begin_layout Standard
+
+\series medium
+There is a continuum of measure one 
+\series default
+households
+\series medium
+ who
+\end_layout
+
+\begin_layout Enumerate
+Own stocks, 
+\begin_inset Formula $a_{t-1}$
+\end_inset
+
+ (measured end-of-period)
+\end_layout
+
+\begin_layout Enumerate
+Supply labor with productivity 
+\begin_inset Formula $z_{t}$
+\end_inset
+
+ (exogenous and stochastic)
+\begin_inset Formula 
+\begin{align}
+z_{t} & =\rho z_{t-1}+\varepsilon_{t}^{z}.\label{eq:transition_z_e_s}\\
+\mathbb{E}[z_{t}] & =1.\nonumber \\
+\text{Var}[\varepsilon_{t}^{z}] & =\sigma_{z}^{2}.\nonumber 
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+Consume, 
+\begin_inset Formula $c_{t}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Firms rent capital, 
+\begin_inset Formula $K_{t-1}$
+\end_inset
+
+, and hire labor, 
+\begin_inset Formula $L_{t}$
+\end_inset
+
+ to produce goods, 
+\begin_inset Formula 
+\begin{equation}
+Y_{t}=Z_{t}K_{t-1}^{\alpha}L_{t}^{1-\alpha},\label{eq:Y}
+\end{equation}
+
+\end_inset
+
+where 
+\begin_inset Formula $Z_{t}$
+\end_inset
+
+ is technology.
+ Capital depreciates with the rate 
+\begin_inset Formula $\delta$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Both households are firms are 
+\series bold
+price takers 
+\series default
+and
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset Formula $r_{t}^{k}$
+\end_inset
+
+ is the (real) rental rate for capital
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset Formula $r_{t}=r_{t}^{k}-\delta$
+\end_inset
+
+ is the implied
+\series bold
+ 
+\series default
+(real) interest rate
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset Formula $w_{t}$
+\end_inset
+
+ is the (real) wage rate
+\end_layout
+
+\begin_layout Paragraph*
+Firms.
+ 
+\end_layout
+
+\begin_layout Standard
+Firms maximize profits implying the standard pricing equations
+\series bold
+
+\begin_inset Formula 
+\begin{align}
+r_{t}^{k} & =\alpha Z_{t}\left(K_{t-1}/L_{t}\right)^{\text{\alpha-1}}\equiv r^{k}(Z_{t},K_{t-1},L_{t})\label{eq:rk}\\
+w_{t} & =(1-\alpha)Z_{t}(K_{t-1}/L_{t})^{\alpha}\label{eq:w}\\
+ & =(1-\alpha)Z_{t}\left(\frac{r_{t}^{k}}{\alpha Z_{t}}\right)^{\frac{\alpha}{\alpha-1}}\equiv w(r_{t}^{k},Z_{t})\nonumber 
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Paragraph*
+Households.
+\end_layout
+
+\begin_layout Standard
+Households have 
+\emph on
+perfect foresight
+\emph default
+ wrt.
+ to the interest rate and the wage rate, 
+\begin_inset Formula $\{r_{t},w_{t}\}_{t=0}^{\infty}$
+\end_inset
+
+, and solve the problem
+\begin_inset Formula 
+\begin{align*}
+V_{t}(z_{t},a_{t-1}) & =\max_{c_{t}}\frac{c_{t}^{1-\sigma}}{1-\sigma}+\beta\mathbb{E}_{t}\left[V_{t+1}(z_{t+1},a_{t})\right]\\
+ & \text{s.t.}\\
+a_{t}+c_{t} & =(1+r_{t})a_{t-1}+w_{t}z_{t}\\
+z_{t+1} & \sim\Gamma_{z}(z_{t})\\
+a_{t} & \geq0,
+\end{align*}
+
+\end_inset
+
+where
+\begin_inset Formula 
+\[
+V_{t}\left(z_{t},a_{t-1}\right)=V\left(z_{t},a_{t-1};\{r_{\tau},w_{\tau}\}_{\tau=t}^{\infty}\right).
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The FOC is 
+\begin_inset Formula $c_{t}^{-\sigma}=\beta\mathbb{E}_{t}[v_{a,t+1}]$
+\end_inset
+
+ and the envelope condition is 
+\begin_inset Formula $v_{a,t}=(1+r_{t})c_{t}^{-\sigma}$
+\end_inset
+
+.
+ The optimal saving and consumption functions 
+\begin_inset Formula $a_{t}^{\ast}(a_{t-1},z_{t})$
+\end_inset
+
+ and 
+\begin_inset Formula $c_{t}^{\ast}(a_{t-1},z_{t})$
+\end_inset
+
+ can be found using e.g.
+ the EGM.
+ These solutions live on the discretized grids, 
+\begin_inset Formula $z_{t}\in\{z^{0},\dots,z^{\#_{z}-1}\}$
+\end_inset
+
+ and 
+\begin_inset Formula $a_{t}\in\{a^{0},\dots,a^{\#_{a}-1}\}$
+\end_inset
+
+.
+ In 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{grids.py}
+\end_layout
+
+\end_inset
+
+ the user must supply the function 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{create_grids(model)}
+\end_layout
+
+\end_inset
+
+ to setup these grids.
+\end_layout
+
+\begin_layout Standard
+The user should provide two jiited functions in 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{household_problem.py}
+\end_layout
+
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{solve_hh_ss(par,sol,ss)}
+\end_layout
+
+\end_inset
+
+: Solve for 
+\begin_inset Formula $a_{ss}^{\ast}(\bullet)$
+\end_inset
+
+ and 
+\begin_inset Formula $c_{ss}^{\ast}(\bullet)$
+\end_inset
+
+ in 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{sol.a}
+\end_layout
+
+\end_inset
+
+ and 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{sol.c}
+\end_layout
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{solve_hh_path(par,sol,path)}
+\end_layout
+
+\end_inset
+
+: Solve for 
+\begin_inset Formula $\{a_{t}^{\ast}(\bullet)\}_{t=0}^{T-1}$
+\end_inset
+
+ and 
+\begin_inset Formula $\{c_{t}^{\ast}(\bullet)\}_{t=0}^{T-1}$
+\end_inset
+
+ for arbitrary sequences 
+\begin_inset Formula $\{r_{t},w_{t}\}_{t=0}^{T}$
+\end_inset
+
+, where 
+\begin_inset Formula $a_{T}^{\ast}(\bullet)=a_{ss}^{\ast}(\bullet)$
+\end_inset
+
+ and 
+\begin_inset Formula $c_{T}^{\ast}(\bullet)=c_{ss}^{\ast}(\bullet)$
+\end_inset
+
+, in 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{sol.path_a}
+\end_layout
+
+\end_inset
+
+ and 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{sol.path_c}
+\end_layout
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Paragraph*
+Distribution.
+\end_layout
+
+\begin_layout Standard
+Let 
+\begin_inset Formula $D_{t}$
+\end_inset
+
+ be the distribution of households over 
+\begin_inset Formula $z_{t}$
+\end_inset
+
+ and 
+\begin_inset Formula $a_{t-1}$
+\end_inset
+
+.
+ The supply of capital then is
+\begin_inset Formula 
+\begin{equation}
+\mathcal{K}_{t}=\int a_{t}^{\ast}(a_{t-1},z_{t})dD_{t}=\int a_{t}dD_{t+1}\label{eq:K_supply}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The household problem implies a time-varying but non-stochastic law of motion
+ for 
+\begin_inset Formula $D_{t}$
+\end_inset
+
+ denoted 
+\begin_inset Formula $\Gamma_{t,D}$
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Standard
+In practice, this simulation problem is generic.
+ It is beneficial to use a simulation method, where households are always
+ on the grid.
+ The idea here is to re-distribute mass to grid points based on optimal
+ decision.
+ More precisely we calculate
+\begin_inset Formula 
+\begin{align}
+D_{t+1}(e^{k},a^{l}) & =\label{eq:D_plus}\\
+ & \sum_{i=0}^{\#_{e}-1}\text{Pr}[e^{k}|e^{i}]\sum_{j=0}^{\#_{a}-1}D_{t}(e^{i},a^{j})\omega(a_{t}^{\ast}(e^{i},a^{j}),a^{\max\{l-1,0\}},a^{l},a^{\min\{l+1,\#_{a}-1\}}),\nonumber 
+\end{align}
+
+\end_inset
+
+where 
+\begin_inset Formula $\omega$
+\end_inset
+
+ is a weight calculated using linear interpolation
+\begin_inset Formula 
+\begin{align*}
+\omega(a,\underline{a},\tilde{a},\overline{a}) & =1\{a\in[\underline{a},\overline{a}]\}\begin{cases}
+\frac{\overline{a}-a}{\overline{a}-\tilde{a}} & \text{if }a\geq\tilde{a}\\
+\frac{a-\underline{a}}{\overline{\tilde{a}}-\underline{a}} & \text{if }a<\tilde{a}
+\end{cases}.
+\end{align*}
+
+\end_inset
+
+Extension to higher dimensions are straightforward.
+ This is provided in the package as the methods 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{.simulate_ss()}
+\end_layout
+
+\end_inset
+
+ and 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{.simulate_path()}
+\end_layout
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Paragraph*
+Market clearing.
+\end_layout
+
+\begin_layout Standard
+Market clearing requires
+\begin_inset Formula 
+\begin{align*}
+\text{Capital: }K_{t} & =\mathcal{K}_{t}=\int a_{t}dD_{t+1}=\int a_{t}^{\ast}(z_{t},a_{t-1})dD_{t}\\
+\text{Labour: }L_{t} & =\int e_{t}dD_{t}=1\\
+\text{Goods: }Y_{t} & =\int c_{t}^{\ast}(z_{t},a_{t-1})dD_{t}+K_{t}-K_{t-1}+\delta K_{t-1}
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Stationary equilibrium
+\end_layout
+
+\begin_layout Standard
+A 
+\series bold
+stationary equilibrium
+\series default
+ for a given 
+\begin_inset Formula $Z_{ss}$
+\end_inset
+
+ is one where
+\end_layout
+
+\begin_layout Enumerate
+Quantities 
+\begin_inset Formula $K_{ss}$
+\end_inset
+
+ and 
+\begin_inset Formula $L_{ss},$
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Enumerate
+prices 
+\begin_inset Formula $r_{ss}$
+\end_inset
+
+ and 
+\begin_inset Formula $w_{ss},$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+a distribution 
+\begin_inset Formula $D_{ss}$
+\end_inset
+
+ over 
+\begin_inset Formula $a_{t-1}$
+\end_inset
+
+ and 
+\begin_inset Formula $z_{t}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+and policy functions 
+\begin_inset Formula $a_{ss}^{\ast}(z_{t},a_{t-1})$
+\end_inset
+
+ and 
+\begin_inset Formula $c_{ss}^{\ast}(z_{t},a_{t-1})$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+are such that
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset Formula $a_{ss}^{\ast}(\bullet)$
+\end_inset
+
+ and 
+\begin_inset Formula $c_{ss}^{\ast}(\bullet)$
+\end_inset
+
+ solves the household problem with 
+\begin_inset Formula $\{r_{ss},w_{ss}\}_{t=0}^{\infty}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset Formula $D_{ss}$
+\end_inset
+
+ is the invariant distribution implied by the household problem
+\end_layout
+
+\begin_layout Enumerate
+Firms maximize profits, 
+\begin_inset Formula $r_{ss}=r(Z_{ss},K_{ss},L_{ss})$
+\end_inset
+
+ and 
+\begin_inset Formula $w_{ss}=w(r_{ss},Z_{ss})$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+The labor market clears, i.e.
+ 
+\begin_inset Formula $L_{ss}=\int e_{t}dD_{ss}=1$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+The capital market clears, i.e.
+ 
+\begin_inset Formula $K_{ss}=\int a_{ss}^{\ast}(z_{t},a_{t-1})dD_{ss}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+The goods market clears, i.e.
+ 
+\begin_inset Formula $Y_{ss}=\int c_{ss}^{\ast}(z_{t},a_{t-1})dD_{ss}+\delta K_{ss}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We can 
+\series bold
+find the stationary equilibrium
+\series default
+ by solving a root-finding problem
+\end_layout
+
+\begin_layout Enumerate
+Guess on 
+\begin_inset Formula $r_{ss}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+Calculate 
+\begin_inset Formula $w_{ss}=w(r_{ss},Z_{ss})$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+Solve the infinite horizon household problem
+\end_layout
+
+\begin_layout Enumerate
+Simulate until convergence of 
+\begin_inset Formula $D_{ss}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+Calculate supply 
+\begin_inset Formula $\mathcal{K}_{ss}=\int a_{ss}^{\ast}(z_{t},a_{t-1})dD_{ss}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+Calculate demand 
+\begin_inset Formula $K_{ss}=\left(\frac{r_{ss}+\delta}{\alpha Z_{ss}}\right)^{\frac{1}{\alpha-1}}L_{ss}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+If for some tolerance 
+\begin_inset Formula $\epsilon$
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\left|\mathcal{K}_{ss}-K_{ss}\right|<\epsilon
+\]
+
+\end_inset
+
+then stop, otherwise update 
+\begin_inset Formula $r_{ss}$
+\end_inset
+
+ appropriately and return to step 2
+\end_layout
+
+\begin_layout Standard
+In 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{find_strady_state.py}
+\end_layout
+
+\end_inset
+
+ the user must supply the function
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{find_ss(model,do_print)}
+\end_layout
+
+\end_inset
+
+ to solve the problem.
+ In practice we guess on 
+\begin_inset Formula $r_{ss}$
+\end_inset
+
+ and 
+\begin_inset Formula $w_{ss}$
+\end_inset
+
+ and derive 
+\begin_inset Formula $Z_{ss}$
+\end_inset
+
+ and 
+\begin_inset Formula $\delta_{ss}$
+\end_inset
+
+ from the implied household problem.
+\end_layout
+
+\begin_layout Subsection
+Transition path
+\end_layout
+
+\begin_layout Standard
+A 
+\series bold
+transition path
+\series default
+ for 
+\begin_inset Formula $t\in\{0,1,2,\dots\}$
+\end_inset
+
+, given an initial distribution 
+\begin_inset Formula $D_{0}$
+\end_inset
+
+ and a path of 
+\begin_inset Formula $Z_{t}$
+\end_inset
+
+, is paths of quantities 
+\begin_inset Formula $K_{t}$
+\end_inset
+
+ and 
+\begin_inset Formula $L_{t}$
+\end_inset
+
+, prices 
+\begin_inset Formula $r_{t}$
+\end_inset
+
+ and 
+\begin_inset Formula $w_{t}$
+\end_inset
+
+, policy functions 
+\begin_inset Formula $a_{t}^{\ast}(\bullet)$
+\end_inset
+
+ and 
+\begin_inset Formula $c_{t}^{\ast}(\bullet)$
+\end_inset
+
+, distributions 
+\begin_inset Formula $D_{t}$
+\end_inset
+
+, such that for all 
+\begin_inset Formula $t$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset Formula $a_{t}^{\ast}(\bullet)$
+\end_inset
+
+ and 
+\begin_inset Formula $c_{t}^{\ast}(\bullet)$
+\end_inset
+
+ solve the household problem given price paths
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset Formula $D_{t}$
+\end_inset
+
+ are implied by the household problem given price paths and 
+\begin_inset Formula $D_{0}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+Firms maximizes profit, 
+\begin_inset Formula $r_{t}=r(Z_{t},K_{t-1},L_{t})$
+\end_inset
+
+ and 
+\begin_inset Formula $w_{t}=w(r_{t},Z_{t})$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+The labor market clears, i.e.
+ 
+\begin_inset Formula $L_{t}=\int z_{t}dD_{t}=1$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+The capital market clears, i.e.
+ 
+\begin_inset Formula $K_{t-1}=\int a_{t-1}dD_{t}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+The goods market clears, i.e.
+ 
+\begin_inset Formula $Y_{t}=\int c_{t}^{\ast}(\bullet)dD_{t}+K_{t}-K_{t-1}+\delta K_{t-1}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+This is also called an MIT-shock 
+\begin_inset Formula $\equiv$
+\end_inset
+
+ 
+\begin_inset Quotes ald
+\end_inset
+
+shock in a world without shocks
+\begin_inset Quotes ard
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+In practice we consider a 
+\emph on
+truncated
+\emph default
+ transition path of length 
+\begin_inset Formula $T$
+\end_inset
+
+, and everything is back to steady state afterwards.
+\end_layout
+
+\begin_layout Subsection
+Sequence space method
+\end_layout
+
+\begin_layout Standard
+We can think of the model in terms of inputs are targets:
+\end_layout
+
+\begin_layout Enumerate
+
+\series bold
+1 exogenous input:
+\series default
+ 
+\begin_inset Formula $\{Z_{t}\}_{t=0}^{T-1}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+
+\series bold
+1 endogenous input: 
+\begin_inset Formula $\{K_{t}\}_{t=0}^{T-1}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+
+\series bold
+1 target: 
+\series default
+Asset market clearing
+\end_layout
+
+\begin_layout Standard
+The model is then captured by the equation system
+\size small
+
+\begin_inset Formula 
+\begin{align*}
+\boldsymbol{H}(\{K_{t},Z_{t}\}_{t=0}^{T}) & =\boldsymbol{0}\Leftrightarrow\\
+\left[\begin{array}{c}
+\text{Asset market clearing}\end{array}\right] & =\boldsymbol{0}\\
+\left[\begin{array}{c}
+K_{t}-\mathcal{K}_{t}\end{array}\right] & =\left[\begin{array}{c}
+0\end{array}\right]\\
+\forall t\in\{0,1,\dots,T-1\}
+\end{align*}
+
+\end_inset
+
+
+\size default
+where we have
+\begin_inset Formula 
+\begin{align*}
+L_{t} & =1\\
+r_{t} & =\alpha Z_{t}(K_{t-1}/L_{t})^{\alpha-1}\\
+w_{t} & =(1-\alpha)Z_{t}\left(\frac{r_{t}+\delta}{\alpha Z_{t}}\right)^{\frac{\alpha}{\alpha-1}}\\
+D_{t} & =\Gamma_{t-1,D}(D_{t-1}),\forall t>0\\
+\mathcal{K}_{t} & =\int a_{t}^{\ast}(z_{t},a_{t-1})dD_{t}\\
+K_{-1} & =K_{ss}\\
+D_{0} & =D_{ss}
+\end{align*}
+
+\end_inset
+
+In 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{evaluate_transition_path.py}
+\end_layout
+
+\end_inset
+
+ the user must supply the jitted function
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{evaluate_transition_path_distribution(...)}
+\end_layout
+
+\end_inset
+
+, which given the inputs updates the value of all targets.
+\end_layout
+
+\begin_layout Paragraph*
+Jacobian.
+\end_layout
+
+\begin_layout Standard
+Defining 
+\begin_inset Formula $\boldsymbol{K}=(K_{0},K_{1},\dots$
+\end_inset
+
+) and 
+\begin_inset Formula $\boldsymbol{Z}=(Z_{0},Z_{1},\dots)$
+\end_inset
+
+ we can write the equation system in time-stacked form
+\series bold
+
+\begin_inset Formula 
+\[
+\boldsymbol{H}(\boldsymbol{K},\boldsymbol{Z})=\boldsymbol{0}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+Total differentiation
+\series default
+ implies
+\begin_inset Formula 
+\begin{align*}
+\boldsymbol{H}_{\boldsymbol{K}}d\boldsymbol{K}+\boldsymbol{H}_{\boldsymbol{Z}}d\boldsymbol{Z}=0 & \Leftrightarrow d\boldsymbol{K}=-\boldsymbol{H}_{\boldsymbol{K}}^{-1}\boldsymbol{H}_{\boldsymbol{Z}}d\boldsymbol{Z}
+\end{align*}
+
+\end_inset
+
+where
+\begin_inset Formula 
+\[
+\boldsymbol{H}_{\boldsymbol{K}}=\left[\begin{array}{ccc}
+\frac{\partial H_{0}}{\partial K_{0}} & \frac{\partial H_{0}}{\partial K_{1}} & \cdots\\
+\frac{\partial H_{1}}{\partial K_{0}} & \ddots & \ddots\\
+\vdots & \ddots & \ddots
+\end{array}\right],\,\boldsymbol{H}_{\boldsymbol{Z}}=\left[\begin{array}{ccc}
+\frac{\partial H_{0}}{\partial Z_{0}} & \frac{\partial H_{0}}{\partial Z_{1}} & \cdots\\
+\frac{\partial H_{1}}{\partial Z_{0}} & \ddots & \ddots\\
+\vdots & \ddots & \ddots
+\end{array}\right]
+\]
+
+\end_inset
+
+and
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+\boldsymbol{H}_{\boldsymbol{K}} & =\mathcal{J}^{\mathcal{K},r}\mathcal{J}^{r,K}+\mathcal{J}^{\mathcal{K},w}\mathcal{J}^{w,K}-\boldsymbol{I}\\
+\boldsymbol{H}_{Z} & =\mathcal{J}^{\mathcal{K},r}\mathcal{J}^{r,Z}+\mathcal{J}^{\mathcal{K},w}\mathcal{J}^{w,Z}
+\end{align*}
+
+\end_inset
+
+where generically
+\begin_inset Formula 
+\[
+\mathcal{J}^{x,y}=\left[\begin{array}{ccc}
+\frac{\partial x_{0}}{\partial y_{0}} & \frac{\partial x_{0}}{\partial y_{1}} & \cdots\\
+\frac{\partial x_{1}}{\partial y_{0}} & \ddots & \ddots\\
+\vdots & \ddots & \ddots
+\end{array}\right]
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Once the Jacobians 
+\begin_inset Formula $\boldsymbol{H}_{\boldsymbol{K}}$
+\end_inset
+
+ and 
+\begin_inset Formula $\boldsymbol{H}_{Z}$
+\end_inset
+
+, collectively referred to as 
+\begin_inset Quotes eld
+\end_inset
+
+the full Jacobian
+\begin_inset Quotes erd
+\end_inset
+
+, are both calculated, the equation system can be solved with a quasi-Newton
+ equation solver such as the Broyden-solver.
+ This is provided in the package with the method 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{.find_transition_path()}
+\end_layout
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+In the package there are two methods which both needs to be run to calculate
+ the Jacobian:
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{.compute_jac_hh()}
+\end_layout
+
+\end_inset
+
+: Compute the Jacobians of household problem (
+\begin_inset Formula $\mathcal{J}^{\mathcal{K},r}$
+\end_inset
+
+, 
+\begin_inset Formula $\mathcal{J}^{\mathcal{K},w}$
+\end_inset
+
+) using the fast fast news algorithm (see below).
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+vspace{-3mm}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{.compute_jac()}
+\end_layout
+
+\end_inset
+
+: Compute the full Jacobian using simple numerical differentiation relying
+ on the Jacobians of the household problem.
+\end_layout
+
+\begin_layout Subsection
+Fake new algorithm
+\end_layout
+
+\begin_layout Standard
+Consider the following notation:
+\end_layout
+
+\begin_layout Enumerate
+
+\series bold
+Productivity:
+\series default
+ 
+\begin_inset Formula $z_{t}$
+\end_inset
+
+, indexed by 
+\begin_inset Formula $i$
+\end_inset
+
+, lives on 
+\begin_inset Formula $\mathcal{G}_{z}=\{z^{0},z^{1},\dots,z^{\#_{z}-1}\}$
+\end_inset
+
+ with transition matrix 
+\begin_inset Formula $\Pi^{e}$
+\end_inset
+
+ with elements
+\begin_inset Formula 
+\[
+\pi_{[i,i+]}^{z}=\text{Pr}[z_{t+1}=z^{i+1}|z_{t}=z^{i}].
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+
+\series bold
+Assets:
+\series default
+ 
+\begin_inset Formula $a_{t}$
+\end_inset
+
+, indexed by 
+\begin_inset Formula $j$
+\end_inset
+
+, lives on 
+\begin_inset Formula $\mathcal{G}_{a}=\{a^{0},a^{1},\dots,a^{\#_{a}-1}\}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Enumerate
+
+\series bold
+Value
+\series default
+ 
+\series bold
+and policy functions:
+\series default
+ 
+\begin_inset Formula $\boldsymbol{v}$
+\end_inset
+
+, 
+\begin_inset Formula $\boldsymbol{a}^{\ast}$
+\end_inset
+
+ and 
+\begin_inset Formula $\boldsymbol{c}^{\ast}$
+\end_inset
+
+ lives on 
+\begin_inset Formula $\mathcal{G}_{z}\times\mathcal{G}_{a}$
+\end_inset
+
+ with
+\begin_inset Formula 
+\begin{align*}
+\boldsymbol{v}_{[i,j]} & =u(\boldsymbol{c}_{[i,j]}^{\ast})+\sum_{j_{+}=0}^{\#_{a}-1}\boldsymbol{Q}_{[j,j_{+}]}^{i}\beta\sum_{k=0}^{\#_{z}-1}\pi_{[i,i_{+}]}^{e}v_{[i_{+}j_{+}]},
+\end{align*}
+
+\end_inset
+
+where 
+\begin_inset Formula $\boldsymbol{c}_{[i,j]}^{\ast}=c^{\ast}(z_{i},a_{j})$
+\end_inset
+
+ and 
+\begin_inset Formula $\boldsymbol{Q}_{[j,k]}^{i}$
+\end_inset
+
+ are the weights implied by linear interpolation of 
+\begin_inset Formula $a^{\ast}(z_{t},a_{t-1})$
+\end_inset
+
+ at 
+\begin_inset Formula $\boldsymbol{a}_{[i,j]}^{\text{\ensuremath{\ast}}}=a^{\ast}(z_{i},a_{j})$
+\end_inset
+
+ given by
+\begin_inset Formula 
+\[
+\boldsymbol{Q}_{[j,k]}^{i}=\begin{cases}
+\frac{a_{ij}^{\text{\ensuremath{\ast}}}-a^{j_{+}-1}}{a^{j_{+}}-a^{j_{+}-1}} & \text{if }j_{+}>0,\text{and }a_{ij}^{\text{\ensuremath{\ast}}}\in[a^{j_{+}-1},a^{j_{+}}]\\
+\frac{a_{ij}^{\text{\ensuremath{\ast}}}-a^{j_{+}}}{a^{j_{+}+1}-a^{j_{+}}} & \text{if }j_{+}<\#_{a}-1,\text{and }a_{ij}^{\text{\ensuremath{\ast}}}\in[a^{j_{+}},a^{j_{+}+1}]\\
+0 & \text{else}
+\end{cases}.
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Let 
+\series bold
+
+\begin_inset Formula $\overrightarrow{x}$
+\end_inset
+
+
+\series default
+ be the row-stacked version of the matrix 
+\begin_inset Formula $x$
+\end_inset
+
+.
+ The Bellman equation can be written
+\series bold
+
+\begin_inset Formula 
+\begin{equation}
+\boldsymbol{\overrightarrow{v}_{t}}=u(\boldsymbol{\overrightarrow{c}}_{t}^{\ast})+\beta\boldsymbol{Q}_{t}\tilde{\Pi}^{e}\overrightarrow{\boldsymbol{v}}_{t+1}m\label{eq:Bellman_vec}
+\end{equation}
+
+\end_inset
+
+
+\series default
+where 
+\begin_inset Formula $\tilde{\Pi}=\Pi\otimes\boldsymbol{I}_{\#_{a}\times\#_{a}}$
+\end_inset
+
+ and 
+\begin_inset Formula $Q_{t}$
+\end_inset
+
+ is the policy matrix given by
+\size small
+
+\begin_inset Formula 
+\begin{equation}
+\boldsymbol{Q}_{t}=\left[\begin{array}{ccc}
+\boldsymbol{Q}_{t}^{0} & \boldsymbol{0} & \boldsymbol{0}\\
+\boldsymbol{0} & \ddots & \boldsymbol{0}\\
+\boldsymbol{0} & \boldsymbol{0} & \boldsymbol{Q}_{t}^{\#_{e}-1}
+\end{array}\right],\,\boldsymbol{Q}_{t}^{i}=\left[\begin{array}{ccc}
+\ddots & \vdots & \iddots\\
+\cdots & q_{[j,j_{+}]}^{i} & \cdots\\
+\iddots & \vdots & \ddots
+\end{array}\right].\label{eq:Q}
+\end{equation}
+
+\end_inset
+
+
+\size default
+Simulation is now the inverse operation: 
+\begin_inset Formula 
+\begin{equation}
+\overrightarrow{D}_{t+1}=\tilde{\Pi}^{e\prime}\boldsymbol{Q}_{t}^{\prime}\overrightarrow{D}_{t},\label{eq:D_vec}
+\end{equation}
+
+\end_inset
+
+where 
+\begin_inset Formula $\prime$
+\end_inset
+
+ denoted transpose.
+\end_layout
+
+\begin_layout Standard
+The fake new algorithm now is:
+\end_layout
+
+\begin_layout Itemize
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+[]
+\end_layout
+
+\end_inset
+
+
+\series bold
+Step 1: 
+\series default
+Solve backwards 
+\begin_inset Formula $T-1$
+\end_inset
+
+ periods from a shock 
+\begin_inset Formula $\Delta_{x}$
+\end_inset
+
+ to price 
+\begin_inset Formula $x$
+\end_inset
+
+.
+ 
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Formula $\,\,\,\boldsymbol{a}_{s}^{\ast,x}$
+\end_inset
+
+ is the optimal saving policy with 
+\begin_inset Formula $s$
+\end_inset
+
+ periods until shock arrival
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Formula $\,\,\,\boldsymbol{Q}_{s}^{x}$
+\end_inset
+
+ is the associated policy matrix
+\begin_inset space ~
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+[]
+\end_layout
+
+\end_inset
+
+
+\series bold
+Step 2: 
+\series default
+\emph on
+Numerical derivatives,
+\emph default
+
+\begin_inset Formula 
+\begin{align*}
+\Delta_{D,x}^{s} & =\frac{\tilde{\Pi}^{e\prime}\boldsymbol{Q}_{s}^{x\prime}\overrightarrow{D}_{ss}-\overrightarrow{D}_{ss}}{\Delta_{x}},\Delta_{a,x}^{s}=\frac{\overrightarrow{\boldsymbol{a}}_{s}^{\ast,x\prime}\overrightarrow{D}_{ss}-\overrightarrow{\boldsymbol{a}_{ss}}^{\ast,\prime}\overrightarrow{D}_{ss}}{\Delta_{x}}
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+[]
+\end_layout
+
+\end_inset
+
+
+\series bold
+Step 3: 
+\series default
+\emph on
+Expectation factors
+\emph default
+, 
+\begin_inset Formula $\mathcal{E}_{t}=\begin{cases}
+\boldsymbol{a}_{ss}^{\ast} & \text{if }t=0\\
+\boldsymbol{Q}_{ss}\tilde{\Pi}^{e}\mathcal{E}_{t-1} & \text{else}
+\end{cases}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+[]
+\end_layout
+
+\end_inset
+
+
+\series bold
+Step 4: 
+\series default
+\emph on
+Fake news matrix,
+\begin_inset space ~
+\end_inset
+
+
+\emph default
+
+\begin_inset Formula $\mathcal{F}_{[t,s]}^{a}=\begin{cases}
+\Delta_{a,x}^{s} & \text{if }t=0\\
+\overrightarrow{\mathcal{E}}_{t-1}\Delta_{D,x}^{s} & \text{else }
+\end{cases}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+[]
+\end_layout
+
+\end_inset
+
+
+\series bold
+Step 5:
+\series default
+ 
+\emph on
+Jacobian, 
+\emph default
+
+\begin_inset Formula $\mathcal{J}_{[t,s]}^{\mathcal{K},x}=\begin{cases}
+\mathcal{F}_{[t,s]}^{a} & \text{if \ensuremath{t=0\lor s=0}}\\
+\sum_{k=0}^{\min\{t,s\}}\mathcal{F}_{[t-k,s-k]}^{a} & \text{\ensuremath{\text{else}}}
+\end{cases}$
+\end_inset
+
+
+\end_layout
+
+\end_body
+\end_document
