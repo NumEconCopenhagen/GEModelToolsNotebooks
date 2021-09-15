@@ -118,3 +118,12 @@ class HANKModelClass(EconModelClass,GEModelClass):
         # b. solution
         sol_shape = (par.Nbeta,par.Nz,par.Na)
         self.allocate_GE(sol_shape)
+
+    def evaluate_transition_path2(self,threads=1,use_jac_hh=False):
+        """ evaluate transition path """
+
+        with jit(self) as model:
+            evaluate_transition_path(
+                model.par,model.sol,model.sim,
+                model.ss,model.path,
+                model.jac_hh,threads=threads,use_jac_hh=use_jac_hh)  

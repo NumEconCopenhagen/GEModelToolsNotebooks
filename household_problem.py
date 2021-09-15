@@ -83,13 +83,13 @@ def solve_hh_path(par,sol,path):
             Va_p = sol.path_Va[t+1]
 
         # ii. solve       
-        y = path.w[t]*par.z_grid_ss
+        y = path.w[t,0]*par.z_grid_ss
         for i_beta in range(par.Nbeta):
             for i_z in range(par.Nz):
-                sol.path_m[t,i_beta,i_z] = (1+path.r[t])*par.a_grid + y[i_z]
+                sol.path_m[t,i_beta,i_z] = (1+path.r[t,0])*par.a_grid + y[i_z]
 
         # iii. time iteration
-        solve_hh_backwards(par,path.r[t],Va_p,sol.path_Va[t],sol.path_a[t],sol.path_c[t],sol.path_m[t])
+        solve_hh_backwards(par,path.r[t,0],Va_p,sol.path_Va[t],sol.path_a[t],sol.path_c[t],sol.path_m[t])
 
         # iv. find indices and weights
         find_i_and_w_1d_1d(sol.path_a[t],par.a_grid,sol.path_i[t],sol.path_w[t])

@@ -10,71 +10,87 @@ from household_problem import solve_hh_path
 ###############
 # 2. evaluate #
 ###############
-
-@nb.njit
-def evaluate_transition_path_distribution(par,sol,sim,ss,path,jac_hh,use_jac_hh=True):
-    """ evaluate household path """
-
-    # a. solve and simulate households
-    path.A_hh[:] = np.repeat(np.nan,par.transition_T)
-    path.C_hh[:] = np.repeat(np.nan,par.transition_T)
-
-    if use_jac_hh:            
-    
-        path.A_hh[:] = ss.A_hh 
-        path.A_hh[:] += jac_hh.A_r@(path.r-ss.r) 
-        path.A_hh[:] += jac_hh.A_w@(path.w-ss.w) 
-
-        path.C_hh[:] = ss.C_hh 
-        path.C_hh[:] += jac_hh.C_r@(path.r-ss.r) 
-        path.C_hh[:] += jac_hh.C_w@(path.w-ss.w) 
-    
-    else:
         
-        solve_hh_path(par,sol,path)
-        simulate_hh_path(par,sol,sim)
-    
-        for t in range(par.transition_T):
-
-            # i. distribution                
-            if t == 0: # steady state
-                D_lag = sim.D
-            else:
-                D_lag = sim.path_D[t-1]
-
-            # ii. aggregate
-            path.A_hh[t] = np.sum(sol.path_a[t]*D_lag)
-            path.C_hh[t] = np.sum(sol.path_c[t]*D_lag)
-            
 @nb.njit
-def evaluate_transition_path(par,sol,sim,ss,path,jac_hh,use_jac_hh=True):
+def evaluate_transition_path(par,sol,sim,ss,path,jac_hh,threads=1,use_jac_hh=True):
     """ evaluate transition path """
 
-    K_lag = lag(ss.K,path.K[:-1])
+    for thread in nb.prange(threads):
 
-    ####################
-    # I. implied paths #
-    ####################
+        # unpack
+        Z = path.Z[:,thread]
+        K = path.K[:,thread]
+        L = path.L[:,thread]
 
-    path.L[:] = 1.0
-    path.rk[:] = par.alpha*path.Z*(K_lag/path.L)**(par.alpha-1.0)
-    path.r[:] = path.rk[:] - par.delta
-    path.w[:] = (1.0-par.alpha)*path.Z*(path.rk/(par.alpha*path.Z))**(par.alpha/(par.alpha-1.0))
+        rk = path.rk[:,thread]
+        r = path.r[:,thread]
+        w = path.w[:,thread]
+        
+        Y = path.Y[:,thread]
+        C = path.C[:,thread]
+        A = path.A[:,thread]
 
-    path.Y[:] = path.Z*K_lag**(par.alpha)*path.L**(1-par.alpha)
-    path.C[:] = path.Y - (path.K-K_lag) - par.delta*K_lag
+        A_hh = path.A_hh[:,thread]
+        C_hh = path.C_hh[:,thread]
 
-    path.A[:] = path.K
+        clearing_A = path.clearing_A[:,thread]
+        clearing_C = path.clearing_C[:,thread]
 
-    #########################
-    # II. household problem #
-    #########################
-    
-    evaluate_transition_path_distribution(par,sol,sim,ss,path,jac_hh,use_jac_hh=use_jac_hh)
+        # lag
+        K_lag = lag(ss.K,K[:-1])
 
-    ######################
-    # III. check targets #
-    ######################
+        ####################
+        # I. implied paths #
+        ####################
 
-    path.clearing_A[:] = path.A-path.A_hh
-    path.clearing_C[:] = path.C-path.C_hh
+        L[:] = 1.0
+        rk[:] = par.alpha*Z*(K_lag/L)**(par.alpha-1.0)
+        r[:] = rk-par.delta
+        w[:] = (1.0-par.alpha)*Z*(rk/(par.alpha*Z))**(par.alpha/(par.alpha-1.0))
+
+        Y[:] = Z*K_lag**(par.alpha)*L**(1-par.alpha)
+        C[:] = Y-(K-K_lag)-par.delta*K_lag
+
+        A[:] = K
+
+        #########################
+        # II. household problem #
+        #########################
+        
+        # a. solve and simulate households
+        A_hh[:] = np.repeat(np.nan,par.transition_T)
+        C_hh[:] = np.repeat(np.nan,par.transition_T)
+
+        if use_jac_hh:            
+        
+            A_hh[:] = ss.A_hh 
+            A_hh[:] += jac_hh.A_r@(r-ss.r) 
+            A_hh[:] += jac_hh.A_w@(w-ss.w) 
+
+            C_hh[:] = ss.C_hh 
+            C_hh[:] += jac_hh.C_r@(r-ss.r) 
+            C_hh[:] += jac_hh.C_w@(w-ss.w) 
+        
+        else:
+            
+            solve_hh_path(par,sol,path)
+            simulate_hh_path(par,sol,sim)
+        
+            for t in range(par.transition_T):
+
+                # i. distribution                
+                if t == 0: # steady state
+                    D_lag = sim.D
+                else:
+                    D_lag = sim.path_D[t-1]
+
+                # ii. aggregate
+                A_hh[t] = np.sum(sol.path_a[t]*D_lag)
+                C_hh[t] = np.sum(sol.path_c[t]*D_lag)
+
+        ######################
+        # III. check targets #
+        ######################
+
+        clearing_A[:] = A[:]-A_hh
+        clearing_C[:] = C[:]-C_hh
