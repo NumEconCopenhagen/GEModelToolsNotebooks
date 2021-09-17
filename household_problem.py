@@ -5,7 +5,6 @@ import numpy as np
 import numba as nb
 
 from consav.linear_interp import interp_1d_vec
-from GEModelTools import find_i_and_w_1d_1d
 
 @nb.njit(parallel=True)        
 def solve_hh_backwards(par,r,Va_p,Va,a,c,m):
@@ -36,6 +35,9 @@ def solve_hh_backwards(par,r,Va_p,Va,a,c,m):
 def solve_hh_ss(par,sol,ss):
     """ solve household problem in steady state """
 
+    # called by .solve_hh_ss(), which also prepares simulation
+    # by calculating sol.i and sol.w
+    
     it = 0
 
     # a. construct grid for m 
@@ -71,6 +73,9 @@ def solve_hh_ss(par,sol,ss):
 def solve_hh_path(par,sol,path):
     """ solve household problem along the transition path """
 
+    # called by .solve_hh_path(), which also prepares for simulation
+    # by calculating sol.path_i and sol.path_w
+
     # solve Bellman equations backwards along transition path
     for k in range(par.transition_T):
 
@@ -83,15 +88,12 @@ def solve_hh_path(par,sol,path):
             Va_p = sol.path_Va[t+1]
 
         # ii. solve       
-        y = path.w[t,0]*par.z_grid_ss
+        y = path.w[0,t]*par.z_grid_ss
         for i_beta in range(par.Nbeta):
             for i_z in range(par.Nz):
-                sol.path_m[t,i_beta,i_z] = (1+path.r[t,0])*par.a_grid + y[i_z]
+                sol.path_m[t,i_beta,i_z] = (1+path.r[0,t])*par.a_grid + y[i_z]
 
         # iii. time iteration
-        solve_hh_backwards(par,path.r[t,0],Va_p,sol.path_Va[t],sol.path_a[t],sol.path_c[t],sol.path_m[t])
-
-        # iv. find indices and weights
-        find_i_and_w_1d_1d(sol.path_a[t],par.a_grid,sol.path_i[t],sol.path_w[t])
+        solve_hh_backwards(par,path.r[0,t],Va_p,sol.path_Va[t],sol.path_a[t],sol.path_c[t],sol.path_m[t])
 
     return k

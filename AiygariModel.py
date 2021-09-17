@@ -3,12 +3,7 @@ import numpy as np
 from EconModel import EconModelClass
 from GEModelTools import GEModelClass
 
-from grids import create_grids
-from household_problem import solve_hh_ss, solve_hh_path
-from steady_state import find_ss
-from transition_path import evaluate_transition_path
-
-class HANKModelClass(EconModelClass,GEModelClass):
+class AiyagariModelClass(EconModelClass,GEModelClass):
     
     #########
     # setup #
@@ -20,8 +15,14 @@ class HANKModelClass(EconModelClass,GEModelClass):
         # a. namespaces
         self.namespaces = ['par','sol','sim','ss','path','jac_hh']
         
+        # typically constant accross models 
+
         # b. other attributes (to save them)
-        self.other_attrs = ['grids_hh','pols_hh','inputs_hh','inputs_exo','inputs_endo','targets','varlist_hh','varlist','jac']
+        self.other_attrs = [
+            'grids_hh','pols_hh','inputs_hh','varlist_hh'
+            'inputs_exo','inputs_endo','targets','varlist','jac']
+
+        # used when copying and saving the model
 
         # household
         self.grids_hh = ['a'] # grids
@@ -54,10 +55,10 @@ class HANKModelClass(EconModelClass,GEModelClass):
             'w',
         ]
 
-        # c. savefolder
+        # c. folder to save in
         self.savefolder = 'saved'
         
-        # d. list not-floats for safe type inference
+        # d. list not-floats in namespaces for safe type inference
         self.not_floats = ['Nbeta']
 
     def setup(self):
@@ -76,27 +77,26 @@ class HANKModelClass(EconModelClass,GEModelClass):
 
         # c. income parameters
         par.rho_z = 0.95 # AR(1) parameter
-
         par.sigma_z = 0.30*(1.0-par.rho_z**2.0)**0.5 # std. of persistent shock
         par.Nz = 7 # number of productivity states
 
         # d. production and investment
         par.alpha = 0.36 # cobb-douglas
-        par.delta = 0.032 # depreciation
+        par.delta = np.nan # depreciation [determined in ss]
 
         # e. calibration
         par.r_ss_target = 0.01 # target for real interest rate
         par.w_ss_target = 1.0 # target for real wage
 
-        # h. grids         
+        # f. grids         
         par.a_max = 500.0 # maximum point in grid for a
         par.Na = 300 # number of grid points
 
-        # i. shocks
+        # g. shocks
         par.jump_Z = -0.01 # initial jump in %
-        par.rho_Z = 0.8
+        par.rho_Z = 0.8 # AR(1) coefficient
 
-        # j. misc.
+        # h. misc.
         par.transition_T = 500 # length of path        
         
         par.max_iter_solve = 50_000 # maximum number of iterations when solving
@@ -116,14 +116,5 @@ class HANKModelClass(EconModelClass,GEModelClass):
         par.beta_grid = np.zeros(par.Nbeta)
         
         # b. solution
-        sol_shape = (par.Nbeta,par.Nz,par.Na)
-        self.allocate_GE(sol_shape)
-
-    def evaluate_transition_path2(self,threads=1,use_jac_hh=False):
-        """ evaluate transition path """
-
-        with jit(self) as model:
-            evaluate_transition_path(
-                model.par,model.sol,model.sim,
-                model.ss,model.path,
-                model.jac_hh,threads=threads,use_jac_hh=use_jac_hh)  
+        sol_shape = (par.Nbeta,par.Nz,par.Na) # (Nfix,Nz,Nendo1)
+        self.allocate_GE(sol_shape) # should always be called here

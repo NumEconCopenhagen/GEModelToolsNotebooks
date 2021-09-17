@@ -2,8 +2,6 @@ import numpy as np
 from numba import njit
 from scipy.stats import norm
 
-# create grids
-
 from consav.grids import equilogspace
 from consav.markov import log_rouwenhorst
 
@@ -11,6 +9,15 @@ def create_grids(model):
     """ create grids """
 
     # note: only fills out already allocated arrays
+
+    # model specific: par.beta_grid
+    # always:
+    #   par.endo1_grid
+    #   par.z_grid_ss (par.Nz,) # grid values
+    #   par.z_trans_ss (par.Nz,par.Nz) # transition matrix
+    #   par.z_ergodic_ss (par.Nz,) # ergodic distribution
+    #   par.z_grid_path (par.transition,par.Nz) # grid along transition path
+    #   par.z_transition_path (par.transition,par.Nz) # transition matrix along transition path
 
     par = model.par
     ss = model.ss

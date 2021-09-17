@@ -164,7 +164,7 @@
 \begin_layout Title
 
 \series bold
-The GEModelTools for
+The GEModelTools Package for
 \begin_inset Newline newline
 \end_inset
 
@@ -188,12 +188,34 @@ status open
 
 
 \backslash
-lstinline{GEModelClass}
+lstinline{GEModelTools}
 \end_layout
 
 \end_inset
 
- Python-package for solving general equilibrium models.
+ package for solving general equilibrium models easily in Python.
+ To learn how to use the package follow these steps:
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+Read this document
+\end_layout
+
+\begin_layout Enumerate
+Install the package 
+\end_layout
+
+\begin_layout Enumerate
+Run the example notebooks
+\end_layout
+
+\begin_layout Enumerate
+Read the commented code for the example notebooks
+\end_layout
+
+\begin_layout Enumerate
+Implement your own model
 \begin_inset ERT
 status open
 
@@ -207,14 +229,107 @@ vspace{3mm}
 \end_inset
 
 
-\series bold
+\end_layout
 
-\begin_inset Newline newline
+\begin_layout Standard
+
+\series bold
+Structure:
+\end_layout
+
+\begin_layout Itemize
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+[]
+\end_layout
+
 \end_inset
 
+Section 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:Overview"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ gives an overview of the package and the required user inputs and available
+ methods
+\end_layout
+
+\begin_layout Itemize
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+[]
+\end_layout
+
+\end_inset
+
+Section 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:Solving-the-Aiyagari-model"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ go through a simple Aiyagari-model and presents the solution method used
+ in the package 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+[]
+\end_layout
+
+\end_inset
+
+Section 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:Additional-features"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ explains additional features
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+vspace{3mm}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\series bold
 Code:
 \series default
- 
+
 \begin_inset Newline newline
 \end_inset
 
@@ -231,7 +346,7 @@ literal "false"
 \begin_inset Newline newline
 \end_inset
 
-Examples: 
+Notebooks: 
 \begin_inset CommandInset href
 LatexCommand href
 name "github.com/JeppeDruedahl/GEModelToolsNotebooks"
@@ -240,15 +355,152 @@ literal "false"
 
 \end_inset
 
- 
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+vspace{3mm}
+\end_layout
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\series bold
+Requirements:
+\series default
+ Rely on 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{EconModel}
+\end_layout
+
+\end_inset
+
+ and 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{ConSav}
+\end_layout
+
+\end_inset
+
+.
+\begin_inset Newline newline
+\end_inset
+
+Packages: 
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset CommandInset href
+LatexCommand href
+name "github.com/NumEconCopenhagen/EconModel"
+target "https://github.com/NumEconCopenhagen/EconModel"
+literal "false"
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset CommandInset href
+LatexCommand href
+name "github.com/NumEconCopenhagen/ConsumptionSaving"
+target "https://github.com/NumEconCopenhagen/ConsumptionSaving"
+literal "false"
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+Notebooks: 
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset CommandInset href
+LatexCommand href
+name "github.com/NumEconCopenhagen/EconModelNotebooks"
+target "https://github.com/NumEconCopenhagen/EconModelNotebooks"
+literal "false"
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset CommandInset href
+LatexCommand href
+name "github.com/NumEconCopenhagen/ConsumptionSavingNotebooks"
+target "https://github.com/NumEconCopenhagen/ConsumptionSavingNotebooks"
+literal "false"
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+
+\series bold
+\begin_inset Newpage newpage
+\end_inset
+
+
 \end_layout
 
 \begin_layout Section
 Overview
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:Overview"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
-The 
+The central tool in 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{GEModelTools}
+\end_layout
+
+\end_inset
+
+ is the 
 \begin_inset ERT
 status open
 
@@ -261,7 +513,7 @@ lstinline{GEModelClass}
 
 \end_inset
 
- is an add-on to the basic 
+, which is an add-on to the basic 
 \begin_inset ERT
 status open
 
@@ -274,7 +526,7 @@ lstinline{EconModelClass}
 
 \end_inset
 
- (see 
+ whose functionality is explained 
 \begin_inset CommandInset href
 LatexCommand href
 name "here"
@@ -283,7 +535,58 @@ literal "false"
 
 \end_inset
 
-).
+.
+ An example of the setup is shown in Listing 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "lst:setup"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+.
+ The 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{.settings()}
+\end_layout
+
+\end_inset
+
+, 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{.setup()}
+\end_layout
+
+\end_inset
+
+ and 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{.allocate()}
+\end_layout
+
+\end_inset
+
+ methods are called automatically when the model is created.
 \end_layout
 
 \begin_layout Standard
@@ -296,6 +599,19 @@ status open
 
 \backslash
 lstinline{model}
+\end_layout
+
+\end_inset
+
+ of the 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{GEModelClass}
 \end_layout
 
 \end_inset
@@ -679,7 +995,7 @@ lstinline{sol.path_VARNAME}
 \begin_inset Newline newline
 \end_inset
 
-Extra: 
+Extra I: 
 \begin_inset ERT
 status open
 
@@ -705,7 +1021,37 @@ lstinline{w}
 
 \end_inset
 
- are used for saving indices and weights for use in simulation.
+ are used for saving simulation indices and weights.
+\begin_inset Newline newline
+\end_inset
+
+Extra II: 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{path_i}
+\end_layout
+
+\end_inset
+
+ and 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{path_w}
+\end_layout
+
+\end_inset
+
+ are used for saving simulation indices and weights.
 \end_layout
 
 \begin_layout Enumerate
@@ -1038,7 +1384,11 @@ lstinline{.varlist}
 \end_layout
 
 \begin_layout Standard
-And in 
+The user must choose the following 
+\series bold
+settings
+\series default
+ in 
 \begin_inset ERT
 status open
 
@@ -1051,11 +1401,7 @@ lstinline{.setup()}
 
 \end_inset
 
- choose the following 
-\series bold
-settings
-\series default
-:
+ :
 \end_layout
 
 \begin_layout Enumerate
@@ -1373,7 +1719,7 @@ status open
 
 
 \backslash
-lstinline{tol_broyden}
+lstinline{par.tol_broyden}
 \end_layout
 
 \end_inset
@@ -1382,7 +1728,7 @@ lstinline{tol_broyden}
 \end_layout
 
 \begin_layout Standard
-In in 
+In the 
 \begin_inset ERT
 status open
 
@@ -1395,7 +1741,7 @@ lstinline{.allocate()}
 
 \end_inset
 
- the internal 
+ method the internal 
 \series bold
 method 
 \series default
@@ -1804,7 +2150,11 @@ lstinline{path.VARNAME}
 
 \end_inset
 
-, 
+,
+\begin_inset Newline newline
+\end_inset
+
+
 \begin_inset ERT
 status open
 
@@ -1812,7 +2162,24 @@ status open
 
 
 \backslash
-lstinline{shape=(par.transition_T,)}
+lstinline{shape=(par.transition_T,}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{len(inputs_endo)}$
+\backslash
+times$
+\backslash
+lstinline{par.transtion_T})
 \end_layout
 
 \end_inset
@@ -1835,6 +2202,127 @@ lstinline{ss.VARNAME}
 \end_inset
 
 , scalar
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+
+\series bold
+Note on use:
+\end_layout
+
+\begin_layout Enumerate
+Normally: 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{path.VARNAME[0,t]}
+\end_layout
+
+\end_inset
+
+ is the value in period 
+\begin_inset Formula $t$
+\end_inset
+
+.
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{path.VARNAME[i,t]}
+\end_layout
+
+\end_inset
+
+ for 
+\begin_inset Formula $i>0$
+\end_inset
+
+ is 
+\emph on
+undefined behavior
+\emph default
+.
+\end_layout
+
+\begin_layout Enumerate
+In 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{.compute_jac()}
+\end_layout
+
+\end_inset
+
+: 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{path.VARNAME[i}$
+\backslash
+times$
+\backslash
+lstinline{par.transition_T+t,t]}
+\end_layout
+
+\end_inset
+
+ is the value in period 
+\begin_inset Formula $t$
+\end_inset
+
+ when shocking 
+\begin_inset Formula $i$
+\end_inset
+
+ in period 
+\begin_inset Formula $t$
+\end_inset
+
+ 
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+Value in period 
+\begin_inset Formula $t$
+\end_inset
+
+: 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{path.VARNAME}[0,t]
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Enumerate
@@ -1879,7 +2367,7 @@ status open
 
 
 \backslash
-lstinline{OUTPUTNAME.upper()_INPUTNAME}
+lstinline{jac_hh.OUTPUTNAME.upper()_INPUTNAME}
 \end_layout
 
 \end_inset
@@ -1905,7 +2393,7 @@ lstinline{shape=(par.transition_T,par.transition_T)}
 \end_layout
 
 \begin_layout Standard
-The user must also provide the following 
+Finally, the user must also provide the following 
 \series bold
 functions
 \series default
@@ -1951,8 +2439,10 @@ lstinline{create_grids(model)}
 
 \end_inset
 
- which at a minimum creates the grids for the endogenous variables and the
- grids and transition matrices for the exogenous variable.
+, which at a minimum creates the grids for the endogenous variables and
+ the grids and transition matrices for the exogenous variable.
+ This is called each time we solve for the steady state of the household
+ problem.
 \end_layout
 
 \begin_layout Enumerate
@@ -2021,7 +2511,7 @@ lstinline{solve_hh_ss(par,sol,ss)}
 
 \end_inset
 
-, result in 
+, find 
 \begin_inset ERT
 status open
 
@@ -2030,6 +2520,19 @@ status open
 
 \backslash
 lstinline{sol.VARNAME}
+\end_layout
+
+\end_inset
+
+ for all variables in 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{.outputs_hh}
 \end_layout
 
 \end_inset
@@ -2051,7 +2554,7 @@ lstinline{solve_hh_path(par,sol,path)}
 
 \end_inset
 
-, result in 
+, find 
 \begin_inset ERT
 status open
 
@@ -2060,6 +2563,19 @@ status open
 
 \backslash
 lstinline{sol.path_VARNAME}
+\end_layout
+
+\end_inset
+
+ for all variables in 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{.outputs_hh}
 \end_layout
 
 \end_inset
@@ -2160,12 +2676,16 @@ status open
 
 
 \backslash
-lstinline{evaluate_transition_path(par,sol,sim,ss,path,jac_hh,use_jac_hh)}
+lstinline{evaluate_path(par,sol,sim,ss,path,jac_hh,threads,use_jac_hh)}
 \end_layout
 
 \end_inset
 
-, where 
+, where
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
 \begin_inset ERT
 status open
 
@@ -2179,9 +2699,99 @@ lstinline{use_jac_hh}
 \end_inset
 
  is a boolean for whether or not to use the household Jacobians when evaluating
- household behavior (used when calculating the full Jacobian).
+ household behavior
+\begin_inset Newline newline
+\end_inset
+
+(used when calculating the full Jacobian).
 \end_layout
 
+\begin_layout Enumerate
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{threads}
+\end_layout
+
+\end_inset
+
+ is 
+\begin_inset Formula $1$
+\end_inset
+
+ or 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{len(inputs_endo)}$
+\backslash
+times$
+\backslash
+lstinline{par.transtion_T}
+\end_layout
+
+\end_inset
+
+, where the latter is used to evaluate the path in parallel for all one
+ step changes.
+\end_layout
+
+\begin_layout Enumerate
+If 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{threads}
+\end_layout
+
+\end_inset
+
+ 
+\begin_inset Formula $>1$
+\end_inset
+
+ then 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{use_jac_hh}
+\end_layout
+
+\end_inset
+
+ should be 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{True}
+\end_layout
+
+\end_inset
+
+.
+\end_layout
+
+\end_deeper
 \begin_layout Standard
 The following internal methods are now available:
 \end_layout
@@ -2213,6 +2823,10 @@ lstinline{.solve_ss()}
 \end_inset
 
 : Solve household problem at steady state, 
+\begin_inset Newline newline
+\end_inset
+
+find 
 \begin_inset ERT
 status open
 
@@ -2256,6 +2870,10 @@ lstinline{.simulate_ss()}
 \end_inset
 
 : Simulate household problem at steady state, 
+\begin_inset Newline newline
+\end_inset
+
+find 
 \begin_inset ERT
 status open
 
@@ -2301,7 +2919,7 @@ lstinline{.solve_path()}
 \begin_inset Newline newline
 \end_inset
 
-
+find 
 \begin_inset ERT
 status open
 
@@ -2347,7 +2965,7 @@ lstinline{.simulate_path()}
 \begin_inset Newline newline
 \end_inset
 
-
+find 
 \begin_inset ERT
 status open
 
@@ -2389,7 +3007,11 @@ lstinline{.compute_jac_hh()}
 
 \end_inset
 
-: Compute the Jacobians of household problem, 
+: Compute the Jacobians of household problem,
+\begin_inset Newline newline
+\end_inset
+
+find 
 \begin_inset ERT
 status open
 
@@ -2431,7 +3053,11 @@ lstinline{.compute_jac()}
 
 \end_inset
 
-: Compute the full Jacobian, 
+: Compute the full Jacobian,
+\begin_inset Newline newline
+\end_inset
+
+find 
 \begin_inset ERT
 status open
 
@@ -2494,14 +3120,53 @@ lstinline{path}
 \end_layout
 
 \begin_layout Standard
-\begin_inset Newpage newpage
+To solve and simulate household behavior along the transition path in a
+ jitted function use:
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{lstlisting}[language=Python]
+\end_layout
+
+\begin_layout Plain Layout
+
+household_problem.solve_hh_path(par,sol,path)
+\end_layout
+
+\begin_layout Plain Layout
+
+GEModelTools.prepare_simulation_1d_1d(par,sol,sol.path_endo1,par.endo1_grid)
+\end_layout
+
+\begin_layout Plain Layout
+
+GEModelTools.simulate_hh_path(par,sol,sim)
+\end_layout
+
+\begin_layout Plain Layout
+
+
+\backslash
+end{lstlisting}
+\end_layout
+
 \end_inset
 
 
 \end_layout
 
-\begin_layout Section
-Example
+\begin_layout Standard
+\begin_inset Newpage newpage
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -2549,7 +3214,7 @@ from GEModelTools import GEModelClass
 
 \begin_layout Plain Layout
 
-class HANKModelClass(EconModelClass,GEModelClass):
+class MyModelClass(EconModelClass,GEModelClass):
 \end_layout
 
 \begin_layout Plain Layout
@@ -2710,16 +3375,23 @@ end{lstlisting}
 \end_layout
 
 \begin_layout Section
-Solution method
+Solving the Aiyagari-model
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:Solving-the-Aiyagari-model"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
 In this section, we explain the non-linear sequence space solution method
- implemented in the package for a simple model.
+ implemented in the package for a simple Aiygari-model.
 \end_layout
 
 \begin_layout Subsection
-Model
+Aiyagari-model
 \end_layout
 
 \begin_layout Paragraph*
@@ -2780,7 +3452,7 @@ Firms rent capital,
 \begin_inset Formula $L_{t}$
 \end_inset
 
- to produce goods, 
+, to produce goods, 
 \begin_inset Formula 
 \begin{equation}
 Y_{t}=Z_{t}K_{t-1}^{\alpha}L_{t}^{1-\alpha},\label{eq:Y}
@@ -2844,9 +3516,9 @@ Firms maximize profits implying the standard pricing equations
 
 \begin_inset Formula 
 \begin{align}
-r_{t}^{k} & =\alpha Z_{t}\left(K_{t-1}/L_{t}\right)^{\text{\alpha-1}}\equiv r^{k}(Z_{t},K_{t-1},L_{t})\label{eq:rk}\\
+r_{t}^{k} & =\alpha Z_{t}\left(K_{t-1}/L_{t}\right)^{\text{\alpha-1}}\equiv r^{k}(Z_{t},K_{t-1},L_{t}).\label{eq:rk}\\
 w_{t} & =(1-\alpha)Z_{t}(K_{t-1}/L_{t})^{\alpha}\label{eq:w}\\
- & =(1-\alpha)Z_{t}\left(\frac{r_{t}^{k}}{\alpha Z_{t}}\right)^{\frac{\alpha}{\alpha-1}}\equiv w(r_{t}^{k},Z_{t})\nonumber 
+ & =(1-\alpha)Z_{t}\left(\frac{r_{t}^{k}}{\alpha Z_{t}}\right)^{\frac{\alpha}{\alpha-1}}\equiv w(r_{t}^{k},Z_{t}).\nonumber 
 \end{align}
 
 \end_inset
@@ -2911,7 +3583,7 @@ The FOC is
 
  can be found using e.g.
  the EGM.
- These solutions live on the discretized grids, 
+ These optimal policy functions live on the discretized grids, 
 \begin_inset Formula $z_{t}\in\{z^{0},\dots,z^{\#_{z}-1}\}$
 \end_inset
 
@@ -2920,6 +3592,11 @@ The FOC is
 \end_inset
 
 .
+ Labor productivity, 
+\begin_inset Formula $z_{t}$
+\end_inset
+
+, is discretized with the Rouwenhorst-method.
  In 
 \begin_inset ERT
 status open
@@ -2933,7 +3610,7 @@ lstinline{grids.py}
 
 \end_inset
 
- the user must supply the function 
+ the user must provide the function 
 \begin_inset ERT
 status open
 
@@ -2946,7 +3623,7 @@ lstinline{create_grids(model)}
 
 \end_inset
 
- to setup these grids.
+ to setup the grids and transition matrices.
 \end_layout
 
 \begin_layout Standard
@@ -3099,7 +3776,7 @@ Let
  The supply of capital then is
 \begin_inset Formula 
 \begin{equation}
-\mathcal{K}_{t}=\int a_{t}^{\ast}(a_{t-1},z_{t})dD_{t}=\int a_{t}dD_{t+1}\label{eq:K_supply}
+\mathcal{K}_{t}=\int a_{t}^{\ast}(a_{t-1},z_{t})dD_{t}=\int a_{t}dD_{t+1}.\label{eq:K_supply}
 \end{equation}
 
 \end_inset
@@ -3160,7 +3837,7 @@ status open
 
 
 \backslash
-lstinline{.simulate_ss()}
+lstinline{.simulate_hh_ss()}
 \end_layout
 
 \end_inset
@@ -3173,7 +3850,35 @@ status open
 
 
 \backslash
-lstinline{.simulate_path()}
+lstinline{.simulate_hh_path()}
+\end_layout
+
+\end_inset
+
+.
+ The indices and weights required for simulation is calculated automatically
+ when calling the methods 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{.solve_hh_ss()}
+\end_layout
+
+\end_inset
+
+ and 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{.solve_hh_path()}
 \end_layout
 
 \end_inset
@@ -3452,7 +4157,7 @@ lstinline{find_ss(model,do_print)}
 \begin_inset Formula $\delta_{ss}$
 \end_inset
 
- from the implied household problem.
+ from the implied household behavior.
 \end_layout
 
 \begin_layout Subsection
@@ -3679,16 +4384,12 @@ status open
 
 
 \backslash
-lstinline{evaluate_transition_path.py}
+lstinline{transition_path.py}
 \end_layout
 
 \end_inset
 
- the user must supply the jitted function
-\begin_inset Newline newline
-\end_inset
-
-
+ the user must supply the jitted function 
 \begin_inset ERT
 status open
 
@@ -3696,7 +4397,7 @@ status open
 
 
 \backslash
-lstinline{evaluate_transition_path_distribution(...)}
+lstinline{evaluate_path(...)}
 \end_layout
 
 \end_inset
@@ -3721,9 +4422,9 @@ Defining
 \series bold
 
 \begin_inset Formula 
-\[
-\boldsymbol{H}(\boldsymbol{K},\boldsymbol{Z})=\boldsymbol{0}
-\]
+\begin{equation}
+\boldsymbol{H}(\boldsymbol{K},\boldsymbol{Z})=\boldsymbol{0}\label{eq:H_vec}
+\end{equation}
 
 \end_inset
 
@@ -3737,9 +4438,9 @@ Total differentiation
 \series default
  implies
 \begin_inset Formula 
-\begin{align*}
-\boldsymbol{H}_{\boldsymbol{K}}d\boldsymbol{K}+\boldsymbol{H}_{\boldsymbol{Z}}d\boldsymbol{Z}=0 & \Leftrightarrow d\boldsymbol{K}=-\boldsymbol{H}_{\boldsymbol{K}}^{-1}\boldsymbol{H}_{\boldsymbol{Z}}d\boldsymbol{Z}
-\end{align*}
+\begin{align}
+\boldsymbol{H}_{\boldsymbol{K}}d\boldsymbol{K}+\boldsymbol{H}_{\boldsymbol{Z}}d\boldsymbol{Z}=0 & \Leftrightarrow d\boldsymbol{K}=-\boldsymbol{H}_{\boldsymbol{K}}^{-1}\boldsymbol{H}_{\boldsymbol{Z}}d\boldsymbol{Z}\label{eq:total_diff}
+\end{align}
 
 \end_inset
 
@@ -3764,10 +4465,10 @@ and
 
 \begin_layout Standard
 \begin_inset Formula 
-\begin{align*}
-\boldsymbol{H}_{\boldsymbol{K}} & =\mathcal{J}^{\mathcal{K},r}\mathcal{J}^{r,K}+\mathcal{J}^{\mathcal{K},w}\mathcal{J}^{w,K}-\boldsymbol{I}\\
-\boldsymbol{H}_{Z} & =\mathcal{J}^{\mathcal{K},r}\mathcal{J}^{r,Z}+\mathcal{J}^{\mathcal{K},w}\mathcal{J}^{w,Z}
-\end{align*}
+\begin{align}
+\boldsymbol{H}_{\boldsymbol{K}} & =\mathcal{J}^{\mathcal{K},r}\mathcal{J}^{r,K}+\mathcal{J}^{\mathcal{K},w}\mathcal{J}^{w,K}-\boldsymbol{I}\label{eq:H_K}\\
+\boldsymbol{H}_{Z} & =\mathcal{J}^{\mathcal{K},r}\mathcal{J}^{r,Z}+\mathcal{J}^{\mathcal{K},w}\mathcal{J}^{w,Z}\label{eq:H_Z}
+\end{align}
 
 \end_inset
 
@@ -3800,7 +4501,12 @@ the full Jacobian
 \end_inset
 
 , is calculated, the equation system can be solved with a quasi-Newton equation
- solver such as the Broyden-solver.
+ solver such as the Broyden-solver for an arbitrary path of technology,
+ 
+\begin_inset Formula $Z_{t}$
+\end_inset
+
+, returning to steady state.
  This is provided in the package with the method 
 \begin_inset ERT
 status open
@@ -3835,15 +4541,15 @@ lstinline{.compute_jac_hh()}
 
 \end_inset
 
-: Compute the Jacobians of household problem (
+: Compute the Jacobians of household problem, namely 
 \begin_inset Formula $\mathcal{J}^{\mathcal{K},r}$
 \end_inset
 
-, 
+ and 
 \begin_inset Formula $\mathcal{J}^{\mathcal{K},w}$
 \end_inset
 
-) using the fast fast news algorithm (see below).
+ using the fast fast news algorithm (see below).
 \end_layout
 
 \begin_layout Enumerate
@@ -3873,7 +4579,19 @@ lstinline{.compute_jac()}
 \end_inset
 
 : Compute the full Jacobian using simple numerical differentiation relying
- on the Jacobians of the household problem.
+ on the Jacobians of the household problem through the chain-rule, i.e.
+ eq.
+ 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:H_K"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Subsection
@@ -4244,6 +4962,165 @@ Jacobian,
 \end_inset
 
 
+\end_layout
+
+\begin_layout Section
+Additional features
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:Additional-features"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+vspace{-1mm}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{.check_determinancy()}
+\end_layout
+
+\end_inset
+
+:
+\begin_inset Newline newline
+\end_inset
+
+Check whether the solution is determinate.
+ 
+\emph on
+Work-in-progress.
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+vspace{-1mm}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{.show_IRFS((...)}
+\end_layout
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+Show IRFs.
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+vspace{-1mm}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{.compare_IRFS(...)}
+\end_layout
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+Compare IRFs across models
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+vspace{-1mm}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{.print_unpack_varlist(...)}
+\end_layout
+
+\end_inset
+
+:
+\begin_inset Newline newline
+\end_inset
+
+Print unpacking of all variables for use in 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{.evaluate_path(...)}
+\end_layout
+
+\end_inset
+
+ to screen.
 \end_layout
 
 \end_body
