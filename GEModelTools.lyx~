@@ -5635,7 +5635,7 @@ status open
 
 
 \backslash
-lstinline{par.rho_VARNAME}$
+lstinline{par.jump_VARNAME}$
 \backslash
 downarrow$
 \end_layout

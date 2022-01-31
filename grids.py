@@ -17,7 +17,7 @@ def create_grids(model):
     #   par.z_trans_ss (par.Nz,par.Nz) # transition matrix
     #   par.z_ergodic_ss (par.Nz,) # ergodic distribution
     #   par.z_grid_path (par.transition,par.Nz) # grid along transition path
-    #   par.z_transition_path (par.transition,par.Nz) # transition matrix along transition path
+    #   par.z_transition_path (par.transition,par.Nz) # transition matrix along transition path for t to t+1
 
     par = model.par
     ss = model.ss
@@ -29,7 +29,7 @@ def create_grids(model):
     par.a_grid[:] = equilogspace(0.0,ss.w*par.a_max,par.Na)
     
     # c. z - steady state
-    par.z_grid_ss[:],par.z_trans_ss[:,:],par.z_ergodic_ss[:],_,_ = log_rouwenhorst(par.rho_z,par.sigma_z,par.Nz)
+    par.z_grid_ss[:],par.z_trans_ss[:,:],par.z_ergodic_ss[:],_,_ = log_rouwenhorst(par.rho_z,par.sigma_psi,par.Nz)
 
     # d. z - path
     for t in range(par.transition_T):

@@ -89,21 +89,13 @@ def evaluate_path(par,sol,sim,ss,path,jac_hh,threads=1,use_jac_hh=False):
         
         else:
             
-            solve_hh_path(par,sol,path)
+            solve_hh_path(par,sol,ss,path)
             prepare_simulation_1d_1d(par,sol,sol.path_a,par.a_grid)
             simulate_hh_path(par,sol,sim)
         
             for t in range(par.transition_T):
-
-                # i. distribution                
-                if t == 0: # steady state
-                    D_lag = sim.D # steady state distribution
-                else:
-                    D_lag = sim.path_D[t-1]
-
-                # ii. aggregate
-                A_hh[t] = np.sum(sol.path_a[t]*D_lag) # path_a[t] is policy for a in period t
-                C_hh[t] = np.sum(sol.path_c[t]*D_lag) # path_c[t] is policy for c in period t
+                A_hh[t] = np.sum(sol.path_a[t]*sim.path_D[t])
+                C_hh[t] = np.sum(sol.path_c[t]*sim.path_D[t])
 
         ######################
         # III. check targets #

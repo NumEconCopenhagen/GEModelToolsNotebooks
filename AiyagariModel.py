@@ -42,19 +42,19 @@ class AiygariModelClass(EconModelClass,GEModelClass):
         self.targets = ['clearing_A'] # targets
         
         self.varlist = [ # all variables
-            'Z',
-            'Y',
             'A_hh',
             'A',
-            'K',
-            'L',
             'C_hh',
             'C',
             'clearing_A',
             'clearing_C',
-            'rk',
+            'K',
+            'L',
             'r',
+            'rk',
             'w',
+            'Y',
+            'Z',
         ]
 
         # c. folder to save in
@@ -79,7 +79,7 @@ class AiygariModelClass(EconModelClass,GEModelClass):
 
         # c. income parameters
         par.rho_z = 0.95 # AR(1) parameter
-        par.sigma_z = 0.30*(1.0-par.rho_z**2.0)**0.5 # std. of persistent shock
+        par.sigma_psi = 0.30*(1.0-par.rho_z**2.0)**0.5 # std. of persistent shock
         par.Nz = 7 # number of productivity states
 
         # d. production and investment
