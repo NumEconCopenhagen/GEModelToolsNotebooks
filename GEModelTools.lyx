@@ -4740,6 +4740,19 @@ where generically
 
 \end_inset
 
+We also refer to 
+\begin_inset Formula $\boldsymbol{G}=-\boldsymbol{H}_{\boldsymbol{K}}^{-1}\boldsymbol{H}_{\boldsymbol{Z}}$
+\end_inset
+
+ as the solution matrix, and write the generic linearized response of any
+ variable as
+\begin_inset Formula 
+\begin{align}
+d\boldsymbol{Y} & =\mathcal{J}^{Y,K}\boldsymbol{G}d\boldsymbol{Z}+\mathcal{J}^{Y,Z}d\boldsymbol{Z}\label{eq:linearized_path}
+\end{align}
+
+\end_inset
+
 
 \end_layout
 
@@ -4756,9 +4769,9 @@ the full Jacobian
 \begin_inset Quotes erd
 \end_inset
 
-, is calculated, the equation system can be solved with a quasi-Newton equation
- solver such as the Broyden-solver for an arbitrary path of technology,
- 
+, is calculated, the full non-linear equation system can be solved with
+ a quasi-Newton equation solver such as the Broyden-solver for an arbitrary
+ path of technology, 
 \begin_inset Formula $Z_{t}$
 \end_inset
 
@@ -5501,6 +5514,10 @@ Computation of covariance-matrices
 
 \begin_layout Enumerate
 Efficient computation of multiple household Jacobians
+\end_layout
+
+\begin_layout Enumerate
+Use Jacobians block-by-block
 \end_layout
 
 \begin_layout Enumerate

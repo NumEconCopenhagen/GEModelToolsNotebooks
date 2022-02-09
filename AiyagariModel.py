@@ -107,7 +107,7 @@ class AiygariModelClass(EconModelClass,GEModelClass):
         
         par.tol_solve = 1e-10 # tolerance when solving
         par.tol_simulate = 1e-10 # tolerance when simulating
-        par.tol_broyden = 1e-8 # tolerance when solving eq. system
+        par.tol_broyden = 1e-10 # tolerance when solving eq. system
         
     def allocate(self):
         """ allocate model """

@@ -4740,6 +4740,19 @@ where generically
 
 \end_inset
 
+We also refer to 
+\begin_inset Formula $\boldsymbol{G}=-\boldsymbol{H}_{\boldsymbol{K}}^{-1}\boldsymbol{H}_{\boldsymbol{Z}}$
+\end_inset
+
+ as the solution matrix, and write the generic linearized response of any
+ variable as
+\begin_inset Formula 
+\begin{align}
+d\boldsymbol{Y} & =\mathcal{J}^{Y,K}\boldsymbol{G}d\boldsymbol{Z}+\mathcal{J}^{Y,Z}d\boldsymbol{Z}\label{eq:linearized_path}
+\end{align}
+
+\end_inset
+
 
 \end_layout
 
@@ -5504,6 +5517,10 @@ Efficient computation of multiple household Jacobians
 \end_layout
 
 \begin_layout Enumerate
+Use Jacobians block-by-block
+\end_layout
+
+\begin_layout Enumerate
 Interface to fast C++ code
 \end_layout
 
@@ -5635,7 +5652,7 @@ status open
 
 
 \backslash
-lstinline{par.jump_VARNAME}$
+lstinline{par.rho_VARNAME}$
 \backslash
 downarrow$
 \end_layout
