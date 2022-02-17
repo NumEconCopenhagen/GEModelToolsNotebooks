@@ -60,9 +60,6 @@ class AiygariModelClass(EconModelClass,GEModelClass):
         # c. folder to save in
         self.savefolder = 'saved'
         
-        # d. list not-floats in namespaces for safe type inference
-        self.not_floats = ['Nbeta']
-
     def setup(self):
         """ set baseline parameters """
 
