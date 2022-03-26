@@ -86,6 +86,9 @@
 \setlist[itemize]{leftmargin=0.5cm}
 \end_preamble
 \use_default_options true
+\begin_modules
+theorems-ams
+\end_modules
 \maintain_unincluded_children false
 \language english
 \language_package default
@@ -147,7 +150,7 @@
 \defskip smallskip
 \is_math_indent 0
 \math_numbering_side default
-\quotes_style english
+\quotes_style danish
 \dynamic_quotes 0
 \papercolumns 1
 \papersides 1
@@ -164,7 +167,24 @@
 \begin_layout Title
 
 \series bold
-The GEModelTools Package for
+The 
+\series default
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{GEModelTools}
+\end_layout
+
+\end_inset
+
+
+\series bold
+ Package for
 \begin_inset Newline newline
 \end_inset
 
@@ -205,9 +225,8 @@ lstinline{GEModelTools}
 
 \end_inset
 
- package for solving general equilibrium models easily in Python.
- The package is specifically designed for finding the non-linear transition
- path to a MIT-shock.
+ package for solving general equilibrium models easily in Python using the
+ sequence-space method.
 \begin_inset ERT
 status open
 
@@ -361,7 +380,35 @@ status open
 Section 
 \begin_inset CommandInset ref
 LatexCommand ref
-reference "sec:Overview"
+reference "sec:Model-Class"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+
+\series default
+ describes the class of models considered
+\end_layout
+
+\begin_layout Itemize
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+[]
+\end_layout
+
+\end_inset
+
+
+\series bold
+Section 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:GEModelClass"
 plural "false"
 caps "false"
 noprefix "false"
@@ -389,7 +436,7 @@ status open
 Section 
 \begin_inset CommandInset ref
 LatexCommand ref
-reference "sec:Solving-the-Aiyagari-model"
+reference "sec:Efficient-Computation-of"
 plural "false"
 caps "false"
 noprefix "false"
@@ -398,7 +445,7 @@ noprefix "false"
 
 
 \series default
- shows an example with a simple Aiyagari-model
+ explains how to efficiently compute the household Jacobian
 \end_layout
 
 \begin_layout Itemize
@@ -426,7 +473,7 @@ noprefix "false"
 
 
 \series default
- explains additional (and upcoming) features
+ explains additional features
 \end_layout
 
 \begin_layout Itemize
@@ -684,10 +731,1338 @@ addtocounter{page}{-1}
 \end_layout
 
 \begin_layout Section
-Overview
+Model Class
 \begin_inset CommandInset label
 LatexCommand label
-name "sec:Overview"
+name "sec:Model-Class"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In this section, we describe the class of general equilibrium models with
+ heterogeneous agents the package is designed solve, and explain how to
+ use the 
+\emph on
+sequence space method
+\emph default
+ to solve them.
+ The starting point is a model with 
+\emph on
+perfect foresight
+\emph default
+, where the 
+\emph on
+non-linear transition path
+\emph default
+ can be found given the initial distribution of agents and a sequence of
+ exogenous shocks.
+ Next, we show how to solve for the 
+\emph on
+linearized impulse responses.
+ 
+\emph default
+These impulse responses are equal to those from a model with 
+\emph on
+aggregate risk
+\emph default
+ once it is linearized and certainty equivalence holds.
+ This implies that the sequence space method can be used to simulate time-series
+ data for aggregate variables and the distribution of agents.
+ Throughout this section a simple Aiygari-model is used as an example.
+\end_layout
+
+\begin_layout Subsection
+Model Class
+\end_layout
+
+\begin_layout Standard
+We consider economies where:
+\end_layout
+
+\begin_layout Enumerate
+Time is discrete (index 
+\begin_inset Formula $t$
+\end_inset
+
+).
+\end_layout
+
+\begin_layout Enumerate
+There is a continuum of households (index 
+\begin_inset Formula $i$
+\end_inset
+
+, when needed).
+\end_layout
+
+\begin_layout Enumerate
+There is 
+\emph on
+perfect foresight
+\emph default
+ wrt.
+ all aggregate variables, 
+\begin_inset Formula $\boldsymbol{X}$
+\end_inset
+
+, indexed by 
+\begin_inset Formula $\mathcal{N}$
+\end_inset
+
+,
+\begin_inset Formula 
+\[
+\boldsymbol{X}=\{\boldsymbol{X}_{t}\}_{t=0}^{\infty}=\{\boldsymbol{X}^{j}\}_{j\in\mathcal{N}}=\{\boldsymbol{X}_{t}^{j}\}_{t=0,j\in\mathcal{N}}^{\infty},
+\]
+
+\end_inset
+
+where 
+\begin_inset Formula $\mathcal{N}=\mathcal{Z}\cup\mathcal{U}\cup\mathcal{O}$
+\end_inset
+
+, and 
+\begin_inset Formula $\mathcal{Z}$
+\end_inset
+
+ are 
+\emph on
+exogenous shocks, 
+\begin_inset Formula $\mathcal{U}$
+\end_inset
+
+ 
+\emph default
+are
+\emph on
+ unknowns
+\emph default
+, 
+\begin_inset Formula $\mathcal{O}$
+\end_inset
+
+ are outputs, and 
+\begin_inset Formula $\mathcal{H\in\mathcal{O}}$
+\end_inset
+
+ are 
+\emph on
+targets.
+\end_layout
+
+\begin_layout Enumerate
+The model structure is described in terms of a set of 
+\emph on
+blocks 
+\emph default
+indexed by 
+\begin_inset Formula $\mathcal{B}$
+\end_inset
+
+, where each block has inputs, 
+\begin_inset Formula $\mathcal{I}_{b}\subset\mathcal{N}$
+\end_inset
+
+, and outputs, 
+\begin_inset Formula $\mathcal{O}_{b}\subset\mathcal{O}$
+\end_inset
+
+, and there exists functions 
+\begin_inset Formula $h^{o}(\{\boldsymbol{X}^{i}\}_{i\in\mathcal{I}_{b}})$
+\end_inset
+
+ for all 
+\begin_inset Formula $o\in\mathcal{O}_{b}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Enumerate
+The blocks are 
+\emph on
+ordered
+\emph default
+ such that (i) each output is 
+\emph on
+unique
+\emph default
+ to a block, (ii) the first block only have shocks and unknowns as inputs,
+ and (iii) later blocks only additionally take outputs of previous blocks
+ as inputs.
+ This implies the blocks can be structured as a 
+\emph on
+directed acyclical graph
+\emph default
+ (DAG).
+\end_layout
+
+\begin_layout Enumerate
+The number of targets are equal to the number of unknowns, and an 
+\emph on
+equilibrium
+\emph default
+ implies 
+\begin_inset Formula $\boldsymbol{X}^{o}=0$
+\end_inset
+
+ for all 
+\begin_inset Formula $o\in\mathcal{H}$
+\end_inset
+
+.
+ Equivalently, the model can be summarized by an 
+\emph on
+target equation system
+\emph default
+ from the unknowns and shocks to the targets,
+\begin_inset Formula 
+\begin{equation}
+\boldsymbol{H(U,Z)=0},\label{eq:H}
+\end{equation}
+
+\end_inset
+
+and an 
+\emph on
+auxiliary model equation
+\emph default
+ to infer all variables 
+\begin_inset Formula 
+\begin{equation}
+\boldsymbol{X=M(U,Z).}\label{eq:M}
+\end{equation}
+
+\end_inset
+
+A 
+\emph on
+steady state
+\emph default
+ satisfy
+\begin_inset Formula 
+\[
+\boldsymbol{H(\boldsymbol{U}_{ss},\boldsymbol{Z}_{ss})}=0\text{ and \boldsymbol{X}_{ss}=\boldsymbol{M(}\boldsymbol{U_{ss}}\boldsymbol{,}\boldsymbol{Z}_{ss}\boldsymbol{)}.}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+The 
+\emph on
+discretized household block
+\emph default
+ can be written recursively as
+\begin_inset Formula 
+\begin{align}
+\boldsymbol{v}_{t} & =v(\boldsymbol{v}_{t+1},\boldsymbol{X}_{t}^{hh})\label{eq:v_general}\\
+\boldsymbol{a}_{t}^{\ast} & =a^{\ast}(\boldsymbol{v}_{t+1},\boldsymbol{X}_{t}^{hh})\label{eq:a_general}\\
+\boldsymbol{D}_{t} & =\Pi(\boldsymbol{X}_{t}^{hh})^{\prime}\underline{\boldsymbol{D}}_{t}\label{eq:D_exo_general}\\
+\boldsymbol{Y}_{t}^{hh} & =\boldsymbol{y}(\boldsymbol{v}_{t+1},\boldsymbol{X}_{t}^{hh})^{\prime}\boldsymbol{D}_{t}\label{eq:Y_general}\\
+\boldsymbol{\underline{\boldsymbol{D}}}_{t+1} & =\tilde{\Lambda}(\boldsymbol{v}_{t+1},\boldsymbol{X}_{t}^{hh})^{\text{\prime}}\boldsymbol{D}_{t}\label{eq:D_endo_general}\\
+ & \boldsymbol{D}_{0}\text{ is given}\nonumber \\
+ & \boldsymbol{X}_{t}^{hh}=\{\boldsymbol{X}_{t}^{i}\}_{i\in\mathcal{I}_{hh}}\nonumber \\
+ & \boldsymbol{Y}_{t}^{hh}=\{\boldsymbol{X}_{t}^{o}\}_{o\in\mathcal{O}_{hh}},\nonumber 
+\end{align}
+
+\end_inset
+
+where 
+\begin_inset Formula $\boldsymbol{v}_{t}$
+\end_inset
+
+ and 
+\begin_inset Formula $a_{t}^{\star}$
+\end_inset
+
+ are the value and policy functions over some grid of the idiosyncratic
+ states, 
+\begin_inset Formula $\boldsymbol{D}_{t}$
+\end_inset
+
+ is the distribution over the idiosyncratic states in terms of the probability
+ mass at each grid point with 
+\emph on
+endogenous
+\emph default
+ transition matrix 
+\begin_inset Formula $\tilde{\Lambda}(\boldsymbol{v}_{t+1},\boldsymbol{X}_{t}^{hh})$
+\end_inset
+
+ and 
+\emph on
+exogenous
+\emph default
+ transition matrix 
+\begin_inset Formula $\Pi(\boldsymbol{X}_{t}^{hh})$
+\end_inset
+
+, 
+\begin_inset Formula $\boldsymbol{Y}_{t}$
+\end_inset
+
+ is aggregated outputs with 
+\begin_inset Formula $y(\boldsymbol{v}_{t+1},\boldsymbol{X}_{t})$
+\end_inset
+
+ as individual level measures.
+ The full transition matrix is
+\begin_inset Formula 
+\begin{align*}
+\Lambda(\boldsymbol{v}_{t+1},\boldsymbol{X}_{t}^{hh}) & =\tilde{\Lambda}(\boldsymbol{v}_{t+1},\boldsymbol{X}_{t}^{hh})\Pi(\boldsymbol{X}_{t}^{hh})\\
+\boldsymbol{D}_{t+1} & =\Lambda(\boldsymbol{v}_{t+1},\boldsymbol{X}_{t}^{hh})^{\prime}\boldsymbol{D}_{t}
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+Given the sequence of shocks, 
+\begin_inset Formula $\boldsymbol{Z},$
+\end_inset
+
+there exists a 
+\emph on
+truncation period
+\emph default
+, 
+\begin_inset Formula $T$
+\end_inset
+
+, such all variables return to steady state beforehand.
+\end_layout
+
+\begin_layout Standard
+It is straightforward to numerically evaluate the model starting from the
+ shocks and unknowns going forward block by block along the directed acyclical
+ graph (DAG).
+ Derivatives can also be calculated along this graph to construct Jacobians.
+ Computationally, the central challenge is to compute the derivatives of
+ the household block.
+ This is can be done efficiently as explained below in section 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:Efficient-Computation-of"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ with the so-called 
+\begin_inset Quotes ald
+\end_inset
+
+fake new algorithm
+\begin_inset Quotes ard
+\end_inset
+
+ from 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "auclert_using_2021"
+literal "false"
+
+\end_inset
+
+.
+ With the sequence-space Jacobians, the truncated equation system, 
+\begin_inset Formula $\boldsymbol{H}(\boldsymbol{U},\boldsymbol{Z})=0$
+\end_inset
+
+, can be solved straightforwardly with a quasi-Newton solver (e.g.
+ using Broyden's method).
+\end_layout
+
+\begin_layout Standard
+Alternatively, the model can be solved to a first order by total differentiating
+ equation 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:H"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\boldsymbol{H}_{\boldsymbol{U}}d\boldsymbol{U}+\boldsymbol{H}_{\boldsymbol{Z}}d\boldsymbol{Z}=0 & \Leftrightarrow d\boldsymbol{U}=\underset{\text{\ensuremath{\equiv\boldsymbol{G}_{\boldsymbol{U}}}}}{\underbrace{-\boldsymbol{H}_{\boldsymbol{U}}^{-1}\boldsymbol{H}_{\boldsymbol{Z}}}}d\boldsymbol{Z},\label{eq:total_diff-1}
+\end{align}
+
+\end_inset
+
+where we refer to 
+\begin_inset Formula $\boldsymbol{G}_{U}$
+\end_inset
+
+ as the 
+\emph on
+solution matrix
+\emph default
+.
+ By also total differentiating equation 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:M"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+, the remaining linearized impulse responses can be calculated as
+\begin_inset Formula 
+\begin{align*}
+d\boldsymbol{X} & =M_{\boldsymbol{U}}d\boldsymbol{U}+M_{\boldsymbol{Z}}d\boldsymbol{Z}\\
+ & =\underset{\equiv\boldsymbol{G}}{\underbrace{(-M_{\boldsymbol{U}}\boldsymbol{H}_{\boldsymbol{U}}^{-1}\boldsymbol{H}_{\boldsymbol{Z}}+M_{\boldsymbol{Z}})}}d\boldsymbol{Z.}
+\end{align*}
+
+\end_inset
+
+where 
+\begin_inset Formula $\boldsymbol{G}$
+\end_inset
+
+ is the full 
+\emph on
+general equilibrium matrix
+\emph default
+.
+\end_layout
+
+\begin_layout Subsection
+Example: A simple Aiygari-model
+\end_layout
+
+\begin_layout Standard
+We now consider how a simple Aiygari-model fits into this setup.
+\end_layout
+
+\begin_layout Paragraph*
+Firms.
+ 
+\end_layout
+
+\begin_layout Standard
+A representative firm rent capital, 
+\begin_inset Formula $K_{t-1}$
+\end_inset
+
+, and hire labor, 
+\begin_inset Formula $L_{t}$
+\end_inset
+
+, to produce goods, with the production function
+\begin_inset Formula 
+\begin{equation}
+Y_{t}=\Gamma_{t}K_{t-1}^{\alpha}L_{t}^{1-\alpha},\label{eq:Y}
+\end{equation}
+
+\end_inset
+
+where 
+\begin_inset Formula $\Gamma_{t}$
+\end_inset
+
+ is technology.
+ Capital depreciates with the rate 
+\begin_inset Formula $\delta$
+\end_inset
+
+.
+ Profit maximization by
+\begin_inset Formula 
+\[
+\max_{K_{t-1},L_{t}}Y_{t}-w_{t}L_{t}-r_{t}^{k}K_{t-1}
+\]
+
+\end_inset
+
+implies the standard pricing equations
+\series bold
+
+\begin_inset Formula 
+\begin{align}
+r_{t}^{k} & =\alpha\Gamma_{t}\left(K_{t-1}/L_{t}\right)^{\text{\alpha-1}}\label{eq:rk}\\
+w_{t} & =(1-\alpha)\Gamma_{t}(K_{t-1}/L_{t})^{\alpha}\label{eq:w}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where 
+\begin_inset Formula $r_{t}^{k}$
+\end_inset
+
+ is rental rate of capital and 
+\begin_inset Formula $w_{t}$
+\end_inset
+
+ is the wage rate.
+ The implied
+\series bold
+ 
+\series default
+(real) interest rate is 
+\begin_inset Formula $r_{t}=r_{t}^{k}-\delta$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Paragraph*
+Households.
+\end_layout
+
+\begin_layout Standard
+Households are heterogeneous ex ante with respect to their discount factor,
+ 
+\begin_inset Formula $\beta_{i}$
+\end_inset
+
+, and ex post with respect to their productivity, 
+\begin_inset Formula $z_{t}$
+\end_inset
+
+, and assets, 
+\begin_inset Formula $a_{t-1}$
+\end_inset
+
+.
+ Each period household exogenously supply 
+\begin_inset Formula $z_{t}$
+\end_inset
+
+ units of labor, and choose consumption 
+\begin_inset Formula $c_{t}$
+\end_inset
+
+ subject to a no-borrowing constraint.
+ Households have 
+\emph on
+perfect foresight
+\emph default
+ wrt.
+ to the interest rate and the wage rate, 
+\begin_inset Formula $\{r_{t},w_{t}\}_{t=0}^{\infty}$
+\end_inset
+
+, and solve the problem
+\begin_inset Formula 
+\begin{align}
+v_{t}(\beta_{i},z_{t},a_{t-1}) & =\max_{a_{t},c_{t}}\frac{c_{t}^{1-\sigma}}{1-\sigma}+\beta\mathbb{E}_{t}\left[v_{t+1}(\beta_{i},z_{t+1},a_{t})\right]\label{eq:Bellman_Aiyagari}\\
+ & \text{s.t.}\nonumber \\
+a_{t}+c_{t} & =(1+r_{t})a_{t-1}+w_{t}z_{t}\nonumber \\
+\log z_{t} & =\rho\log z_{t-1}+\varepsilon_{t}^{z}\,\,\,,\varepsilon_{t}^{z}\sim\mathcal{N}(\mu_{z},\sigma_{z}),\,\mathbb{E}[z_{t}]=1\,\nonumber \\
+a_{t} & \geq0,\nonumber 
+\end{align}
+
+\end_inset
+
+where implicitly 
+\begin_inset Formula $v_{t}(\beta_{i},z_{t},a_{t-1})=v(\beta_{i},z_{t},a_{t-1},\{r_{\tau},w_{\tau}\}_{\tau=t}^{\infty})$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+The household problem is discretized, and optimal savings function, 
+\begin_inset Formula $a^{\ast}$
+\end_inset
+
+, is computed on sorted grids for 
+\begin_inset Formula $\beta_{i}$
+\end_inset
+
+, 
+\begin_inset Formula $z_{t}$
+\end_inset
+
+ and 
+\begin_inset Formula $a_{t-1}$
+\end_inset
+
+ generically denoted 
+\begin_inset Formula $\mathcal{G}_{x}=\{x^{0},x^{1},\dots,x^{\#_{x-1}}\}$
+\end_inset
+
+.
+ The transition probabilities for 
+\begin_inset Formula $z_{t}$
+\end_inset
+
+ are denoted 
+\begin_inset Formula $\pi_{i_{z+},i_{z}}=\text{Pr}[z^{i_{z+}}|z^{i_{z}}]$
+\end_inset
+
+.
+ Let 
+\begin_inset Formula $\boldsymbol{D}_{t}$
+\end_inset
+
+ denote the distribution of households in terms of the probability mass
+ on each grid point (i.e.
+ a discrete histogram).
+ The following updating algorithm can now be used:
+\end_layout
+
+\begin_layout Enumerate
+Set 
+\begin_inset Formula $\underline{\boldsymbol{D}}_{t+1}(\beta^{i_{\beta+}},z^{i_{z+}},a^{i_{a+}})=0$
+\end_inset
+
+ for all 
+\begin_inset Formula $i_{\beta+}$
+\end_inset
+
+, 
+\begin_inset Formula $i_{z+}$
+\end_inset
+
+ and 
+\begin_inset Formula $i_{a+}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Enumerate
+For each 
+\begin_inset Formula $i_{\beta}$
+\end_inset
+
+, 
+\begin_inset Formula $i_{z}$
+\end_inset
+
+ and 
+\begin_inset Formula $i_{a+}$
+\end_inset
+
+:
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+Find largest 
+\begin_inset Formula $\iota\in\{0,1,\dots,\#_{a}-2\}$
+\end_inset
+
+ such that 
+\begin_inset Formula $a^{\star}(i_{\beta},i_{z},i_{a})\geq a^{\iota}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Enumerate
+Calculate 
+\begin_inset Formula $\omega=\frac{a^{\iota+1}-a^{\ast}(i_{\beta},i_{z},i_{a})}{a^{\iota+1}-a^{\iota}}\in[0,1]$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Enumerate
+Increment 
+\begin_inset Formula $\underline{\boldsymbol{D}}_{t+1}(\beta^{i_{\beta}},z^{i_{z}},a^{\iota})$
+\end_inset
+
+ with 
+\begin_inset Formula $\omega\boldsymbol{D}_{t}(\beta^{i_{\beta}},z^{i_{z}},a^{i_{a}})$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+Increment 
+\begin_inset Formula $\boldsymbol{\underline{\boldsymbol{D}}}_{t+1}(\beta^{i_{\beta}},z^{i_{z}},a^{\iota+1})$
+\end_inset
+
+ with 
+\begin_inset Formula $(1-\omega)\boldsymbol{D}_{t}(\beta^{i_{\beta}},z^{i_{z}},a^{i_{a}})$
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+For each 
+\begin_inset Formula $i_{\beta}$
+\end_inset
+
+, 
+\begin_inset Formula $i_{z}$
+\end_inset
+
+ and 
+\begin_inset Formula $i_{a+}$
+\end_inset
+
+: 
+\begin_inset Formula $\boldsymbol{D}_{t+1}(\beta^{i_{\beta+}},z^{i_{z+}},a^{i_{a+}})=\sum_{i_{z}=0}^{\text{\#}_{z}-1}\pi_{i_{z+},i_{z}}\boldsymbol{\underline{\boldsymbol{D}}}_{t+1}(\beta^{i_{\beta}},z^{i_{z}},a^{i_{a}})$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The algorithm basically first distributes probability mass from an existing
+ point, 
+\begin_inset Formula $\boldsymbol{D}_{t}$
+\end_inset
+
+, to the neighboring points of the optimal savings choice in the endogenous
+ dimension, weighted by 
+\begin_inset Formula $\omega$
+\end_inset
+
+, to get the beginning-of-period distribution 
+\begin_inset Formula $\underline{\boldsymbol{D}}_{t}$
+\end_inset
+
+.
+ Second, it accounts for the transition to decision-relevant distribution,
+ 
+\begin_inset Formula $\boldsymbol{D}_{t+1}$
+\end_inset
+
+, by the exogenous transition probabilities, 
+\begin_inset Formula $\pi_{i_{z+},i_{z}}$
+\end_inset
+
+.
+ This updating algorithm can also be formulated in matrix form as 
+\begin_inset Formula $\boldsymbol{D}_{t+1}=\Pi_{t}^{\prime}\tilde{\Lambda}_{t}^{\prime}\boldsymbol{D_{t}}$
+\end_inset
+
+, where the 
+\begin_inset Formula $\tilde{\Lambda}_{t}$
+\end_inset
+
+ is constructed from 
+\begin_inset Formula $\iota$
+\end_inset
+
+ and 
+\begin_inset Formula $\omega$
+\end_inset
+
+, and 
+\begin_inset Formula $\Pi_{t}$
+\end_inset
+
+ is constructed from 
+\begin_inset Formula $\pi_{i_{z+},i_{z}}$
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Standard
+The aggregate supply of savings can be calculated as
+\begin_inset Formula 
+\begin{align}
+A_{t}^{hh} & =\int a_{t}^{\ast}(\beta_{i},z_{t},a_{t-1})d\boldsymbol{D}_{t}\label{eq:Ahh}\\
+ & =\sum_{i_{\beta}}\sum_{i_{z}}\sum_{i_{a}}a_{t}^{\ast}(\beta_{i},z_{t},a_{t-1})\boldsymbol{D}_{t}(\beta^{i_{\beta}},z^{i_{z}},a^{i_{a}})\nonumber \\
+ & =\boldsymbol{a}_{t}^{\prime}\boldsymbol{D}_{t}\nonumber 
+\end{align}
+
+\end_inset
+
+and aggregate consumption can be calculated as
+\begin_inset Formula 
+\begin{align}
+C_{t}^{hh} & =\int c_{t}^{\ast}(\beta_{i},z_{t},a_{t-1})d\boldsymbol{D}_{t}\label{eq:Chh}\\
+ & =\sum_{i_{\beta}}\sum_{i_{z}}\sum_{i_{a}}c_{t}^{\ast}(\beta_{i},z_{t},a_{t-1})\boldsymbol{D}_{t}(\beta^{i_{\beta}},z^{i_{z}},a^{i_{a}})\nonumber \\
+ & =\boldsymbol{c}_{t}^{\prime}\boldsymbol{D}_{t}\nonumber 
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Paragraph*
+Market clearing.
+\end_layout
+
+\begin_layout Standard
+Market clearing requires
+\begin_inset Formula 
+\begin{align*}
+\text{Capital: }K_{t} & =A_{t}^{hh}\\
+\text{Labour: }L_{t} & =\int z_{t}dD_{t}=1\\
+\text{Goods: }Y_{t} & =C_{t}^{hh}+K_{t}-K_{t-1}+\delta K_{t-1}
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Paragraph*
+Stationary Equilibrium.
+\end_layout
+
+\begin_layout Standard
+The 
+\emph on
+stationary equilibrium
+\emph default
+ (steady state for aggregate variables) for a given 
+\begin_inset Formula $\Gamma_{ss}$
+\end_inset
+
+ is
+\end_layout
+
+\begin_layout Enumerate
+Quantities 
+\begin_inset Formula $K_{ss}$
+\end_inset
+
+ and 
+\begin_inset Formula $L_{ss},$
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Enumerate
+prices 
+\begin_inset Formula $r_{ss}$
+\end_inset
+
+ and 
+\begin_inset Formula $w_{ss},$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+a distribution 
+\begin_inset Formula $\boldsymbol{D}_{ss}$
+\end_inset
+
+ over 
+\begin_inset Formula $a_{t-1}$
+\end_inset
+
+ and 
+\begin_inset Formula $z_{t}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+and policy functions 
+\begin_inset Formula $a_{ss}^{\ast}(z_{t},a_{t-1})$
+\end_inset
+
+ and 
+\begin_inset Formula $c_{ss}^{\ast}(z_{t},a_{t-1})$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+are such that
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset Formula $a_{ss}^{\ast}(\bullet)$
+\end_inset
+
+ and 
+\begin_inset Formula $c_{ss}^{\ast}(\bullet)$
+\end_inset
+
+ solves the household problem with 
+\begin_inset Formula $\{r_{ss},w_{ss}\}_{t=0}^{\infty}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset Formula $\boldsymbol{D}_{ss}=\Lambda_{ss}^{\prime}\boldsymbol{D}_{ss}$
+\end_inset
+
+ is the invariant distribution implied by the household problem
+\end_layout
+
+\begin_layout Enumerate
+Firms maximize profits, 
+\begin_inset Formula $r_{ss}=\alpha A_{ss}(K_{ss}/L_{ss})^{\alpha-1}$
+\end_inset
+
+ and 
+\begin_inset Formula $w_{ss}=(1-\alpha)A_{ss}\left(\frac{r_{t}+\delta}{\alpha A_{ss}}\right)^{\frac{\alpha}{\alpha-1}}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+The labor market clears, i.e.
+ 
+\begin_inset Formula $L_{ss}=\int z_{ss}dD_{ss}=1$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+The capital market clears, i.e.
+ 
+\begin_inset Formula $K_{ss}=\int a_{ss}^{\ast}(\beta_{i},z_{t},a_{t-1})dD_{ss}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+The goods market clears, i.e.
+ 
+\begin_inset Formula $Y_{ss}=\int c_{ss}^{\ast}(\beta_{i},z_{t},a_{t-1})dD_{ss}+\delta K_{ss}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+This is a root-finding problem, which can be solved as follows:
+\end_layout
+
+\begin_layout Enumerate
+Guess on 
+\begin_inset Formula $r_{ss}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+Calculate 
+\begin_inset Formula $w_{ss}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+Solve the infinite horizon household problem
+\end_layout
+
+\begin_layout Enumerate
+Simulate until convergence of 
+\begin_inset Formula $\boldsymbol{D}_{ss}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+Calculate supply 
+\begin_inset Formula $A_{ss}^{hh}=\int a_{ss}^{\ast}(\beta_{i},z_{t},a_{t-1})d\boldsymbol{D}_{ss}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+Calculate demand 
+\begin_inset Formula $K_{ss}=\left(\frac{r_{ss}+\delta}{\alpha Z_{ss}}\right)^{\frac{1}{\alpha-1}}L_{ss}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+If for some tolerance 
+\begin_inset Formula $\epsilon$
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\left|A_{ss}^{hh}-K_{ss}\right|<\epsilon
+\]
+
+\end_inset
+
+then stop, otherwise update 
+\begin_inset Formula $r_{ss}$
+\end_inset
+
+ appropriately and return to step 2
+\end_layout
+
+\begin_layout Paragraph*
+Transition path.
+\end_layout
+
+\begin_layout Standard
+In terms of the general formulation above, we can write the model in terms
+ of
+\end_layout
+
+\begin_layout Enumerate
+Shocks: 
+\begin_inset Formula $\boldsymbol{Z}=\{\boldsymbol{\Gamma}\}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+Unknowns: 
+\begin_inset Formula $\boldsymbol{U}=\{\boldsymbol{K}\}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+Targets: 
+\begin_inset Formula $\{K_{t}-A_{t}^{hh}\}$
+\end_inset
+
+ (asset market clearing)
+\end_layout
+
+\begin_layout Enumerate
+Aggregate variables: 
+\begin_inset Formula $\boldsymbol{X}=\{\boldsymbol{\boldsymbol{\Gamma}},\boldsymbol{K},\boldsymbol{r},\boldsymbol{w},\boldsymbol{L},\boldsymbol{C},\boldsymbol{Y},\boldsymbol{A}^{hh},\boldsymbol{C}^{hh}\}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+Household inputs: 
+\begin_inset Formula $\boldsymbol{X}_{t}^{hh}=\{\boldsymbol{r},\boldsymbol{w}\}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+Household outputs: 
+\begin_inset Formula $\boldsymbol{Y}_{t}^{hh}=\{\boldsymbol{A}^{hh},\boldsymbol{C}^{hh}\}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+This implies the equation system
+\size small
+
+\begin_inset Formula 
+\begin{align}
+\boldsymbol{H}(\boldsymbol{K},\boldsymbol{\Gamma}) & =\boldsymbol{0}\Leftrightarrow\label{eq:H_Ayagari}\\
+\left[\begin{array}{c}
+K_{t}-A_{t}^{hh}\end{array}\right] & =\left[\begin{array}{c}
+0\end{array}\right],\,\,\,\forall t\in\{0,1,\dots,T-1\}\nonumber 
+\end{align}
+
+\end_inset
+
+
+\size default
+where we have
+\begin_inset Formula 
+\begin{align*}
+L_{t} & =1\\
+r_{t} & =\alpha\Gamma_{t}(K_{t-1}/L_{t})^{\alpha-1}\\
+w_{t} & =(1-\alpha)\Gamma_{t}\left(\frac{r_{t}+\delta}{\alpha\Gamma_{t}}\right)^{\frac{\alpha}{\alpha-1}}\\
+A_{t}^{hh} & =\boldsymbol{a}_{t}^{\prime}\boldsymbol{D}_{t}\\
+\boldsymbol{D}_{t+1} & =\Lambda_{t}\boldsymbol{D}_{t}\\
+\boldsymbol{D}_{0} & =\Pi_{ss}\Lambda_{ss}^{\prime}\boldsymbol{D}_{ss}
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The sequence-space solution method described above can therefore be used
+ to find the non-linear transition for an arbitrary sequence for for 
+\begin_inset Formula $\Gamma_{t}$
+\end_inset
+
+.
+ The full Jacobians can be written as
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\boldsymbol{H}_{\boldsymbol{K}} & =\mathcal{J}^{A^{hh},r}\mathcal{J}^{r,K}+\mathcal{J}^{A^{hh},w}\mathcal{J}^{w,K}-\boldsymbol{I}\label{eq:H_K}\\
+\boldsymbol{H}_{\boldsymbol{Z}} & =\mathcal{J}^{A^{hh},r}\mathcal{J}^{r,Z}+\mathcal{J}^{A^{hh},w}\mathcal{J}^{w,Z}\label{eq:H_Z}
+\end{align}
+
+\end_inset
+
+where 
+\begin_inset Formula $\mathcal{J}^{A^{hh},\bullet}$
+\end_inset
+
+ are the Jacobians of the household problem, which must be found numerically,
+ and 
+\begin_inset Formula $\mathcal{J}^{\bullet,K}$
+\end_inset
+
+ and 
+\begin_inset Formula $\mathcal{J}^{\bullet,Z}$
+\end_inset
+
+ are the Jacobians of the firm block, which can in principle be found analytical
+ly.
+\end_layout
+
+\begin_layout Subsection
+Aggregate Risk and Simulation
+\end_layout
+
+\begin_layout Standard
+The sequence-space solution method above was used to solve with 
+\emph on
+perfect foresight
+\emph default
+ with respect to all aggregate variables.
+ The linearized impulse responses can, however, be shown to also be the
+ linearized impulse responses in a model with aggregate risk, where 
+\begin_inset Formula $\boldsymbol{Z}_{t}$
+\end_inset
+
+ is a 
+\begin_inset Formula $MA(\infty)$
+\end_inset
+
+ process with coefficient 
+\begin_inset Formula $d\boldsymbol{Z}_{s}$
+\end_inset
+
+ for 
+\begin_inset Formula $s\in\{0,1,\dots\}$
+\end_inset
+
+ driven by the innovation 
+\begin_inset Formula $\boldsymbol{\epsilon}_{t}$
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Standard
+For a time series of the innovations, 
+\begin_inset Formula $\tilde{\boldsymbol{\epsilon}}_{t}$
+\end_inset
+
+, the resulting time series of the shocks and all endogenous variables can
+ be computed 
+\emph on
+with truncation
+\emph default
+ by
+\begin_inset Formula 
+\begin{align}
+d\tilde{\boldsymbol{Z}}_{t} & =\sum_{s=0}^{T}d\boldsymbol{Z}_{s}\tilde{\boldsymbol{\epsilon}}_{t-s}\label{eq:dZ_sim}\\
+d\tilde{\boldsymbol{X}}_{t} & =\sum_{s=0}^{T}d\boldsymbol{X}_{s}\tilde{\boldsymbol{\epsilon}}_{t-s}\label{eq:dX_sim}
+\end{align}
+
+\end_inset
+
+where 
+\begin_inset Formula $d\boldsymbol{X}_{s}$
+\end_inset
+
+ is the value of the impulse response function 
+\begin_inset Formula $s$
+\end_inset
+
+ periods after the shock has arrived.
+ 
+\end_layout
+
+\begin_layout Standard
+To simulate a panel of household, we need to know how the policy functions
+ change.
+ Let 
+\begin_inset Formula $\partial\boldsymbol{a}_{i_{g}}^{\star}/\partial X_{k}^{hh}$
+\end_inset
+
+ be the derivative of the policy function at grid point 
+\begin_inset Formula $i_{g}$
+\end_inset
+
+ to a 
+\begin_inset Formula $k$
+\end_inset
+
+ periods ahead shock to input 
+\begin_inset Formula $X^{hh}$
+\end_inset
+
+.
+ The impulse responses for each grind point then is then computed using
+ the product rule 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+da_{i_{g},s}^{\star}=\sum_{s^{\prime}=s}^{T-1}\sum_{X^{hh}\in\boldsymbol{X}^{hh}}\frac{\partial a_{i_{g}}^{\star}}{\partial X_{s^{\prime}-s}^{hh}}dX_{s^{\prime}}^{hh}.
+\]
+
+\end_inset
+
+The time path of the policy can then be computed as
+\begin_inset Formula 
+\[
+\boldsymbol{a}_{i_{g}}^{\star}=\sum_{s=0}^{T}da_{i_{g},s}^{\star}\tilde{\boldsymbol{\epsilon}}_{t-s},
+\]
+
+\end_inset
+
+and a panel of households can be simulated using the standard updating rule
+ for the distribution.
+\end_layout
+
+\begin_layout Standard
+Alternative, Appendix C.7 in 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "auclert_using_2021"
+literal "false"
+
+\end_inset
+
+ discuss how the reformulate the model in state space form
+\begin_inset Formula 
+\[
+\left[\begin{array}{c}
+\boldsymbol{D}_{t+1}-\boldsymbol{D}_{ss}\\
+\boldsymbol{S}_{t+1}-\boldsymbol{S}_{ss}\\
+\boldsymbol{Z}_{t+1}-\boldsymbol{Z}_{ss}
+\end{array}\right]=A\left[\begin{array}{c}
+\boldsymbol{D}_{t}-\boldsymbol{D}_{ss}\\
+\boldsymbol{S}_{t}-\boldsymbol{S}_{ss}\\
+\boldsymbol{Z}_{t}-\boldsymbol{Z}_{ss}
+\end{array}\right]+B\boldsymbol{\epsilon}_{t},
+\]
+
+\end_inset
+
+where 
+\begin_inset Formula $\boldsymbol{S}_{t}$
+\end_inset
+
+ are the required aggregate state variables, and 
+\begin_inset Formula $A$
+\end_inset
+
+ and 
+\begin_inset Formula $B$
+\end_inset
+
+ are matrices, which can be constructed from objects computed by the 
+\begin_inset Quotes ald
+\end_inset
+
+fake news
+\begin_inset Quotes ard
+\end_inset
+
+ algorithm explained in Section 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:Efficient-Computation-of"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsubsection
+Simple Aiygari-model
+\end_layout
+
+\begin_layout Standard
+Assume that 
+\begin_inset Formula $\Gamma_{t}$
+\end_inset
+
+ is an AR(1) process driven by Gaussian shocks with standard deviation 
+\begin_inset Formula $\sigma$
+\end_inset
+
+ then 
+\begin_inset Formula $d\boldsymbol{Z}=d\boldsymbol{\Gamma}=\left[\begin{array}{cccc}
+1 & \rho & \rho^{2} & \cdots\end{array}\right]^{\prime}$
+\end_inset
+
+and 
+\begin_inset Formula $\epsilon_{t}\sim\mathcal{N}(0,1)$
+\end_inset
+
+ and the general formulate above applies.
+\begin_inset Newpage newpage
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Using the 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{GEModelClass}
+\end_layout
+
+\end_inset
+
+
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:GEModelClass"
 
 \end_inset
 
@@ -998,72 +2373,6 @@ status open
 
 \backslash
 lstinline{.path}
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Enumerate
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-vspace{-3mm}
-\end_layout
-
-\end_inset
-
-
-\series bold
-Jacobians for household problem:
-\series default
- 
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-lstinline{.jac_hh}
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Enumerate
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-vspace{-3mm}
-\end_layout
-
-\end_inset
-
-
-\series bold
-Full Jacobians:
-\series default
- 
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-lstinline{.jac}
 \end_layout
 
 \end_inset
@@ -1434,7 +2743,20 @@ lstinline{.outputs_hh}
 \end_inset
 
 .
- Should be in 
+ The aggregated variable 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{VARNAME.upper()_hh}
+\end_layout
+
+\end_inset
+
+ should be in 
 \begin_inset ERT
 status open
 
@@ -1465,7 +2787,7 @@ vspace{-3mm}
 
 
 \series bold
-Exogenous inputs:
+Shocks:
 \series default
  
 \begin_inset ERT
@@ -1475,7 +2797,7 @@ status open
 
 
 \backslash
-lstinline{.inputs_exo}
+lstinline{.shocks}
 \end_layout
 
 \end_inset
@@ -1512,7 +2834,7 @@ vspace{-3mm}
 
 
 \series bold
-Endogenous inputs:
+Unknowns:
 \series default
  
 \begin_inset ERT
@@ -1522,7 +2844,7 @@ status open
 
 
 \backslash
-lstinline{.inputs_endo}
+lstinline{.unknowns}
 \end_layout
 
 \end_inset
@@ -1609,7 +2931,7 @@ lstinline{.setup()}
 
 \end_inset
 
- :
+:
 \end_layout
 
 \begin_layout Enumerate
@@ -1767,7 +3089,7 @@ status open
 
 
 \backslash
-lstinline{par.transition_T}
+lstinline{par.T}
 \end_layout
 
 \end_inset
@@ -2101,7 +3423,7 @@ status open
 
 
 \backslash
-lstinline{shape=(par.transition_T,par.Nz)}
+lstinline{shape=(par.T,par.Nz)}
 \end_layout
 
 \end_inset
@@ -2131,7 +3453,7 @@ status open
 
 
 \backslash
-lstinline{shape=(par.transition_T,par.Nz,par.Nz)}
+lstinline{shape=(par.T,par.Nz,par.Nz)}
 \end_layout
 
 \end_inset
@@ -2157,11 +3479,7 @@ vspace{1mm}
 
 Remark:
 \series default
-
-\begin_inset Newline newline
-\end_inset
-
-
+ 
 \begin_inset ERT
 status open
 
@@ -2175,23 +3493,14 @@ lstinline{path.z_trans_path[t]}
 \end_inset
 
  is the transition matrix from 
-\begin_inset Formula $t-1$
+\begin_inset Formula $\underline{D}_{t}$
 \end_inset
 
  to 
-\begin_inset Formula $t$
+\begin_inset Formula $D_{t}$
 \end_inset
 
-,
-\begin_inset Newline newline
-\end_inset
 
-and can depend on variables in period 
-\begin_inset Formula $t$
-\end_inset
-
-.
- 
 \begin_inset ERT
 status open
 
@@ -2279,7 +3588,7 @@ status open
 
 
 \backslash
-lstinline{shape=(par.transition_T,*sol_shape)}
+lstinline{shape=(par.T,*sol_shape)}
 \end_layout
 
 \end_inset
@@ -2372,7 +3681,7 @@ status open
 
 
 \backslash
-lstinline{shape=(par.transition_T,*sol_shape)}
+lstinline{shape=(par.T,*sol_shape)}
 \end_layout
 
 \end_inset
@@ -2439,7 +3748,7 @@ status open
 
 
 \backslash
-lstinline{shape=(par.transition_T,}
+lstinline{shape=(par.T,}
 \end_layout
 
 \end_inset
@@ -2456,7 +3765,7 @@ lstinline{len(inputs_endo)}$
 \backslash
 times$
 \backslash
-lstinline{par.transtion_T})
+lstinline{par.T})
 \end_layout
 
 \end_inset
@@ -2591,7 +3900,7 @@ lstinline{.jac_hh}
 
 \end_inset
 
- 
+ (dictionary)
 \begin_inset Newline newline
 \end_inset
 
@@ -2603,12 +3912,58 @@ status open
 
 
 \backslash
-lstinline{jac_hh.OUTPUTNAME.upper()_INPUTNAME}
+lstinline{jac_hh[(OUTPUTNAME.upper(),INPUTNAME)]}
 \end_layout
 
 \end_inset
 
-,
+, each 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{shape=(par.T,par.T)}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+vspace{-3mm}
+\end_layout
+
+\end_inset
+
+
+\series bold
+All variables in 
+\series default
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{.jac}
+\end_layout
+
+\end_inset
+
+ (dictionary)
 \begin_inset Newline newline
 \end_inset
 
@@ -2620,7 +3975,108 @@ status open
 
 
 \backslash
-lstinline{shape=(par.transition_T,par.transition_T)}
+lstinline{jac[(OUTPUTNAME.upper(),INPUTNAME)]}
+\end_layout
+
+\end_inset
+
+, each 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{shape=(par.T,par.T)}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+vspace{-3mm}
+\end_layout
+
+\end_inset
+
+
+\series bold
+Components of the solution matrix
+\series default
+
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Formula $\boldsymbol{H}_{\boldsymbol{U}}$
+\end_inset
+
+: 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{H_U}
+\end_layout
+
+\end_inset
+
+, with shape 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{shape=(par.T,par.T)}
+\end_layout
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Formula $\boldsymbol{H}_{\boldsymbol{Z}}$
+\end_inset
+
+: 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{H_Z}
+\end_layout
+
+\end_inset
+
+, with shape 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{shape=(par.T,par.T)}
 \end_layout
 
 \end_inset
@@ -2631,7 +4087,7 @@ lstinline{shape=(par.transition_T,par.transition_T)}
 \begin_layout Standard
 Finally, the user must also provide the following 
 \series bold
-functions
+methods
 \series default
 :
 \end_layout
@@ -2657,12 +4113,14 @@ status open
 
 
 \backslash
-lstinline{grids.py}
+lstinline{.create_grids()}
 \end_layout
 
 \end_inset
 
- must contain 
+ (method), which creates the grids for the endogenous variables, the grid
+ and transition matrix for the exogenous variable, and compute guesses for
+ all variables in 
 \begin_inset ERT
 status open
 
@@ -2670,19 +4128,31 @@ status open
 
 
 \backslash
-lstinline{create_grids(model)}
+lstinline{.intertemps_hh()}
 \end_layout
 
 \end_inset
 
-, which creates the grids for the endogenous variables and the grids and
- transition matrices for the exogenous variable.
- 
-\emph on
-This is called each time we solve for the steady state of the household
- problem
-\emph default
 .
+ This is called each time we solve for the steady state of the household
+ problem
+\emph on
+ 
+\emph default
+(in 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{.solve_ss()}
+\end_layout
+
+\end_inset
+
+, see below)
 \end_layout
 
 \begin_layout Enumerate
@@ -2693,7 +4163,7 @@ status open
 
 
 \backslash
-vspace{-3mm}
+vspace{-1mm}
 \end_layout
 
 \end_inset
@@ -2706,12 +4176,123 @@ status open
 
 
 \backslash
-lstinline{household_problem.py}
+lstinline{.find_ss()}
 \end_layout
 
 \end_inset
 
- must contain the jitted
+ (method), which solves for the steady state, i.e.
+ fills 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{ss}
+\end_layout
+
+\end_inset
+
+, and solve and simulate the household problem in steady state (call 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{.solve_ss()}
+\end_layout
+
+\end_inset
+
+ and 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{.simulate_ss()}
+\end_layout
+
+\end_inset
+
+, see below).
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+vspace{-1mm}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{.create_grids_path()}
+\end_layout
+
+\end_inset
+
+ (method), which creates the grid and the transition matrix for the exogenous
+ variable along the transition path.
+ Can rely on paths in 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{.inputs_hh}
+\end_layout
+
+\end_inset
+
+.
+ This is called each time we solve the household problem backwards along
+ the transition path
+\emph on
+ 
+\emph default
+(in 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{.solve_path()}
+\end_layout
+
+\end_inset
+
+, see below).
+\end_layout
+
+\begin_layout Standard
+Compared to the general model formulation above the code, currently, only
+ allows for a structure with the household block and pre- and post-blocks.
+ The user must provide the following 
+\series bold
+jitted
 \begin_inset Foot
 status collapsed
 
@@ -2734,7 +4315,56 @@ lstinline{@numba.njit}
 
 \end_inset
 
- functions:
+ functions
+\series default
+:
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+vspace{-1mm}
+\end_layout
+
+\end_inset
+
+
+\series bold
+Bellman iteration
+\series default
+ (function), 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{.solve_bakcwards_step()}
+\end_layout
+
+\end_inset
+
+ which iterates one step backwards in the household problem.
+ Inputs must by: 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{par}
+\end_layout
+
+\end_inset
+
+ and
 \begin_inset Newline newline
 \end_inset
 
@@ -2746,12 +4376,20 @@ status open
 
 
 \backslash
-lstinline{solve_hh_ss(par,sol,ss)}
+lstinline{z_grid}
 \end_layout
 
 \end_inset
 
-, finds 
+ (grid for 
+\begin_inset Formula $z$
+\end_inset
+
+ in period 
+\begin_inset Formula $t)$
+\end_inset
+
+, 
 \begin_inset ERT
 status open
 
@@ -2759,12 +4397,33 @@ status open
 
 
 \backslash
-lstinline{sol.VARNAME}
+lstinline{z_trans_plus}
 \end_layout
 
 \end_inset
 
- for variables in 
+ (transition matrix in 
+\begin_inset Formula $t+1$
+\end_inset
+
+).
+\begin_inset Newline newline
+\end_inset
+
+All variables in 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{.inputs_hh}
+\end_layout
+
+\end_inset
+
+, 
 \begin_inset ERT
 status open
 
@@ -2773,6 +4432,19 @@ status open
 
 \backslash
 lstinline{.outputs_hh}
+\end_layout
+
+\end_inset
+
+ and 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{.intertemps_hh}
 \end_layout
 
 \end_inset
@@ -2781,7 +4453,7 @@ lstinline{.outputs_hh}
 \begin_inset Newline newline
 \end_inset
 
-
+All variables in 
 \begin_inset ERT
 status open
 
@@ -2789,12 +4461,12 @@ status open
 
 
 \backslash
-lstinline{solve_hh_path(par,sol,ss,path)}
+lstinline{.intertemps_hh}
 \end_layout
 
 \end_inset
 
-, finds 
+ with suffice 
 \begin_inset ERT
 status open
 
@@ -2802,20 +4474,7 @@ status open
 
 
 \backslash
-lstinline{sol.path_VARNAME}
-\end_layout
-
-\end_inset
-
- for all in 
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-lstinline{.outputs_hh}
+lstinline{_plus}
 \end_layout
 
 \end_inset
@@ -2831,12 +4490,16 @@ status open
 
 
 \backslash
-vspace{-3mm}
+vspace{-1mm}
 \end_layout
 
 \end_inset
 
 
+\series bold
+Evaluate block before household block
+\series default
+ (function), 
 \begin_inset ERT
 status open
 
@@ -2844,12 +4507,13 @@ status open
 
 
 \backslash
-lstinline{find_strady_state.py}
+lstinline{.block_pre()}
 \end_layout
 
 \end_inset
 
- must contain the function 
+.
+ Inputs must be: 
 \begin_inset ERT
 status open
 
@@ -2857,94 +4521,12 @@ status open
 
 
 \backslash
-lstinline{find_ss(model,do_print)}
+lstinline{(par,sol,sim,ss,path,threads)}
 \end_layout
 
 \end_inset
 
-, which fills 
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-lstinline{ss}
-\end_layout
-
-\end_inset
-
-, and solve and simulate the household problem in steady state.
-\end_layout
-
-\begin_layout Enumerate
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-vspace{-3mm}
-\end_layout
-
-\end_inset
-
-
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-lstinline{transition_path.py}
-\end_layout
-
-\end_inset
-
- must contain the jitted function
-\begin_inset Newline newline
-\end_inset
-
-
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-lstinline{evaluate_path(par,sol,sim,ss,path,jac_hh,threads,use_jac_hh)}
-\end_layout
-
-\end_inset
-
-, where
-\end_layout
-
-\begin_deeper
-\begin_layout Standard
-i) 
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-lstinline{use_jac_hh}
-\end_layout
-
-\end_inset
-
- is a boolean for whether or not to use the household Jacobians when evaluating
- household behavior (used when calculating the full Jacobian).
-\end_layout
-
-\begin_layout Standard
-ii) 
+, where 
 \begin_inset ERT
 status open
 
@@ -2969,21 +4551,18 @@ status open
 
 
 \backslash
-lstinline{len(inputs_endo)}$
+lstinline{len(unknowns)}$
 \backslash
 times$
 \backslash
-lstinline{par.transtion_T}
+lstinline{par.T}
 \end_layout
 
 \end_inset
 
-, where the latter is used to evaluate the path in parallel for all one
- step changes.
-\end_layout
-
-\begin_layout Standard
-iii) If 
+, and the latter is used to evaluate the path in parallel for all one step
+ changes.
+ After this block has been evaluated all paths in 
 \begin_inset ERT
 status open
 
@@ -2991,16 +4570,15 @@ status open
 
 
 \backslash
-lstinline{threads}
+lstinline{.inputs_hh}
 \end_layout
 
 \end_inset
 
- 
-\begin_inset Formula $>1$
-\end_inset
+ must be filled.
+\end_layout
 
- then 
+\begin_layout Enumerate
 \begin_inset ERT
 status open
 
@@ -3008,12 +4586,16 @@ status open
 
 
 \backslash
-lstinline{use_jac_hh}
+vspace{-1mm}
 \end_layout
 
 \end_inset
 
- should be 
+
+\series bold
+Evaluate block after household block
+\series default
+ (function), 
 \begin_inset ERT
 status open
 
@@ -3021,7 +4603,35 @@ status open
 
 
 \backslash
-lstinline{True}
+lstinline{.block_post()}
+\end_layout
+
+\end_inset
+
+.
+ Same requirements as 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{.block_pre()}
+\end_layout
+
+\end_inset
+
+.
+ Can rely on paths in 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{.ouputs_hh}
 \end_layout
 
 \end_inset
@@ -3029,9 +4639,12 @@ lstinline{True}
 .
 \end_layout
 
-\end_deeper
 \begin_layout Standard
-The following internal methods are now available:
+The following internal methods are 
+\series bold
+now available
+\series default
+:
 \end_layout
 
 \begin_layout Enumerate
@@ -3120,6 +4733,36 @@ status open
 
 \backslash
 lstinline{sim.D}
+\end_layout
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+and 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{ss.VARNAME.upper()_hh}
+\end_layout
+
+\end_inset
+
+ for all variables in 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{.outputs_hh}
 \end_layout
 
 \end_inset
@@ -3216,6 +4859,32 @@ lstinline{sim.path_D}
 
 \end_inset
 
+ and 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{path.VARNAME.upper()_hh}
+\end_layout
+
+\end_inset
+
+ for all variables in 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{.outputs_hh}
+\end_layout
+
+\end_inset
+
 .
 \end_layout
 
@@ -3240,12 +4909,16 @@ status open
 
 
 \backslash
-lstinline{.compute_jac_hh()}
+lstinline{.compute_jacs(skip_hh=False,skip_shocks=False)}
 \end_layout
 
 \end_inset
 
-: Compute the household Jacobians 
+:
+\begin_inset Newline newline
+\end_inset
+
+Compute the Jacobians 
 \begin_inset Formula $\rightarrow$
 \end_inset
 
@@ -3262,10 +4935,7 @@ lstinline{jac_hh}
 
 \end_inset
 
-.
-\end_layout
-
-\begin_layout Enumerate
+, 
 \begin_inset ERT
 status open
 
@@ -3273,12 +4943,12 @@ status open
 
 
 \backslash
-vspace{-3mm}
+lstinline{H_U}
 \end_layout
 
 \end_inset
 
-
+, 
 \begin_inset ERT
 status open
 
@@ -3286,16 +4956,12 @@ status open
 
 
 \backslash
-lstinline{.compute_jac()}
+lstinline{H_Z}
 \end_layout
 
 \end_inset
 
-: Compute the full Jacobian 
-\begin_inset Formula $\rightarrow$
-\end_inset
-
- 
+, and 
 \begin_inset ERT
 status open
 
@@ -3357,8 +5023,7 @@ lstinline{path}
 .
 \end_layout
 
-\begin_layout Standard
-To solve and simulate household behavior in a jitted function use:
+\begin_layout Enumerate
 \begin_inset ERT
 status open
 
@@ -3366,34 +5031,125 @@ status open
 
 
 \backslash
-begin{lstlisting}[language=Python]
-\end_layout
-
-\begin_layout Plain Layout
-
-household_problem.solve_hh_path(par,sol,path)
-\end_layout
-
-\begin_layout Plain Layout
-
-prepare_simulation_1d_1d(par,sol,sol.path_endo1,par.endo1_grid)
-\end_layout
-
-\begin_layout Plain Layout
-
-simulate_hh_path(par,sol,sim)
-\end_layout
-
-\begin_layout Plain Layout
-
-
-\backslash
-end{lstlisting}
+vspace{-3mm}
 \end_layout
 
 \end_inset
 
 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{.find_IRFs_path()}
+\end_layout
+
+\end_inset
+
+: Find transition path 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+ 
+\backslash
+lstinline{IRF}[VARNAME]
+\end_layout
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+The default is to consider AR(1) shocks given by 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{par.jump_VARNAME}
+\end_layout
+
+\end_inset
+
+ and 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{par.rho_VARNAME}
+\end_layout
+
+\end_inset
+
+.
+ Both solution methods 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{.find_transition_path()}
+\end_layout
+
+\end_inset
+
+ and 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{.find_IRFs_path()}
+\end_layout
+
+\end_inset
+
+ also accepts a dictionary like 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline[mathescape]!shock_specs={dSHOCKE:CUSTOMPATH}!
+\end_layout
+
+\end_inset
+
+ as input, where 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{CUSTOMPATH}
+\end_layout
+
+\end_inset
+
+ is an arbitrary path for the shocks for which to compute the solution.
 \end_layout
 
 \begin_layout Standard
@@ -3468,6 +5224,12 @@ class MyModelClass(EconModelClass,GEModelClass):
 
 \begin_layout Plain Layout
 
+		
+\end_layout
+
+\begin_layout Plain Layout
+
+		self.namespaces = ['par','sol','sim','ss','path'] # namespaces
 \end_layout
 
 \begin_layout Plain Layout
@@ -3482,27 +5244,27 @@ class MyModelClass(EconModelClass,GEModelClass):
 
 \begin_layout Plain Layout
 
-        self.inputs_hh = [] # inputs to household problem
+        self.inputs_hh = [] # inputs to hh problem
 \end_layout
 
 \begin_layout Plain Layout
 
-        self.outputs_hh = [] # output of household problem
+        self.outputs_hh = [] # output of hh problem 
 \end_layout
 
 \begin_layout Plain Layout
 
-        self.varlist_hh = [] # variables in household problem
+        self.intertemps_hh = [] # intertemporal variables in hh problem
 \end_layout
 
 \begin_layout Plain Layout
 
-        self.inputs_exo = [] # exogenous inputs
+        self.shocks = [] # exogenous inputs
 \end_layout
 
 \begin_layout Plain Layout
 
-        self.inputs_endo = [] # endogenous inputs
+        self.unknowns= [] # endogenous inputs
 \end_layout
 
 \begin_layout Plain Layout
@@ -3513,6 +5275,25 @@ class MyModelClass(EconModelClass,GEModelClass):
 \begin_layout Plain Layout
 
         self.varlist = [] # all variables
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+		self.solve_backwards_step = solve_backwards_step
+\end_layout
+
+\begin_layout Plain Layout
+
+		self.block_pre = block_pre
+\end_layout
+
+\begin_layout Plain Layout
+
+		self.block_post = block_post
 \end_layout
 
 \begin_layout Plain Layout
@@ -3555,7 +5336,7 @@ class MyModelClass(EconModelClass,GEModelClass):
 
 \begin_layout Plain Layout
 
-        par.transition_T = 500 # length of path        
+        par.T = 500 # length of path        
 \end_layout
 
 \begin_layout Plain Layout
@@ -3594,6 +5375,31 @@ class MyModelClass(EconModelClass,GEModelClass):
 
 \begin_layout Plain Layout
 
+	
+\end_layout
+
+\begin_layout Plain Layout
+
+	# fully model depenedent functions
+\end_layout
+
+\begin_layout Plain Layout
+
+	def find_ss(self): pass
+\end_layout
+
+\begin_layout Plain Layout
+
+	def create_grids(self): pass
+\end_layout
+
+\begin_layout Plain Layout
+
+	def create_grids_path(self): pass
+\end_layout
+
+\begin_layout Plain Layout
+
 \end_layout
 
 \begin_layout Plain Layout
@@ -3616,10 +5422,10 @@ end{lstlisting}
 \end_layout
 
 \begin_layout Section
-Solving the Aiyagari-model
+Efficient Computation of the Household Jacobian
 \begin_inset CommandInset label
 LatexCommand label
-name "sec:Solving-the-Aiyagari-model"
+name "sec:Efficient-Computation-of"
 
 \end_inset
 
@@ -3627,1379 +5433,201 @@ name "sec:Solving-the-Aiyagari-model"
 \end_layout
 
 \begin_layout Standard
-In this section, we explain the non-linear sequence space solution method
- implemented in the package for a simple Aiygari-model.
+In this section, we explain how the Jacobian of the household block can
+ be computed efficiently.
+ This algorithm is fully generic, and the package can be used without understand
+ing this section in detail.
+ Throughout the section we for simplicity assume 
+\begin_inset Formula $\Pi(\boldsymbol{X}_{t}^{hh})=\Pi_{ss}$
+\end_inset
+
+, such that we have 
+\begin_inset Formula $\boldsymbol{D}_{0}=\boldsymbol{D}_{ss}$
+\end_inset
+
+ as given.
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Should be generalized in future version.
 \end_layout
 
-\begin_layout Subsection
-Aiyagari-model
-\end_layout
+\end_inset
 
-\begin_layout Paragraph*
-Overview.
- 
+
 \end_layout
 
 \begin_layout Standard
-
-\series medium
-There is a continuum of measure one 
-\series default
-households
-\series medium
- who
-\end_layout
-
-\begin_layout Enumerate
-Own stocks, 
-\begin_inset Formula $a_{t-1}$
-\end_inset
-
- (measured end-of-period)
-\end_layout
-
-\begin_layout Enumerate
-Supply labor with productivity 
-\begin_inset Formula $z_{t}$
-\end_inset
-
- (exogenous and stochastic)
+The household block can be summarized as
 \begin_inset Formula 
 \begin{align}
-z_{t} & =\rho z_{t-1}+\varepsilon_{t}^{z}.\label{eq:transition_z_e_s}\\
-\mathbb{E}[z_{t}] & =1.\nonumber \\
-\text{Var}[\varepsilon_{t}^{z}] & =\sigma_{z}^{2}.\nonumber 
+\boldsymbol{Y}^{hh} & =hh(\boldsymbol{X^{hh}}).\label{eq:h}
 \end{align}
 
 \end_inset
 
-
-\end_layout
-
-\begin_layout Enumerate
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-vspace{-3mm}
-\end_layout
-
-\end_inset
-
-Consume, 
-\begin_inset Formula $c_{t}$
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Firms rent capital, 
-\begin_inset Formula $K_{t-1}$
-\end_inset
-
-, and hire labor, 
-\begin_inset Formula $L_{t}$
-\end_inset
-
-, to produce goods, 
+We are interested in finding the Jacobian around the steady state, i.e.
 \begin_inset Formula 
 \begin{equation}
-Y_{t}=Z_{t}K_{t-1}^{\alpha}L_{t}^{1-\alpha},\label{eq:Y}
+\mathcal{J}^{hh}=\frac{dhh(\boldsymbol{X}_{ss}^{hh})}{d\boldsymbol{X^{hh}}}.\label{eq:Jhh}
 \end{equation}
 
 \end_inset
 
-where 
-\begin_inset Formula $Z_{t}$
+We let 
+\begin_inset Formula $\mathcal{J}_{t,s}^{hh,o,i}$
 \end_inset
 
- is technology.
- Capital depreciates with the rate 
-\begin_inset Formula $\delta$
+ denote the derivative of output 
+\begin_inset Formula $o$
 \end_inset
 
-.
-\end_layout
-
-\begin_layout Standard
-Both households are firms are 
-\series bold
-price takers 
-\series default
-and
-\end_layout
-
-\begin_layout Enumerate
-\begin_inset Formula $r_{t}^{k}$
+ to input 
+\begin_inset Formula $i$
 \end_inset
 
- is the (real) rental rate for capital
-\end_layout
-
-\begin_layout Enumerate
-\begin_inset Formula $r_{t}=r_{t}^{k}-\delta$
+ at time 
+\begin_inset Formula $t$
 \end_inset
 
- is the implied
-\series bold
- 
-\series default
-(real) interest rate
-\end_layout
-
-\begin_layout Enumerate
-\begin_inset Formula $w_{t}$
-\end_inset
-
- is the (real) wage rate
-\end_layout
-
-\begin_layout Paragraph*
-Firms.
- 
-\end_layout
-
-\begin_layout Standard
-Firms maximize profits implying the standard pricing equations
-\series bold
-
-\begin_inset Formula 
-\begin{align}
-r_{t}^{k} & =\alpha Z_{t}\left(K_{t-1}/L_{t}\right)^{\text{\alpha-1}}\equiv r^{k}(Z_{t},K_{t-1},L_{t}).\label{eq:rk}\\
-w_{t} & =(1-\alpha)Z_{t}(K_{t-1}/L_{t})^{\alpha}\label{eq:w}\\
- & =(1-\alpha)Z_{t}\left(\frac{r_{t}^{k}}{\alpha Z_{t}}\right)^{\frac{\alpha}{\alpha-1}}\equiv w(r_{t}^{k},Z_{t}).\nonumber 
-\end{align}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Paragraph*
-Households.
-\end_layout
-
-\begin_layout Standard
-Households have 
-\emph on
-perfect foresight
-\emph default
- wrt.
- to the interest rate and the wage rate, 
-\begin_inset Formula $\{r_{t},w_{t}\}_{t=0}^{\infty}$
-\end_inset
-
-, and solve the problem
-\begin_inset Formula 
-\begin{align*}
-v_{t}(z_{t},a_{t-1}) & =\max_{c_{t}}\frac{c_{t}^{1-\sigma}}{1-\sigma}+\beta\mathbb{E}_{t}\left[v_{t+1}(z_{t+1},a_{t})\right]\\
- & \text{s.t.}\\
-a_{t}+c_{t} & =(1+r_{t})a_{t-1}+w_{t}z_{t}\\
-z_{t+1} & \sim\Gamma_{z}(z_{t})\\
-a_{t} & \geq0,
-\end{align*}
-
-\end_inset
-
-where
-\begin_inset Formula 
-\[
-v_{t}\left(z_{t},a_{t-1}\right)=v\left(z_{t},a_{t-1};\{r_{\tau},w_{\tau}\}_{\tau=t}^{\infty}\right).
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-The FOC is 
-\begin_inset Formula $c_{t}^{-\sigma}=\beta\mathbb{E}_{t}[v_{a,t+1}]$
-\end_inset
-
- and the envelope condition is 
-\begin_inset Formula $v_{a,t}=(1+r_{t})c_{t}^{-\sigma}$
+ for a shock at time 
+\begin_inset Formula $s$
 \end_inset
 
 .
- The optimal saving and consumption functions 
-\begin_inset Formula $a_{t}^{\ast}(a_{t-1},z_{t})$
-\end_inset
-
- and 
-\begin_inset Formula $c_{t}^{\ast}(a_{t-1},z_{t})$
-\end_inset
-
- can be found using e.g.
- the EGM.
- These optimal policy functions live on the discretized grids, 
-\begin_inset Formula $z_{t}\in\{z^{0},\dots,z^{\#_{z}-1}\}$
-\end_inset
-
- and 
-\begin_inset Formula $a_{t}\in\{a^{0},\dots,a^{\#_{a}-1}\}$
-\end_inset
-
-.
- Labor productivity, 
-\begin_inset Formula $z_{t}$
-\end_inset
-
-, is discretized with the Rouwenhorst-method.
- In 
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-lstinline{grids.py}
-\end_layout
-
-\end_inset
-
- the user must provide the function 
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-lstinline{create_grids(model)}
-\end_layout
-
-\end_inset
-
- to setup the grids and transition matrices.
-\end_layout
-
-\begin_layout Standard
-The user should provide two jiited functions in 
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-lstinline{household_problem.py}
-\end_layout
-
-\end_inset
-
-:
-\end_layout
-
-\begin_layout Enumerate
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-lstinline{solve_hh_ss(par,sol,ss)}
-\end_layout
-
-\end_inset
-
-: Solve for 
-\begin_inset Formula $a_{ss}^{\ast}(\bullet)$
-\end_inset
-
- and 
-\begin_inset Formula $c_{ss}^{\ast}(\bullet)$
-\end_inset
-
- in 
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-lstinline{sol.a}
-\end_layout
-
-\end_inset
-
- and 
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-lstinline{sol.c}
-\end_layout
-
-\end_inset
-
-.
-\end_layout
-
-\begin_layout Enumerate
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-lstinline{solve_hh_path(par,sol,path)}
-\end_layout
-
-\end_inset
-
-: Solve for 
-\begin_inset Formula $\{a_{t}^{\ast}(\bullet)\}_{t=0}^{T-1}$
-\end_inset
-
- and 
-\begin_inset Formula $\{c_{t}^{\ast}(\bullet)\}_{t=0}^{T-1}$
-\end_inset
-
- for arbitrary sequences 
-\begin_inset Formula $\{r_{t},w_{t}\}_{t=0}^{T}$
-\end_inset
-
-, where 
-\begin_inset Formula $a_{T}^{\ast}(\bullet)=a_{ss}^{\ast}(\bullet)$
-\end_inset
-
- and 
-\begin_inset Formula $c_{T}^{\ast}(\bullet)=c_{ss}^{\ast}(\bullet)$
-\end_inset
-
-, in 
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-lstinline{sol.path_a}
-\end_layout
-
-\end_inset
-
- and 
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-lstinline{sol.path_c}
-\end_layout
-
-\end_inset
-
-.
-\end_layout
-
-\begin_layout Paragraph*
-Distribution.
 \end_layout
 
 \begin_layout Standard
 Let 
-\begin_inset Formula $D_{t}$
+\begin_inset Formula $\boldsymbol{v}_{t}^{s,i}$
 \end_inset
 
- be the distribution of households over 
-\begin_inset Formula $z_{t}$
-\end_inset
-
- and 
-\begin_inset Formula $a_{t-1}$
-\end_inset
-
-.
- The supply of capital then is
-\begin_inset Formula 
-\begin{equation}
-\mathcal{K}_{t}=\int a_{t}^{\ast}(a_{t-1},z_{t})dD_{t}=\int a_{t}dD_{t+1}.\label{eq:K_supply}
-\end{equation}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-The household problem implies a time-varying but non-stochastic law of motion
- for 
-\begin_inset Formula $D_{t}$
-\end_inset
-
-,
-\begin_inset Formula 
-\begin{equation}
-D_{t}=\Gamma_{D}(D_{t-1};a_{t-1}^{\ast},\Gamma_{z}).\label{eq:D_law_of_motion}
-\end{equation}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-In practice, this simulation problem is generic.
- It is beneficial to use a simulation method, where households are always
- on the grid.
- The idea here is to re-distribute mass to grid points based on optimal
- decision.
- More precisely we calculate
-\begin_inset Formula 
-\begin{align}
-D_{t+1}(e^{k},a^{l}) & =\label{eq:D_plus}\\
- & \sum_{i=0}^{\#_{e}-1}\text{Pr}[e^{k}|e^{i}]\sum_{j=0}^{\#_{a}-1}D_{t}(e^{i},a^{j})\omega(a_{t}^{\ast}(e^{i},a^{j}),a^{\max\{l-1,0\}},a^{l},a^{\min\{l+1,\#_{a}-1\}}),\nonumber 
-\end{align}
-
-\end_inset
-
-where 
-\begin_inset Formula $\omega$
-\end_inset
-
- is a weight calculated using linear interpolation
-\begin_inset Formula 
-\begin{align*}
-\omega(a,\underline{a},\tilde{a},\overline{a}) & =1\{a\in[\underline{a},\overline{a}]\}\begin{cases}
-\frac{\overline{a}-a}{\overline{a}-\tilde{a}} & \text{if }a\geq\tilde{a}\\
-\frac{a-\underline{a}}{\overline{\tilde{a}}-\underline{a}} & \text{if }a<\tilde{a}
-\end{cases}.
-\end{align*}
-
-\end_inset
-
-Extension to higher dimensions are straightforward.
- This is provided in the package as the methods 
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-lstinline{.simulate_hh_ss()}
-\end_layout
-
+, 
+\begin_inset Formula $\boldsymbol{D}_{t}^{s,i}$
 \end_inset
 
  and 
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-lstinline{.simulate_hh_path()}
-\end_layout
-
-\end_inset
-
-.
- The indices and weights required for simulation is calculated automatically
- when calling the methods 
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-lstinline{.solve_hh_ss()}
-\end_layout
-
-\end_inset
-
- and 
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-lstinline{.solve_hh_path()}
-\end_layout
-
-\end_inset
-
-.
-\end_layout
-
-\begin_layout Paragraph*
-Market clearing.
-\end_layout
-
-\begin_layout Standard
-Market clearing requires
-\begin_inset Formula 
-\begin{align*}
-\text{Capital: }K_{t} & =\mathcal{K}_{t}=\int a_{t}dD_{t+1}=\int a_{t}^{\ast}(z_{t},a_{t-1})dD_{t}\\
-\text{Labour: }L_{t} & =\int e_{t}dD_{t}=1\\
-\text{Goods: }Y_{t} & =\int c_{t}^{\ast}(z_{t},a_{t-1})dD_{t}+K_{t}-K_{t-1}+\delta K_{t-1}
-\end{align*}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Subsection
-Stationary equilibrium
-\end_layout
-
-\begin_layout Standard
-A 
-\series bold
-stationary equilibrium
-\series default
- for a given 
-\begin_inset Formula $Z_{ss}$
-\end_inset
-
- is one where
-\end_layout
-
-\begin_layout Enumerate
-Quantities 
-\begin_inset Formula $K_{ss}$
-\end_inset
-
- and 
-\begin_inset Formula $L_{ss},$
-\end_inset
-
- 
-\end_layout
-
-\begin_layout Enumerate
-prices 
-\begin_inset Formula $r_{ss}$
-\end_inset
-
- and 
-\begin_inset Formula $w_{ss},$
-\end_inset
-
-
-\end_layout
-
-\begin_layout Enumerate
-a distribution 
-\begin_inset Formula $D_{ss}$
-\end_inset
-
- over 
-\begin_inset Formula $a_{t-1}$
-\end_inset
-
- and 
-\begin_inset Formula $z_{t}$
-\end_inset
-
-
-\end_layout
-
-\begin_layout Enumerate
-and policy functions 
-\begin_inset Formula $a_{ss}^{\ast}(z_{t},a_{t-1})$
-\end_inset
-
- and 
-\begin_inset Formula $c_{ss}^{\ast}(z_{t},a_{t-1})$
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-are such that
-\end_layout
-
-\begin_layout Enumerate
-\begin_inset Formula $a_{ss}^{\ast}(\bullet)$
-\end_inset
-
- and 
-\begin_inset Formula $c_{ss}^{\ast}(\bullet)$
-\end_inset
-
- solves the household problem with 
-\begin_inset Formula $\{r_{ss},w_{ss}\}_{t=0}^{\infty}$
-\end_inset
-
-
-\end_layout
-
-\begin_layout Enumerate
-\begin_inset Formula $D_{ss}$
-\end_inset
-
- is the invariant distribution implied by the household problem
-\end_layout
-
-\begin_layout Enumerate
-Firms maximize profits, 
-\begin_inset Formula $r_{ss}=r(Z_{ss},K_{ss},L_{ss})$
-\end_inset
-
- and 
-\begin_inset Formula $w_{ss}=w(r_{ss},Z_{ss})$
-\end_inset
-
-
-\end_layout
-
-\begin_layout Enumerate
-The labor market clears, i.e.
- 
-\begin_inset Formula $L_{ss}=\int e_{t}dD_{ss}=1$
-\end_inset
-
-
-\end_layout
-
-\begin_layout Enumerate
-The capital market clears, i.e.
- 
-\begin_inset Formula $K_{ss}=\int a_{ss}^{\ast}(z_{t},a_{t-1})dD_{ss}$
-\end_inset
-
-
-\end_layout
-
-\begin_layout Enumerate
-The goods market clears, i.e.
- 
-\begin_inset Formula $Y_{ss}=\int c_{ss}^{\ast}(z_{t},a_{t-1})dD_{ss}+\delta K_{ss}$
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-We can 
-\series bold
-find the stationary equilibrium
-\series default
- by solving a root-finding problem
-\end_layout
-
-\begin_layout Enumerate
-Guess on 
-\begin_inset Formula $r_{ss}$
-\end_inset
-
-
-\end_layout
-
-\begin_layout Enumerate
-Calculate 
-\begin_inset Formula $w_{ss}=w(r_{ss},Z_{ss})$
-\end_inset
-
-
-\end_layout
-
-\begin_layout Enumerate
-Solve the infinite horizon household problem
-\end_layout
-
-\begin_layout Enumerate
-Simulate until convergence of 
-\begin_inset Formula $D_{ss}$
-\end_inset
-
-
-\end_layout
-
-\begin_layout Enumerate
-Calculate supply 
-\begin_inset Formula $\mathcal{K}_{ss}=\int a_{ss}^{\ast}(z_{t},a_{t-1})dD_{ss}$
-\end_inset
-
-
-\end_layout
-
-\begin_layout Enumerate
-Calculate demand 
-\begin_inset Formula $K_{ss}=\left(\frac{r_{ss}+\delta}{\alpha Z_{ss}}\right)^{\frac{1}{\alpha-1}}L_{ss}$
-\end_inset
-
-
-\end_layout
-
-\begin_layout Enumerate
-If for some tolerance 
-\begin_inset Formula $\epsilon$
-\end_inset
-
-
-\begin_inset Formula 
-\[
-\left|\mathcal{K}_{ss}-K_{ss}\right|<\epsilon
-\]
-
-\end_inset
-
-then stop, otherwise update 
-\begin_inset Formula $r_{ss}$
-\end_inset
-
- appropriately and return to step 2
-\end_layout
-
-\begin_layout Standard
-In 
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-lstinline{find_strady_state.py}
-\end_layout
-
-\end_inset
-
- the user must supply the function
-\begin_inset Newline newline
-\end_inset
-
-
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-lstinline{find_ss(model,do_print)}
-\end_layout
-
-\end_inset
-
- to solve the problem.
- In practice we guess on 
-\begin_inset Formula $r_{ss}$
-\end_inset
-
- and 
-\begin_inset Formula $w_{ss}$
-\end_inset
-
- and derive 
-\begin_inset Formula $Z_{ss}$
-\end_inset
-
- and 
-\begin_inset Formula $\delta_{ss}$
-\end_inset
-
- from the implied household behavior.
-\end_layout
-
-\begin_layout Subsection
-Transition path
-\end_layout
-
-\begin_layout Standard
-A 
-\series bold
-transition path
-\series default
- for 
-\begin_inset Formula $t\in\{0,1,2,\dots\}$
-\end_inset
-
-, given an initial distribution 
-\begin_inset Formula $D_{0}$
-\end_inset
-
- and a path of 
-\begin_inset Formula $Z_{t}$
-\end_inset
-
-, is paths of quantities 
-\begin_inset Formula $K_{t}$
-\end_inset
-
- and 
-\begin_inset Formula $L_{t}$
-\end_inset
-
-, prices 
-\begin_inset Formula $r_{t}$
-\end_inset
-
- and 
-\begin_inset Formula $w_{t}$
-\end_inset
-
-, policy functions 
-\begin_inset Formula $a_{t}^{\ast}(\bullet)$
-\end_inset
-
- and 
-\begin_inset Formula $c_{t}^{\ast}(\bullet)$
-\end_inset
-
-, distributions 
-\begin_inset Formula $D_{t}$
-\end_inset
-
-, such that for all 
-\begin_inset Formula $t$
-\end_inset
-
-
-\end_layout
-
-\begin_layout Enumerate
-\begin_inset Formula $a_{t}^{\ast}(\bullet)$
-\end_inset
-
- and 
-\begin_inset Formula $c_{t}^{\ast}(\bullet)$
-\end_inset
-
- solve the household problem given price paths
-\end_layout
-
-\begin_layout Enumerate
-\begin_inset Formula $D_{t}$
-\end_inset
-
- are implied by the household problem given price paths and 
-\begin_inset Formula $D_{0}$
-\end_inset
-
-
-\end_layout
-
-\begin_layout Enumerate
-Firms maximizes profit, 
-\begin_inset Formula $r_{t}=r(Z_{t},K_{t-1},L_{t})$
-\end_inset
-
- and 
-\begin_inset Formula $w_{t}=w(r_{t},Z_{t})$
-\end_inset
-
-
-\end_layout
-
-\begin_layout Enumerate
-The labor market clears, i.e.
- 
-\begin_inset Formula $L_{t}=\int z_{t}dD_{t}=1$
-\end_inset
-
-
-\end_layout
-
-\begin_layout Enumerate
-The capital market clears, i.e.
- 
-\begin_inset Formula $K_{t-1}=\int a_{t-1}dD_{t}$
-\end_inset
-
-
-\end_layout
-
-\begin_layout Enumerate
-The goods market clears, i.e.
- 
-\begin_inset Formula $Y_{t}=\int c_{t}^{\ast}(\bullet)dD_{t}+K_{t}-K_{t-1}+\delta K_{t-1}$
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-This is also called an MIT-shock 
-\begin_inset Formula $\equiv$
-\end_inset
-
- 
-\begin_inset Quotes ald
-\end_inset
-
-shock in a world without shocks
-\begin_inset Quotes ard
-\end_inset
-
-.
-\end_layout
-
-\begin_layout Standard
-In practice we consider a 
-\emph on
-truncated
-\emph default
- transition path of length 
-\begin_inset Formula $T$
-\end_inset
-
-, and everything is back to steady state afterwards.
-\end_layout
-
-\begin_layout Subsection
-Sequence space method
-\end_layout
-
-\begin_layout Standard
-We can think of the model in terms of inputs are targets:
-\end_layout
-
-\begin_layout Enumerate
-
-\series bold
-1 exogenous input:
-\series default
- 
-\begin_inset Formula $\{Z_{t}\}_{t=0}^{T-1}$
-\end_inset
-
-
-\end_layout
-
-\begin_layout Enumerate
-
-\series bold
-1 endogenous input: 
-\begin_inset Formula $\{K_{t}\}_{t=0}^{T-1}$
-\end_inset
-
-
-\end_layout
-
-\begin_layout Enumerate
-
-\series bold
-1 target: 
-\series default
-Asset market clearing
-\end_layout
-
-\begin_layout Standard
-The model is then captured by the equation system
-\size small
-
-\begin_inset Formula 
-\begin{align*}
-\boldsymbol{H}(\{K_{t},Z_{t}\}_{t=0}^{T}) & =\boldsymbol{0}\Leftrightarrow\\
-\left[\begin{array}{c}
-\text{Asset market clearing}\end{array}\right] & =\boldsymbol{0}\\
-\left[\begin{array}{c}
-K_{t}-\mathcal{K}_{t}\end{array}\right] & =\left[\begin{array}{c}
-0\end{array}\right]\\
-\forall t\in\{0,1,\dots,T-1\}
-\end{align*}
-
-\end_inset
-
-
-\size default
-where we have
-\begin_inset Formula 
-\begin{align*}
-L_{t} & =1\\
-r_{t} & =\alpha Z_{t}(K_{t-1}/L_{t})^{\alpha-1}\\
-w_{t} & =(1-\alpha)Z_{t}\left(\frac{r_{t}+\delta}{\alpha Z_{t}}\right)^{\frac{\alpha}{\alpha-1}}\\
-D_{t} & =\Gamma_{t-1,D}(D_{t-1}),\forall t>0\\
-\mathcal{K}_{t} & =\int a_{t}^{\ast}(z_{t},a_{t-1})dD_{t}\\
-K_{-1} & =K_{ss}\\
-D_{0} & =\Gamma_{D}(D_{ss};a_{ss}^{\ast},\Gamma_{z})=D_{ss}
-\end{align*}
-
-\end_inset
-
-In 
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-lstinline{transition_path.py}
-\end_layout
-
-\end_inset
-
- the user must supply the jitted function 
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-lstinline{evaluate_path(...)}
-\end_layout
-
-\end_inset
-
-, which given the inputs updates the value of all targets.
-\end_layout
-
-\begin_layout Paragraph*
-Jacobian.
-\end_layout
-
-\begin_layout Standard
-Defining 
-\begin_inset Formula $\boldsymbol{K}=(K_{0},K_{1},\dots$
-\end_inset
-
-) and 
-\begin_inset Formula $\boldsymbol{Z}=(Z_{0},Z_{1},\dots)$
-\end_inset
-
- we can write the equation system in time-stacked form
-\series bold
-
-\begin_inset Formula 
-\begin{equation}
-\boldsymbol{H}(\boldsymbol{K},\boldsymbol{Z})=\boldsymbol{0}\label{eq:H_vec}
-\end{equation}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-
-\series bold
-Total differentiation
-\series default
- implies
-\begin_inset Formula 
-\begin{align}
-\boldsymbol{H}_{\boldsymbol{K}}d\boldsymbol{K}+\boldsymbol{H}_{\boldsymbol{Z}}d\boldsymbol{Z}=0 & \Leftrightarrow d\boldsymbol{K}=-\boldsymbol{H}_{\boldsymbol{K}}^{-1}\boldsymbol{H}_{\boldsymbol{Z}}d\boldsymbol{Z}\label{eq:total_diff}
-\end{align}
-
-\end_inset
-
-where
-\begin_inset Formula 
-\[
-\boldsymbol{H}_{\boldsymbol{K}}=\left[\begin{array}{ccc}
-\frac{\partial H_{0}}{\partial K_{0}} & \frac{\partial H_{0}}{\partial K_{1}} & \cdots\\
-\frac{\partial H_{1}}{\partial K_{0}} & \ddots & \ddots\\
-\vdots & \ddots & \ddots
-\end{array}\right],\,\boldsymbol{H}_{\boldsymbol{Z}}=\left[\begin{array}{ccc}
-\frac{\partial H_{0}}{\partial Z_{0}} & \frac{\partial H_{0}}{\partial Z_{1}} & \cdots\\
-\frac{\partial H_{1}}{\partial Z_{0}} & \ddots & \ddots\\
-\vdots & \ddots & \ddots
-\end{array}\right]
-\]
-
-\end_inset
-
-and
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\begin{align}
-\boldsymbol{H}_{\boldsymbol{K}} & =\mathcal{J}^{\mathcal{K},r}\mathcal{J}^{r,K}+\mathcal{J}^{\mathcal{K},w}\mathcal{J}^{w,K}-\boldsymbol{I}\label{eq:H_K}\\
-\boldsymbol{H}_{Z} & =\mathcal{J}^{\mathcal{K},r}\mathcal{J}^{r,Z}+\mathcal{J}^{\mathcal{K},w}\mathcal{J}^{w,Z}\label{eq:H_Z}
-\end{align}
-
-\end_inset
-
-where generically
-\begin_inset Formula 
-\[
-\mathcal{J}^{x,y}=\left[\begin{array}{ccc}
-\frac{\partial x_{0}}{\partial y_{0}} & \frac{\partial x_{0}}{\partial y_{1}} & \cdots\\
-\frac{\partial x_{1}}{\partial y_{0}} & \ddots & \ddots\\
-\vdots & \ddots & \ddots
-\end{array}\right]
-\]
-
-\end_inset
-
-We also refer to 
-\begin_inset Formula $\boldsymbol{G}=-\boldsymbol{H}_{\boldsymbol{K}}^{-1}\boldsymbol{H}_{\boldsymbol{Z}}$
-\end_inset
-
- as the solution matrix, and write the generic linearized response of any
- variable as
-\begin_inset Formula 
-\begin{align}
-d\boldsymbol{Y} & =\mathcal{J}^{Y,K}\boldsymbol{G}d\boldsymbol{Z}+\mathcal{J}^{Y,Z}d\boldsymbol{Z}\label{eq:linearized_path}
-\end{align}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Once the Jacobian 
-\begin_inset Formula $\boldsymbol{H}_{\boldsymbol{K}}$
-\end_inset
-
-, also referred to as 
-\begin_inset Quotes eld
-\end_inset
-
-the full Jacobian
-\begin_inset Quotes erd
-\end_inset
-
-, is calculated, the full non-linear equation system can be solved with
- a quasi-Newton equation solver such as the Broyden-solver for an arbitrary
- path of technology, 
-\begin_inset Formula $Z_{t}$
-\end_inset
-
-, returning to steady state.
- This is provided in the package with the method 
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-lstinline{.find_transition_path()}
-\end_layout
-
-\end_inset
-
-.
-\end_layout
-
-\begin_layout Standard
-In the package there are two methods which both needs to be run to calculate
- the Jacobian:
-\end_layout
-
-\begin_layout Enumerate
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-lstinline{.compute_jac_hh()}
-\end_layout
-
-\end_inset
-
-: Compute the Jacobians of household problem, namely 
-\begin_inset Formula $\mathcal{J}^{\mathcal{K},r}$
-\end_inset
-
- and 
-\begin_inset Formula $\mathcal{J}^{\mathcal{K},w}$
-\end_inset
-
- using the fast fast news algorithm (see below).
-\end_layout
-
-\begin_layout Enumerate
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-vspace{-3mm}
-\end_layout
-
-\end_inset
-
-
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-lstinline{.compute_jac()}
-\end_layout
-
+\begin_inset Formula $\boldsymbol{Y}_{t}^{s,i}$
 \end_inset
 
-: Compute the full Jacobian using numerical differentiation relying on the
- Jacobians of the household problem through the chain-rule as in eq.
- 
+ denote the solution to the equation system 
 \begin_inset CommandInset ref
 LatexCommand eqref
-reference "eq:H_K"
+reference "eq:v_general"
 plural "false"
 caps "false"
 noprefix "false"
 
 \end_inset
 
-.
-\end_layout
-
-\begin_layout Subsection
-Fake news algorithm
-\end_layout
-
-\begin_layout Standard
-The fake news algorithm is explained in 
-\begin_inset CommandInset citation
-LatexCommand citet
-key "auclert_using_2021"
-literal "false"
+-
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:Y_general"
+plural "false"
+caps "false"
+noprefix "false"
 
 \end_inset
 
-.
- The algorithm firstly uses that the policy functions only depend on the
- time span relative to when the shocks arrive.
- Therefore it is only necessary to find the policy functions solving backwards
- along the transition path one single time.
- The more surprising result is that it is only necessary to simulate forwards
- along the transition path one single time.
- The intuition is not straightforward, but as the algorithm is fully generic
- it can just be relied on as a black box.
-\end_layout
-
-\begin_layout Standard
-Consider the following notation:
-\end_layout
-
-\begin_layout Enumerate
-
-\series bold
-Productivity:
-\series default
- 
-\begin_inset Formula $z_{t}$
+ when all inputs are at their steady state value 
+\emph on
+except in period 
+\begin_inset Formula $s$
 \end_inset
 
-, indexed by 
+
+\emph default
+, where there is an infinitesimal shock 
+\begin_inset Formula $dx$
+\end_inset
+
+ to input variable 
 \begin_inset Formula $i$
 \end_inset
 
-, lives on 
-\begin_inset Formula $\mathcal{G}_{z}=\{z^{0},z^{1},\dots,z^{\#_{z}-1}\}$
+.
+ Let 
+\begin_inset Formula $\Lambda_{t}^{s,i}=\Lambda(\boldsymbol{v}_{t+1}^{s,i},X_{t}^{s,i})$
 \end_inset
 
- with transition matrix 
-\begin_inset Formula $\Pi_{t+1}^{e}$
+ and 
+\begin_inset Formula $\boldsymbol{\boldsymbol{y}}_{t}^{s,i}=y(\boldsymbol{v}_{t+1}^{s,i},X_{t}^{s,i})$
 \end_inset
 
- with elements
+ denote the transition matrix and the individual measures associated with
+ this solution.
+ We can therefore write
 \begin_inset Formula 
-\[
-\pi_{t+1,[i,i+]}^{z}=\text{Pr}[z_{t+1}=z^{i+1}|z_{t}=z^{i}].
-\]
+\begin{align}
+\boldsymbol{D}_{t}^{s,i} & =\left(\Lambda_{t-1}^{s,i}\right)^{\prime}\boldsymbol{D}_{t-1}^{s,i}\label{eq:Ds}\\
+\boldsymbol{Y}_{t}^{s,i} & =\left(\boldsymbol{y}_{t}^{s,i}\right)^{\prime}\boldsymbol{D}_{t}^{s,i}.\label{eq:Ys}
+\end{align}
 
 \end_inset
 
 
 \end_layout
 
-\begin_layout Enumerate
+\begin_layout Paragraph*
+Building blocks.
+\end_layout
 
-\series bold
-Assets:
-\series default
- 
-\begin_inset Formula $a_{t}$
+\begin_layout Standard
+The value function equation 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:v_general"
+plural "false"
+caps "false"
+noprefix "false"
+
 \end_inset
 
-, indexed by 
-\begin_inset Formula $j$
+ is forward looking so 
+\begin_inset Formula $\boldsymbol{v}_{t}^{s,i}=\boldsymbol{v}_{ss}$
 \end_inset
 
-, lives on 
-\begin_inset Formula $\mathcal{G}_{a}=\{a^{0},a^{1},\dots,a^{\#_{a}-1}\}$
+ after the shock has arrived, i\SpecialChar endofsentence
+e.
+ for 
+\begin_inset Formula $t>s$
 \end_inset
 
 .
-\end_layout
-
-\begin_layout Enumerate
-
-\series bold
-Value
-\series default
- 
-\series bold
-and policy functions:
-\series default
- 
-\begin_inset Formula $\boldsymbol{v}$
+ Additionally, only the time span until the shock arrives matter so 
+\begin_inset Formula $\boldsymbol{v}_{t}^{s,i}=\boldsymbol{v}_{t-1}^{s-1,i}$
 \end_inset
 
-, 
-\begin_inset Formula $\boldsymbol{a}^{\ast}$
+ when 
+\begin_inset Formula $t\leq s$
+\end_inset
+
+.
+ This carries over to 
+\begin_inset Formula $\Lambda_{t}^{s,i}$
 \end_inset
 
  and 
-\begin_inset Formula $\boldsymbol{c}^{\ast}$
+\begin_inset Formula $\boldsymbol{y}_{t}^{s,i}$
 \end_inset
 
- lives on 
-\begin_inset Formula $\mathcal{G}_{z}\times\mathcal{G}_{a}$
+ such that for all 
+\begin_inset Formula $t,s\geq1$
 \end_inset
 
- with
+
 \begin_inset Formula 
-\begin{align*}
-\boldsymbol{v}_{[i,j]} & =u(\boldsymbol{c}_{[i,j]}^{\ast})+\sum_{j_{+}=0}^{\#_{a}-1}\boldsymbol{P}_{[j,j_{+}]}^{i}\beta\sum_{k=0}^{\#_{z}-1}\pi_{t+1,[i,i_{+}]}^{e}v_{[i_{+}j_{+}]},
-\end{align*}
-
-\end_inset
-
-where 
-\begin_inset Formula $\boldsymbol{c}_{[i,j]}^{\ast}=c^{\ast}(z_{i},a_{j})$
-\end_inset
-
- and 
-\begin_inset Formula $\boldsymbol{P}_{[j,k]}^{i}$
-\end_inset
-
- are the weights implied by linear interpolation of 
-\begin_inset Formula $a^{\ast}(z_{t},a_{t-1})$
-\end_inset
-
- at 
-\begin_inset Formula $\boldsymbol{a}_{[i,j]}^{\text{\ensuremath{\ast}}}=a^{\ast}(z_{i},a_{j})$
-\end_inset
-
- given by
-\begin_inset Formula 
-\[
-\boldsymbol{P}_{[j,k]}^{i}=\begin{cases}
-\frac{a_{ij}^{\text{\ensuremath{\ast}}}-a^{j_{+}-1}}{a^{j_{+}}-a^{j_{+}-1}} & \text{if }j_{+}>0,\text{and }a_{ij}^{\text{\ensuremath{\ast}}}\in[a^{j_{+}-1},a^{j_{+}}]\\
-\frac{a_{ij}^{\text{\ensuremath{\ast}}}-a^{j_{+}}}{a^{j_{+}+1}-a^{j_{+}}} & \text{if }j_{+}<\#_{a}-1,\text{and }a_{ij}^{\text{\ensuremath{\ast}}}\in[a^{j_{+}},a^{j_{+}+1}]\\
-0 & \text{else}
-\end{cases}.
-\]
+\begin{equation}
+\boldsymbol{y}_{t}^{s,i}=\begin{cases}
+\boldsymbol{y}_{ss} & t>s\\
+\boldsymbol{y}_{T-1-(s-t)}^{T-1,i} & t\leq s
+\end{cases}\,\,\,\text{and}\,\,\,\Lambda_{t}^{s,i}=\begin{cases}
+\Lambda_{ss} & t>s\\
+\Lambda_{T-1-(s-t)}^{T-1,i} & t\leq s
+\end{cases}.\label{eq:timspan}
+\end{equation}
 
 \end_inset
 
@@ -5007,270 +5635,504 @@ where
 \end_layout
 
 \begin_layout Standard
-Let 
-\series bold
-
-\begin_inset Formula $\overrightarrow{x}$
-\end_inset
-
-
-\series default
- be the row-stacked version of the matrix 
-\begin_inset Formula $x$
-\end_inset
-
-.
- The Bellman equation can be written
-\series bold
-
-\begin_inset Formula 
-\begin{equation}
-\boldsymbol{\overrightarrow{v}_{t}}=u(\boldsymbol{\overrightarrow{c}}_{t}^{\ast})+\beta\boldsymbol{P}_{t}\tilde{\Pi}_{t+1}^{e}\overrightarrow{\boldsymbol{v}}_{t+1}m\label{eq:Bellman_vec}
-\end{equation}
-
-\end_inset
-
-
-\series default
-where 
-\begin_inset Formula $\tilde{\Pi}_{t+1}^{e}=\Pi_{t+1}^{e}\otimes\boldsymbol{I}_{\#_{a}\times\#_{a}}$
+This implies that 
+\begin_inset Formula $\boldsymbol{y}_{t}^{s,i}$
 \end_inset
 
  and 
-\begin_inset Formula $P_{t}$
+\begin_inset Formula $\Lambda_{t}^{s,i}$
 \end_inset
 
- is the policy matrix given by
-\size small
-
-\begin_inset Formula 
-\begin{equation}
-\boldsymbol{P}_{t}=\left[\begin{array}{ccc}
-\boldsymbol{P}_{t}^{0} & \boldsymbol{0} & \boldsymbol{0}\\
-\boldsymbol{0} & \ddots & \boldsymbol{0}\\
-\boldsymbol{0} & \boldsymbol{0} & \boldsymbol{P}_{t}^{\#_{e}-1}
-\end{array}\right],\,P_{t}^{i}=\left[\begin{array}{ccc}
-\ddots & \vdots & \iddots\\
-\cdots & q_{[j,j_{+}]}^{i} & \cdots\\
-\iddots & \vdots & \ddots
-\end{array}\right].\label{eq:Q}
-\end{equation}
-
+ can be found for any 
+\begin_inset Formula $t$
 \end_inset
 
-
-\size default
-Simulation is now the inverse operation: 
-\begin_inset Formula 
-\begin{equation}
-\overrightarrow{D}_{t+1}=\tilde{\Pi}_{t+1}^{e\prime}\boldsymbol{P}_{t}^{\prime}\overrightarrow{D}_{t},\label{eq:D_vec}
-\end{equation}
-
+ and 
+\begin_inset Formula $s$
 \end_inset
 
-where 
-\begin_inset Formula $\prime$
+ once 
+\begin_inset Formula $\boldsymbol{y}_{t}^{T-1,i}$
 \end_inset
 
- denoted transpose.
- The fake new algorithm now is:
-\end_layout
-
-\begin_layout Itemize
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-[]
-\end_layout
-
+ and 
+\begin_inset Formula $\Lambda_{t}^{T-1,i}$
 \end_inset
 
+ is known for 
+\begin_inset Formula $t\in\{0,1,\dots,T-1\}$
+\end_inset
 
-\series bold
-Step 1: 
-\series default
-Solve backwards 
+, which only requires a single backwards iteration from a shock in period
+ 
 \begin_inset Formula $T-1$
 \end_inset
 
- periods from a shock 
-\begin_inset Formula $\Delta_{x}$
-\end_inset
-
- to price 
-\begin_inset Formula $x$
-\end_inset
-
-.
- 
-\begin_inset Newline newline
-\end_inset
-
-
-\begin_inset Formula $\,\,\,\boldsymbol{a}_{s}^{\ast,x}$
-\end_inset
-
- is the optimal saving policy with 
-\begin_inset Formula $s$
-\end_inset
-
- periods until shock arrival
-\begin_inset Newline newline
-\end_inset
-
-
-\begin_inset Formula $\,\,\,\boldsymbol{P}_{s}^{x}$
-\end_inset
-
- is the associated policy matrix
-\begin_inset space ~
-\end_inset
-
-
-\begin_inset Newline newline
-\end_inset
-
-
-\begin_inset Formula $\,\,\tilde{\Pi}_{s}^{e\prime}$
-\end_inset
-
- is transition matrix from 
-\begin_inset Formula $s-1$
-\end_inset
-
- to 
-\begin_inset Formula $s$
-\end_inset
-
-
+ for each input.
 \end_layout
 
-\begin_layout Itemize
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-[]
+\begin_layout Standard
+For later use, we define the following objects:
 \end_layout
 
-\end_inset
-
-
-\series bold
-Step 2: 
-\series default
-\emph on
-Numerical derivatives,
-\emph default
-
+\begin_layout Standard
 \begin_inset Formula 
 \begin{align*}
-\Delta_{D,x}^{s} & =\frac{\tilde{\Pi}_{ss}^{e\prime}\boldsymbol{P}_{s}^{x\prime}\overrightarrow{D}_{ini}-\overrightarrow{D}_{ss}}{\Delta_{x}},\Delta_{a,x}^{s}=\frac{\overrightarrow{\boldsymbol{a}}_{s}^{\ast,x\prime}\overrightarrow{D}_{ini}-\overrightarrow{\boldsymbol{a}_{ss}}^{\ast,\prime}\overrightarrow{D}_{ss}}{\Delta_{x}}
+\mathcal{Y}_{s}^{o,i} & \equiv\frac{d\boldsymbol{Y}_{0}^{o,s,i}}{dx}=\frac{(d\boldsymbol{\boldsymbol{y}}_{t}^{o,s,i})^{\prime}}{dx}\boldsymbol{D}_{ss}\\
+\mathcal{D}_{s}^{i} & \equiv\frac{d\boldsymbol{D}_{1}^{s,i}}{dx}=\frac{(d\Lambda_{0}^{s,i})^{\prime}}{dx}\boldsymbol{D}_{ss}\\
+\mathcal{E}_{t}^{o} & \equiv\left(\Lambda_{ss}\right)^{t}\boldsymbol{y}_{ss}^{o},
 \end{align*}
 
 \end_inset
 
 where 
-\begin_inset Formula $\overrightarrow{D}_{ini}=\tilde{\Pi}_{s}^{e\prime}\left(\tilde{\Pi}_{ss}^{e\prime}\right)^{-1}\overrightarrow{D}_{ss}$
+\begin_inset Formula $\mathcal{Y}_{s}^{o,i}$
 \end_inset
 
-
-\end_layout
-
-\begin_layout Itemize
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-[]
-\end_layout
-
+ and 
+\begin_inset Formula $\mathcal{D}_{s}^{i}$
 \end_inset
 
-
-\series bold
-Step 3: 
-\series default
-\emph on
-Expectation factors
-\emph default
-, 
-\begin_inset Formula $\mathcal{E}_{t}=\begin{cases}
-\boldsymbol{a}_{ss}^{\ast} & \text{if }t=0\\
-\boldsymbol{P}_{ss}\tilde{\Pi}_{ss}^{e}\mathcal{E}_{t-1} & \text{else}
-\end{cases}$
-\end_inset
-
-
-\end_layout
-
-\begin_layout Itemize
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-[]
-\end_layout
-
-\end_inset
-
-
-\series bold
-Step 4: 
-\series default
-\emph on
-Fake news matrix,
-\begin_inset space ~
-\end_inset
-
-
-\emph default
-
-\begin_inset Formula $\mathcal{F}_{[t,s]}^{a}=\begin{cases}
-\Delta_{a,x}^{s} & \text{if }t=0\\
-\overrightarrow{\mathcal{E}}_{t-1}\Delta_{D,x}^{s} & \text{else }
-\end{cases}$
-\end_inset
-
-
-\end_layout
-
-\begin_layout Itemize
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-[]
-\end_layout
-
-\end_inset
-
-
-\series bold
-Step 5:
-\series default
+ are derivatives of the outputs and the distribution at respectively time
  
-\emph on
-Jacobian, 
-\emph default
+\begin_inset Formula $0$
+\end_inset
 
-\begin_inset Formula $\mathcal{J}_{[t,s]}^{\mathcal{K},x}=\begin{cases}
-\mathcal{F}_{[t,s]}^{a} & \text{if \ensuremath{t=0\lor s=0}}\\
-\sum_{k=0}^{\min\{t,s\}}\mathcal{F}_{[t-k,s-k]}^{a} & \text{\ensuremath{\text{else}}}
-\end{cases}$
+ and time 
+\begin_inset Formula $1$
+\end_inset
+
+ to a shock at time 
+\begin_inset Formula $s$
+\end_inset
+
+, and 
+\begin_inset Formula $\mathcal{E}_{t}^{o}$
+\end_inset
+
+ is an expectation vector.
+ The cost of computing 
+\begin_inset Formula $\mathcal{Y}_{s}^{o,i}$
+\end_inset
+
+ and 
+\begin_inset Formula $\mathcal{D}_{s}^{i}$
+\end_inset
+
+ for 
+\begin_inset Formula $s\in\{0,1,\dots,T-1\}$
+\end_inset
+
+ are similar to a full forward simulation for 
+\begin_inset Formula $T$
+\end_inset
+
+ periods.
+ The cost of computing 
+\begin_inset Formula $\mathcal{E}_{s}^{o}$
+\end_inset
+
+ is negligible in comparison and can be done recursively, 
+\begin_inset Formula $\mathcal{E}_{t}^{o}=\Lambda_{ss}\mathcal{E}_{t-1}^{o}$
+\end_inset
+
+ with 
+\begin_inset Formula $\mathcal{E}_{0}^{o}=\boldsymbol{\boldsymbol{y}}_{ss}^{o}$
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Standard
+
+\emph on
+The task is to build the full Jacobian from these building blocks
+\emph default
+.
+ To do this, we first need to take the total derivative of equations 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:Ds"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ and 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:Ys"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ around the steady state,
+\begin_inset Formula 
+\begin{align}
+d\boldsymbol{D}_{t}^{s,i} & =\Lambda_{ss}^{\prime}d\boldsymbol{D}_{t-1}^{s,i}+(d\Lambda_{t-1}^{s,i})^{\prime}\boldsymbol{D}_{ss}\label{eq:dDs}\\
+d\boldsymbol{Y}_{t}^{o,s,i} & =(\boldsymbol{y}_{ss}^{o})^{\prime}d\boldsymbol{D}_{t}^{s}+(d\boldsymbol{y}_{t}^{o,s,i})^{\prime}\boldsymbol{D}_{ss}.\label{eq:dYs}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Paragraph*
+Edge of the Jacobian
+\end_layout
+
+\begin_layout Standard
+First consider the effect on output at time 
+\begin_inset Formula $0$
+\end_inset
+
+ from at shock at time 
+\begin_inset Formula $s$
+\end_inset
+
+.
+ We immediately have
+\begin_inset Formula 
+\begin{equation}
+\mathcal{J}_{0,s}^{hh,i,o}=\frac{d\boldsymbol{Y}_{0}^{o,s,i}}{dx}=\mathcal{Y}_{s}^{i,o}\label{eq:Jhh_t0_s}
+\end{equation}
+
 \end_inset
 
 
 \end_layout
 
 \begin_layout Standard
-\begin_inset Newpage newpage
+
+\series medium
+Next consider the effect on output at time 
+\begin_inset Formula $t\geq1$
+\end_inset
+
+ form a shock at time 
+\begin_inset Formula $0$
+\end_inset
+
+.
+ 
+\series default
+Combining equation 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:dDs"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ with only the time span mattering in equation 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:timspan"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ implies for 
+\begin_inset Formula $t\geq2$
+\end_inset
+
+
+\series medium
+
+\begin_inset Formula 
+\begin{align}
+d\boldsymbol{D}_{t}^{0,i} & =\Lambda_{ss}^{\prime}d\boldsymbol{D}_{t-1}^{0,i}+\underset{=0}{\underbrace{\left(d\Lambda_{t-1}^{0,i}\right)^{\prime}}}\boldsymbol{D}_{ss}\label{eq:diff_Ds_edge}\\
+ & =\Lambda_{ss}^{\prime}d\boldsymbol{D}_{t-1}^{0,i}\nonumber \\
+ & =\left(\Lambda_{ss}^{\prime}\right)^{t-1}d\boldsymbol{D}_{1}^{0,i}.\nonumber 
+\end{align}
+
+\end_inset
+
+
+\series default
+Combining 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:dYs"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ with only the time span mattering in equation 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:timspan"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+, and the above equation 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:diff_dDs"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ implies for 
+\begin_inset Formula $t\geq1$
+\end_inset
+
+,
+\series medium
+ 
+\begin_inset Formula 
+\begin{align}
+dY_{t}^{o,0,i} & =(\boldsymbol{y}_{ss}^{o})^{\prime}d\boldsymbol{D}_{t}^{0,i}+\underset{=0}{\underbrace{(d\boldsymbol{y}_{t}^{o,0,i})^{\prime}}}\boldsymbol{D}_{ss}=(\boldsymbol{y}_{ss}^{o})^{\prime}d\boldsymbol{D}_{t}^{0,i}=(\boldsymbol{y}_{ss}^{o})^{\prime}\left(\Lambda_{ss}^{\prime}\right)^{t-1}d\boldsymbol{D}_{1}^{0,i}.\label{eq:diff_Ys_edge}
+\end{align}
+
+\end_inset
+
+
+\series default
+Combining equation 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:diff_Ds_edge"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ and 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:diff_Ys_edge"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ implies for 
+\begin_inset Formula $t\geq1$
+\end_inset
+
+
+\begin_inset Formula 
+\begin{align}
+\mathcal{J}_{t,0}^{hh,i,o} & =\frac{dY_{t}^{o,0,i}}{dx}=\left(\mathcal{E}_{t-1}^{o}\right)^{\prime}\mathcal{D}_{0}^{i}\label{eq:Jhh_t_s0}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Paragraph*
+Inner parts of the Jacobian.
+\end_layout
+
+\begin_layout Standard
+Combining 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:dDs"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ with only the time span mattering in equation 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:timspan"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+, implies for 
+\begin_inset Formula $t,s\geq1$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+d\boldsymbol{D}_{t+1}^{s,i}-d\boldsymbol{D}_{t}^{s-1,i} & =\Lambda_{ss}^{\prime}\left(d\boldsymbol{D}_{t}^{s,i}-d\boldsymbol{D}_{t-1}^{s-1,i}\right)+\underset{=0}{\underbrace{\left(d\Lambda_{t-1}^{s,i}-d\Lambda_{t-2}^{s-1,i}\right)^{\prime}}}\boldsymbol{D}_{ss}\nonumber \\
+ & =\Lambda_{ss}^{\prime}\left(d\boldsymbol{D}_{t}^{s,i}-d\boldsymbol{D}_{t-1}^{s-1,i}\right)\nonumber \\
+ & =\left(\Lambda_{ss}^{\prime}\right)^{\text{2}}\left(d\boldsymbol{D}_{t-2}^{s,i}-d\boldsymbol{D}_{t-2}^{s-1,i}\right)\nonumber \\
+ & =\vdots\nonumber \\
+ & =\left(\Lambda_{ss}^{\prime}\right)^{t-1}\left(d\boldsymbol{D}_{1}^{s,i}-\underset{=0}{\underbrace{d\boldsymbol{D}_{0}^{s-1,i}}}\right)\nonumber \\
+ & =\left(\Lambda_{ss}^{\prime}\right)^{t-1}d\boldsymbol{D}_{1}^{s,i}\label{eq:diff_dDs}
+\end{align}
+
+\end_inset
+
+where 
+\begin_inset Formula $\boldsymbol{D}_{0}=\boldsymbol{D}_{ss}$
+\end_inset
+
+ implies 
+\begin_inset Formula $d\boldsymbol{D}_{0}^{s-1,i}=0$
+\end_inset
+
+ in the next to last line.
+\end_layout
+
+\begin_layout Standard
+Combining 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:dYs"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ with only the time span mattering in equation 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:timspan"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+, and the above equation 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:diff_dDs"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+, implies for 
+\begin_inset Formula $t,s\geq1$
+\end_inset
+
+
+\begin_inset Formula 
+\begin{align}
+dY_{t}^{o,s,i}-dY_{t-1}^{o,s-1,i} & =(\boldsymbol{y}_{ss}^{o})^{\prime}\left(d\boldsymbol{D}_{t}^{s,i}-d\boldsymbol{D}_{t-1}^{s-1,i}\right)+\underset{=0}{\underbrace{\left(d\boldsymbol{y}_{t}^{o,s,i}-d\boldsymbol{y}_{t-1}^{o,s-1,i}\right)^{\prime}}}\boldsymbol{D}_{ss}\label{eq:diff_dYs}\\
+ & =(\boldsymbol{y}_{ss}^{o})^{\prime}\left(d\boldsymbol{D}_{t}^{s,i}-d\boldsymbol{D}_{t-1}^{s-1,o}\right)\nonumber \\
+ & =(\boldsymbol{y}_{ss}^{o})^{\prime}\left(\Lambda_{ss}^{\prime}\right)^{t-1}d\boldsymbol{D}_{1}^{s}\nonumber \\
+ & =\left(\mathcal{E}_{t-1}^{o}\right)^{\prime}d\boldsymbol{D}_{1}^{s,i}\nonumber 
+\end{align}
+
+\end_inset
+
+Combining 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:diff_dDs"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ and 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:diff_dYs"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ for 
+\begin_inset Formula $t,s\geq1$
+\end_inset
+
+ implies 
+\begin_inset Formula 
+\begin{align}
+\mathcal{J}_{t,s}^{hh,i,o}-\mathcal{J}_{t-1,s-1}^{hh,i,o} & =\frac{dY_{t}^{o,s,i}-dY_{t-1}^{o,s-1,i}}{dx}\Leftrightarrow\nonumber \\
+\mathcal{J}_{t,s}^{hh,i,o} & =\mathcal{J}_{t-1,s-1}^{hh,i,o}+\left(\mathcal{E}_{t-1}^{o}\right)^{\prime}\mathcal{D}_{s}^{i}\label{eq:Jhh_inner}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Paragraph*
+Recursive formulation
+\end_layout
+
+\begin_layout Standard
+Define the object
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\mathcal{F}_{t,s}^{,i,o}=\begin{cases}
+\mathcal{Y}_{s}^{o,i} & t=0\\
+\left(\mathcal{E}_{t-1}^{o}\right)^{\prime}\mathcal{D}_{s}^{i} & t\geq1
+\end{cases}\label{eq:F}
+\end{equation}
+
+\end_inset
+
+Combining equations 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:Jhh_t0_s"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+, 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:Jhh_t_s0"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ and 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:Jhh_inner"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+, the household Jacobian can be written recursively by
+\begin_inset Formula 
+\begin{equation}
+\mathcal{J}_{t,s}^{i,o}=\sum_{k=0}^{\min\{t,s\}}\mathcal{F}_{t-k,s-k}^{i,o}\label{eq:Jhh_recursive}
+\end{equation}
+
 \end_inset
 
 
@@ -5285,6 +6147,10 @@ name "sec:Additional-features"
 \end_inset
 
 
+\end_layout
+
+\begin_layout Standard
+The following methods are available:
 \end_layout
 
 \begin_layout Enumerate
@@ -5499,36 +6365,6 @@ Test time-invariance when inputs are at their steady state values.
 \end_layout
 
 \begin_layout Standard
-
-\series bold
-Upcoming features:
-\end_layout
-
-\begin_layout Enumerate
-More general shock processes
-\end_layout
-
-\begin_layout Enumerate
-Computation of covariance-matrices
-\end_layout
-
-\begin_layout Enumerate
-Efficient computation of multiple household Jacobians
-\end_layout
-
-\begin_layout Enumerate
-Use Jacobians block-by-block
-\end_layout
-
-\begin_layout Enumerate
-Interface to fast C++ code
-\end_layout
-
-\begin_layout Enumerate
-Check for determinancy
-\end_layout
-
-\begin_layout Standard
 \begin_inset Newpage newpage
 \end_inset
 
@@ -5610,7 +6446,7 @@ status open
 
 
 \backslash
-lstinline{par.transition_T}$
+lstinline{par.T}$
 \backslash
 uparrow$
 \end_layout
