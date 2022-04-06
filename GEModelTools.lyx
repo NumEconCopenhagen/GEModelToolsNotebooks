@@ -380,7 +380,7 @@ status open
 Section 
 \begin_inset CommandInset ref
 LatexCommand ref
-reference "sec:Model-Class"
+reference "sec:Model-class"
 plural "false"
 caps "false"
 noprefix "false"
@@ -436,7 +436,7 @@ status open
 Section 
 \begin_inset CommandInset ref
 LatexCommand ref
-reference "sec:Efficient-Computation-of"
+reference "sec:Efficient-computation-of"
 plural "false"
 caps "false"
 noprefix "false"
@@ -731,10 +731,10 @@ addtocounter{page}{-1}
 \end_layout
 
 \begin_layout Section
-Model Class
+Model class
 \begin_inset CommandInset label
 LatexCommand label
-name "sec:Model-Class"
+name "sec:Model-class"
 
 \end_inset
 
@@ -748,6 +748,14 @@ In this section, we describe the class of general equilibrium models with
 \emph on
 sequence space method
 \emph default
+ developed in 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "auclert_using_2021"
+literal "false"
+
+\end_inset
+
  to solve them.
  The starting point is a model with 
 \emph on
@@ -771,11 +779,11 @@ aggregate risk
  once it is linearized and certainty equivalence holds.
  This implies that the sequence space method can be used to simulate time-series
  data for aggregate variables and the distribution of agents.
- Throughout this section a simple Aiygari-model is used as an example.
+ Throughout this note a simple Aiygari-model is used as an example.
 \end_layout
 
 \begin_layout Subsection
-Model Class
+Model class
 \end_layout
 
 \begin_layout Standard
@@ -815,7 +823,7 @@ perfect foresight
 ,
 \begin_inset Formula 
 \[
-\boldsymbol{X}=\{\boldsymbol{X}_{t}\}_{t=0}^{\infty}=\{\boldsymbol{X}^{j}\}_{j\in\mathcal{N}}=\{\boldsymbol{X}_{t}^{j}\}_{t=0,j\in\mathcal{N}}^{\infty},
+\boldsymbol{X}=\{\boldsymbol{X}_{t}\}_{t=0}^{\infty}=\{\boldsymbol{X}^{j}\}_{j\in\mathcal{N}}=\{X_{t}^{j}\}_{t=0,j\in\mathcal{N}}^{\infty},
 \]
 
 \end_inset
@@ -1015,8 +1023,8 @@ exogenous
  The full transition matrix is
 \begin_inset Formula 
 \begin{align*}
-\Lambda(\boldsymbol{v}_{t+1},\boldsymbol{X}_{t}^{hh}) & =\tilde{\Lambda}(\boldsymbol{v}_{t+1},\boldsymbol{X}_{t}^{hh})\Pi(\boldsymbol{X}_{t}^{hh})\\
-\boldsymbol{D}_{t+1} & =\Lambda(\boldsymbol{v}_{t+1},\boldsymbol{X}_{t}^{hh})^{\prime}\boldsymbol{D}_{t}
+\Lambda(\boldsymbol{v}_{t+1},\boldsymbol{X}_{t}^{hh}) & =\tilde{\Lambda}(\boldsymbol{v}_{t+1},\boldsymbol{X}_{t}^{hh})\Pi(\boldsymbol{X}_{t+1}^{hh})\\
+\boldsymbol{D}_{t+1} & =\Lambda(\boldsymbol{v}_{t+1},\boldsymbol{X}_{t}^{hh},\boldsymbol{X}_{t+1}^{hh})^{\prime}\boldsymbol{D}_{t}
 \end{align*}
 
 \end_inset
@@ -1047,10 +1055,10 @@ It is straightforward to numerically evaluate the model starting from the
  Derivatives can also be calculated along this graph to construct Jacobians.
  Computationally, the central challenge is to compute the derivatives of
  the household block.
- This is can be done efficiently as explained below in section 
+ This can be done efficiently as explained below in section 
 \begin_inset CommandInset ref
 LatexCommand ref
-reference "sec:Efficient-Computation-of"
+reference "sec:Efficient-computation-of"
 plural "false"
 caps "false"
 noprefix "false"
@@ -1111,7 +1119,7 @@ where we refer to
 
  as the 
 \emph on
-solution matrix
+general equilibrium solution matrix
 \emph default
 .
  By also total differentiating equation 
@@ -1178,7 +1186,7 @@ where
 \begin_inset Formula $\Gamma_{t}$
 \end_inset
 
- is technology.
+ is technology and considered an exogenous shock.
  Capital depreciates with the rate 
 \begin_inset Formula $\delta$
 \end_inset
@@ -1197,16 +1205,14 @@ implies the standard pricing equations
 
 \begin_inset Formula 
 \begin{align}
-r_{t}^{k} & =\alpha\Gamma_{t}\left(K_{t-1}/L_{t}\right)^{\text{\alpha-1}}\label{eq:rk}\\
+r_{t}^{k} & =\alpha\Gamma_{t}(K_{t-1}/L_{t})^{\text{\alpha-1}}\label{eq:rk}\\
 w_{t} & =(1-\alpha)\Gamma_{t}(K_{t-1}/L_{t})^{\alpha}\label{eq:w}
 \end{align}
 
 \end_inset
 
 
-\end_layout
-
-\begin_layout Standard
+\series default
 where 
 \begin_inset Formula $r_{t}^{k}$
 \end_inset
@@ -1427,8 +1433,8 @@ For each
 \end_layout
 
 \begin_layout Standard
-The algorithm basically first distributes probability mass from an existing
- point, 
+This algorithm first distributes probability mass from an existing point
+ in 
 \begin_inset Formula $\boldsymbol{D}_{t}$
 \end_inset
 
@@ -1452,7 +1458,7 @@ The algorithm basically first distributes probability mass from an existing
 \end_inset
 
 .
- This updating algorithm can also be formulated in matrix form as 
+ In matrix form this is 
 \begin_inset Formula $\boldsymbol{D}_{t+1}=\Pi_{t}^{\prime}\tilde{\Lambda}_{t}^{\prime}\boldsymbol{D_{t}}$
 \end_inset
 
@@ -1523,7 +1529,7 @@ Market clearing requires
 \end_layout
 
 \begin_layout Paragraph*
-Stationary Equilibrium.
+Stationary equilibrium.
 \end_layout
 
 \begin_layout Standard
@@ -1820,9 +1826,6 @@ The sequence-space solution method described above can therefore be used
 
 .
  The full Jacobians can be written as
-\end_layout
-
-\begin_layout Standard
 \begin_inset Formula 
 \begin{align}
 \boldsymbol{H}_{\boldsymbol{K}} & =\mathcal{J}^{A^{hh},r}\mathcal{J}^{r,K}+\mathcal{J}^{A^{hh},w}\mathcal{J}^{w,K}-\boldsymbol{I}\label{eq:H_K}\\
@@ -1849,7 +1852,7 @@ ly.
 \end_layout
 
 \begin_layout Subsection
-Aggregate Risk and Simulation
+Aggregate risk and simulation
 \end_layout
 
 \begin_layout Standard
@@ -1956,64 +1959,6 @@ The time path of the policy can then be computed as
 
 and a panel of households can be simulated using the standard updating rule
  for the distribution.
-\end_layout
-
-\begin_layout Standard
-Alternative, Appendix C.7 in 
-\begin_inset CommandInset citation
-LatexCommand citet
-key "auclert_using_2021"
-literal "false"
-
-\end_inset
-
- discuss how the reformulate the model in state space form
-\begin_inset Formula 
-\[
-\left[\begin{array}{c}
-\boldsymbol{D}_{t+1}-\boldsymbol{D}_{ss}\\
-\boldsymbol{S}_{t+1}-\boldsymbol{S}_{ss}\\
-\boldsymbol{Z}_{t+1}-\boldsymbol{Z}_{ss}
-\end{array}\right]=A\left[\begin{array}{c}
-\boldsymbol{D}_{t}-\boldsymbol{D}_{ss}\\
-\boldsymbol{S}_{t}-\boldsymbol{S}_{ss}\\
-\boldsymbol{Z}_{t}-\boldsymbol{Z}_{ss}
-\end{array}\right]+B\boldsymbol{\epsilon}_{t},
-\]
-
-\end_inset
-
-where 
-\begin_inset Formula $\boldsymbol{S}_{t}$
-\end_inset
-
- are the required aggregate state variables, and 
-\begin_inset Formula $A$
-\end_inset
-
- and 
-\begin_inset Formula $B$
-\end_inset
-
- are matrices, which can be constructed from objects computed by the 
-\begin_inset Quotes ald
-\end_inset
-
-fake news
-\begin_inset Quotes ard
-\end_inset
-
- algorithm explained in Section 
-\begin_inset CommandInset ref
-LatexCommand ref
-reference "sec:Efficient-Computation-of"
-plural "false"
-caps "false"
-noprefix "false"
-
-\end_inset
-
-.
 \end_layout
 
 \begin_layout Subsubsection
@@ -2263,72 +2208,6 @@ vspace{-3mm}
 
 
 \series bold
-Solution:
-\series default
- 
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-lstinline{.sol}
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Enumerate
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-vspace{-3mm}
-\end_layout
-
-\end_inset
-
-
-\series bold
-Simulation:
-\series default
- 
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-lstinline{.sim}
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Enumerate
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-vspace{-3mm}
-\end_layout
-
-\end_inset
-
-
-\series bold
 Steady state:
 \series default
  
@@ -2380,6 +2259,39 @@ lstinline{.path}
 
 \end_layout
 
+\begin_layout Enumerate
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+vspace{-3mm}
+\end_layout
+
+\end_inset
+
+
+\series bold
+Simulation:
+\series default
+ 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{.sim}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
 \begin_layout Standard
 The user is required to specify some 
 \series bold
@@ -2409,7 +2321,7 @@ status open
 
 
 \backslash
-vspace{-1mm}
+vspace{-3mm}
 \end_layout
 
 \end_inset
@@ -2432,7 +2344,11 @@ lstinline{.varlist}
 \end_inset
 
 .
- Used as 
+ 
+\begin_inset Newline newline
+\end_inset
+
+Used as 
 \begin_inset ERT
 status open
 
@@ -2446,129 +2362,6 @@ lstinline{path.VARNAME}
 \end_inset
 
 .
-\end_layout
-
-\begin_layout Enumerate
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-vspace{-3mm}
-\end_layout
-
-\end_inset
-
-
-\series bold
-Household variables:
-\series default
- 
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-lstinline{.varlist_hh}
-\end_layout
-
-\end_inset
-
-
-\begin_inset Newline newline
-\end_inset
-
-Used as 
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-lstinline{sol.VARNAME}
-\end_layout
-
-\end_inset
-
- and 
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-lstinline{sol.path_VARNAME}
-\end_layout
-
-\end_inset
-
-
-\begin_inset Newline newline
-\end_inset
-
-Remark I: 
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-lstinline{i}
-\end_layout
-
-\end_inset
-
- and 
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-lstinline{w}
-\end_layout
-
-\end_inset
-
- are used for saving simulation indices and weights.
-\begin_inset Newline newline
-\end_inset
-
-Remark II: 
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-lstinline{path_i}
-\end_layout
-
-\end_inset
-
- and 
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-lstinline{path_w}
-\end_layout
-
-\end_inset
-
- are used for saving simulation indices and weights.
 \end_layout
 
 \begin_layout Enumerate
@@ -2602,7 +2395,11 @@ lstinline{.grid_hh}
 \end_inset
 
 .
- Used as 
+ 
+\begin_inset Newline newline
+\end_inset
+
+Used as 
 \begin_inset ERT
 status open
 
@@ -2611,53 +2408,6 @@ status open
 
 \backslash
 lstinline{par.VARNAME_grid}
-\end_layout
-
-\end_inset
-
-.
-\end_layout
-
-\begin_layout Enumerate
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-vspace{-3mm}
-\end_layout
-
-\end_inset
-
-
-\series bold
-Household policy functions:
-\series default
- 
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-lstinline{.pols_hh}
-\end_layout
-
-\end_inset
-
-.
- Should be in 
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-lstinline{.varlist_hh}
 \end_layout
 
 \end_inset
@@ -2696,7 +2446,10 @@ lstinline{.inputs_hh}
 \end_inset
 
 .
- Should be in 
+\begin_inset Newline newline
+\end_inset
+
+Must be in 
 \begin_inset ERT
 status open
 
@@ -2743,7 +2496,31 @@ lstinline{.outputs_hh}
 \end_inset
 
 .
- The aggregated variable 
+\begin_inset Newline newline
+\end_inset
+
+Must 
+\emph on
+not 
+\emph default
+be in 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{.varlist}
+\end_layout
+
+\end_inset
+
+.
+\begin_inset Newline newline
+\end_inset
+
+The aggregate variable 
 \begin_inset ERT
 status open
 
@@ -2756,7 +2533,7 @@ lstinline{VARNAME.upper()_hh}
 
 \end_inset
 
- should be in 
+ must be in 
 \begin_inset ERT
 status open
 
@@ -2765,6 +2542,110 @@ status open
 
 \backslash
 lstinline{.varlist_hh}
+\end_layout
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+vspace{-3mm}
+\end_layout
+
+\end_inset
+
+
+\series bold
+Household policy functions:
+\series default
+ 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{.pols_hh}
+\end_layout
+
+\end_inset
+
+.
+\begin_inset Newline newline
+\end_inset
+
+Must be subset of 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{.outputs_hh}
+\end_layout
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+vspace{-3mm}
+\end_layout
+
+\end_inset
+
+
+\series bold
+Household intertemporal variables:
+\series default
+ 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{.pols_hh}
+\end_layout
+
+\end_inset
+
+.
+\begin_inset Newline newline
+\end_inset
+
+Must 
+\emph on
+not 
+\emph default
+be in 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{.varlist}
 \end_layout
 
 \end_inset
@@ -2803,7 +2684,10 @@ lstinline{.shocks}
 \end_inset
 
 .
- Should be in 
+\begin_inset Newline newline
+\end_inset
+
+Should be in 
 \begin_inset ERT
 status open
 
@@ -2850,7 +2734,10 @@ lstinline{.unknowns}
 \end_inset
 
 .
- Should be in 
+\begin_inset Newline newline
+\end_inset
+
+Should be in 
 \begin_inset ERT
 status open
 
@@ -2897,7 +2784,10 @@ lstinline{.targets}
 \end_inset
 
 .
- Should be in 
+\begin_inset Newline newline
+\end_inset
+
+Should be in 
 \begin_inset ERT
 status open
 
@@ -2949,7 +2839,48 @@ vspace{-1mm}
 
 
 \series bold
-Number of exogenous states:
+Number of exogenous 
+\emph on
+fixed 
+\emph default
+states:
+\series default
+ 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{par.Nfix}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+vspace{-3mm}
+\end_layout
+
+\end_inset
+
+
+\series bold
+Number of exogenous 
+\emph on
+stochastic
+\emph default
+ states:
 \series default
  
 \begin_inset ERT
@@ -2982,7 +2913,7 @@ vspace{-3mm}
 
 
 \series bold
-Number of grid points:
+Number of grid points for endogenous variables:
 \series default
  
 \begin_inset ERT
@@ -3112,7 +3043,57 @@ vspace{-3mm}
 
 
 \series bold
-For each exogenous input:
+Length of simulation:
+\series default
+ 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{par.simT}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+vspace{-3mm}
+\end_layout
+
+\end_inset
+
+
+\series bold
+For each shock in 
+\series default
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{.shocks}
+\end_layout
+
+\end_inset
+
+
+\series bold
+:
 \series default
  
 \begin_inset Newline newline
@@ -3126,7 +3107,7 @@ status open
 
 
 \backslash
-lstinline{par.jump_VARNAME}
+lstinline{par.jump_SHOCKNAME}
 \end_layout
 
 \end_inset
@@ -3143,7 +3124,24 @@ status open
 
 
 \backslash
-lstinline{par.rho_VARNAME}
+lstinline{par.rho_SHOCKNAME}
+\end_layout
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+Standard deviation: 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{par.std_SHOCKNAME}
 \end_layout
 
 \end_inset
@@ -3258,7 +3256,7 @@ lstinline{par.tol_broyden}
 \end_layout
 
 \begin_layout Standard
-In the 
+In 
 \begin_inset ERT
 status open
 
@@ -3271,7 +3269,7 @@ lstinline{.allocate()}
 
 \end_inset
 
- method the internal 
+ the internal 
 \series bold
 method 
 \series default
@@ -3283,7 +3281,7 @@ status open
 
 
 \backslash
-lstinline{.allocate_GE(sol_shape)}
+lstinline{.allocate_GE()}
 \end_layout
 
 \end_inset
@@ -3545,6 +3543,66 @@ status open
 
 
 \backslash
+lstinline{ss.D}
+\end_layout
+
+\end_inset
+
+, 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{shape=sol_shape}
+\end_layout
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{path.D}
+\end_layout
+
+\end_inset
+
+, 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{shape=(par.T,*sol_shape)}
+\end_layout
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
 lstinline{sim.D}
 \end_layout
 
@@ -3558,37 +3616,7 @@ status open
 
 
 \backslash
-lstinline{shape=sol_shape}
-\end_layout
-
-\end_inset
-
- 
-\begin_inset Newline newline
-\end_inset
-
-
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-lstinline{sim.path_D}
-\end_layout
-
-\end_inset
-
-, 
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-lstinline{shape=(par.T,*sol_shape)}
+lstinline{shape=(par.simT,*sol_shape)}
 \end_layout
 
 \end_inset
@@ -3611,7 +3639,7 @@ vspace{-3mm}
 
 
 \series bold
-All variables in 
+Household outputs in 
 \series default
 
 \begin_inset ERT
@@ -3621,11 +3649,15 @@ status open
 
 
 \backslash
-lstinline{.sol}
+lstinline{.outputs_hh}
 \end_layout
 
 \end_inset
 
+
+\series bold
+:
+\series default
 
 \begin_inset Newline newline
 \end_inset
@@ -3638,7 +3670,7 @@ status open
 
 
 \backslash
-lstinline{sol.VARNAME}
+lstinline{ss.OUTPUTNAME}
 \end_layout
 
 \end_inset
@@ -3668,7 +3700,7 @@ status open
 
 
 \backslash
-lstinline{sol.path_VARNAME}
+lstinline{path.OUTPUTNAME}
 \end_layout
 
 \end_inset
@@ -3687,6 +3719,186 @@ lstinline{shape=(par.T,*sol_shape)}
 \end_inset
 
 
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{sim.OUTPUTNAME}
+\end_layout
+
+\end_inset
+
+, 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{shape=(par.simT,*sol_shape)}
+\end_layout
+
+\end_inset
+
+ (only 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{.pols_hh}
+\end_layout
+
+\end_inset
+
+)
+\begin_inset Newline newline
+\end_inset
+
+Aggregated variables:
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{ss.OUTPUTNAME.upper()_hh}
+\end_layout
+
+\end_inset
+
+, scalar
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{path.OUTPUTNAME.upper()_hh}
+\end_layout
+
+\end_inset
+
+, 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{shape=(par.T,)}
+\end_layout
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{sim.OUTPUTNAME.upper()_hh}
+\end_layout
+
+\end_inset
+
+, 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{shape=(par.simT,)}
+\end_layout
+
+\end_inset
+
+ (only 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{.pols_hh}
+\end_layout
+
+\end_inset
+
+)
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{sim.OUTPUTNAME.upper()_hh_from_D}
+\end_layout
+
+\end_inset
+
+, 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{shape=(par.simT,)}
+\end_layout
+
+\end_inset
+
+ (only 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{.pols_hh}
+\end_layout
+
+\end_inset
+
+)
 \end_layout
 
 \begin_layout Enumerate
@@ -3704,7 +3916,7 @@ vspace{-3mm}
 
 
 \series bold
-All variables in 
+Aggregate variables in 
 \series default
 
 \begin_inset ERT
@@ -3714,13 +3926,43 @@ status open
 
 
 \backslash
-lstinline{.path}
+lstinline{.varlist}
 \end_layout
 
 \end_inset
 
 
+\series bold
+:
+\series default
+
 \begin_inset Newline newline
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{ss.VARNAME}
+\end_layout
+
+\end_inset
+
+, scalar
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+vspace{1mm}
+\end_layout
+
 \end_inset
 
 
@@ -3736,7 +3978,7 @@ lstinline{path.VARNAME}
 
 \end_inset
 
-,
+
 \begin_inset Newline newline
 \end_inset
 
@@ -3782,12 +4024,12 @@ status open
 
 
 \backslash
-lstinline{ss.VARNAME}
+lstinline{sim.VARNAME}
 \end_layout
 
 \end_inset
 
-, scalar
+, 
 \begin_inset ERT
 status open
 
@@ -3795,17 +4037,17 @@ status open
 
 
 \backslash
-vspace{1mm}
+lstinline{shape=(par.simT,)}
 \end_layout
 
 \end_inset
 
 
-\series bold
-
 \begin_inset Newline newline
 \end_inset
 
+
+\series bold
 Remark:
 \series default
 
@@ -3885,9 +4127,9 @@ vspace{-3mm}
 
 
 \series bold
-All variables in 
+Household Jacobian
 \series default
-
+, 
 \begin_inset ERT
 status open
 
@@ -3900,7 +4142,11 @@ lstinline{.jac_hh}
 
 \end_inset
 
- (dictionary)
+
+\series bold
+:
+\series default
+
 \begin_inset Newline newline
 \end_inset
 
@@ -3912,7 +4158,7 @@ status open
 
 
 \backslash
-lstinline{jac_hh[(OUTPUTNAME.upper(),INPUTNAME)]}
+lstinline{jac_hh[(OUTPUTNAME.upper()_hh,INPUTNAME)]}
 \end_layout
 
 \end_inset
@@ -3948,9 +4194,9 @@ vspace{-3mm}
 
 
 \series bold
-All variables in 
+Full Jacobian
 \series default
-
+, 
 \begin_inset ERT
 status open
 
@@ -3963,7 +4209,11 @@ lstinline{.jac}
 
 \end_inset
 
- (dictionary)
+
+\series bold
+:
+\series default
+
 \begin_inset Newline newline
 \end_inset
 
@@ -3975,7 +4225,7 @@ status open
 
 
 \backslash
-lstinline{jac[(OUTPUTNAME.upper(),INPUTNAME)]}
+lstinline{jac[(OUTPUTNAME,INPUTNAME)]}
 \end_layout
 
 \end_inset
@@ -4011,7 +4261,7 @@ vspace{-3mm}
 
 
 \series bold
-Components of the solution matrix
+Solution matrix:
 \series default
 
 \begin_inset Newline newline
@@ -4082,6 +4332,111 @@ lstinline{shape=(par.T,par.T)}
 \end_inset
 
 
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Formula $\boldsymbol{G}_{U}$
+\end_inset
+
+: 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{G_U}
+\end_layout
+
+\end_inset
+
+, with shape 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{shape=(par.T,par.T)}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+vspace{-3mm}
+\end_layout
+
+\end_inset
+
+
+\series bold
+Impulse-responses of linearized model
+\series default
+,
+\series bold
+ 
+\series default
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{.IRF}
+\end_layout
+
+\end_inset
+
+
+\series bold
+:
+\series default
+
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{IRF[(OUTPUTNAME,SHOCKNAME)]}
+\end_layout
+
+\end_inset
+
+, each 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{shape=(par.T,)}
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -4133,6 +4488,19 @@ lstinline{.intertemps_hh()}
 
 \end_inset
 
+ in 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{.ss}
+\end_layout
+
+\end_inset
+
 .
  This is called each time we solve for the steady state of the household
  problem
@@ -4147,7 +4515,7 @@ status open
 
 
 \backslash
-lstinline{.solve_ss()}
+lstinline{.solve_hh_ss()}
 \end_layout
 
 \end_inset
@@ -4203,7 +4571,7 @@ status open
 
 
 \backslash
-lstinline{.solve_ss()}
+lstinline{.solve_hh_ss()}
 \end_layout
 
 \end_inset
@@ -4216,7 +4584,7 @@ status open
 
 
 \backslash
-lstinline{.simulate_ss()}
+lstinline{.simulate_hh_ss()}
 \end_layout
 
 \end_inset
@@ -4279,7 +4647,7 @@ status open
 
 
 \backslash
-lstinline{.solve_path()}
+lstinline{.solve_hh_path()}
 \end_layout
 
 \end_inset
@@ -4345,7 +4713,7 @@ status open
 
 
 \backslash
-lstinline{.solve_bakcwards_step()}
+lstinline{.solve_hh_bakcwards_step()}
 \end_layout
 
 \end_inset
@@ -4521,7 +4889,7 @@ status open
 
 
 \backslash
-lstinline{(par,sol,sim,ss,path,threads)}
+lstinline{(par,ss,path,ncols)}
 \end_layout
 
 \end_inset
@@ -4534,7 +4902,7 @@ status open
 
 
 \backslash
-lstinline{threads}
+lstinline{ncols}
 \end_layout
 
 \end_inset
@@ -4560,8 +4928,8 @@ lstinline{par.T}
 
 \end_inset
 
-, and the latter is used to evaluate the path in parallel for all one step
- changes.
+, and the latter is used to evaluate the path simultaneously for all one
+ step changes.
  After this block has been evaluated all paths in 
 \begin_inset ERT
 status open
@@ -4668,7 +5036,7 @@ status open
 
 
 \backslash
-lstinline{.solve_ss()}
+lstinline{.solve_hh_ss()}
 \end_layout
 
 \end_inset
@@ -4685,7 +5053,7 @@ status open
 
 
 \backslash
-lstinline{sol.VARNAME}
+lstinline{ss.VARNAME}
 \end_layout
 
 \end_inset
@@ -4715,7 +5083,7 @@ status open
 
 
 \backslash
-lstinline{.simulate_ss()}
+lstinline{.simulate_hh_ss()}
 \end_layout
 
 \end_inset
@@ -4732,7 +5100,7 @@ status open
 
 
 \backslash
-lstinline{sim.D}
+lstinline{ss.D}
 \end_layout
 
 \end_inset
@@ -4791,7 +5159,7 @@ status open
 
 
 \backslash
-lstinline{.solve_path()}
+lstinline{.solve_hh_path()}
 \end_layout
 
 \end_inset
@@ -4808,7 +5176,7 @@ status open
 
 
 \backslash
-lstinline{sol.path_VARNAME}
+lstinline{path.VARNAME}
 \end_layout
 
 \end_inset
@@ -4837,7 +5205,7 @@ status open
 
 
 \backslash
-lstinline{.simulate_path()}
+lstinline{.simulate_hh_path()}
 \end_layout
 
 \end_inset
@@ -4854,7 +5222,7 @@ status open
 
 
 \backslash
-lstinline{sim.path_D}
+lstinline{path.D}
 \end_layout
 
 \end_inset
@@ -5044,12 +5412,12 @@ status open
 
 
 \backslash
-lstinline{.find_IRFs_path()}
+lstinline{.find_IRFs(reuse_G_U=False)}
 \end_layout
 
 \end_inset
 
-: Find transition path 
+: Find linearized impulse-response 
 \begin_inset Formula $\rightarrow$
 \end_inset
 
@@ -5069,8 +5437,58 @@ lstinline{IRF}[VARNAME]
 .
 \end_layout
 
+\begin_layout Enumerate
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+vspace{-3mm}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{.simulate(skip_hh=False,reuse_G_U=False)}
+\end_layout
+
+\end_inset
+
+: Simulate model 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+ 
+\backslash
+lstinline{sim.VARNAME}
+\end_layout
+
+\end_inset
+
+.
+\end_layout
+
 \begin_layout Standard
-The default is to consider AR(1) shocks given by 
+The default for the 
+\emph on
+impulses-responses
+\emph default
+ is to consider AR(1) shocks given by 
 \begin_inset ERT
 status open
 
@@ -5153,6 +5571,56 @@ lstinline{CUSTOMPATH}
 \end_layout
 
 \begin_layout Standard
+The default for the 
+\emph on
+simulation 
+\emph default
+is to consider AR(1) shocks given by 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{par.std_VARNAME}
+\end_layout
+
+\end_inset
+
+ and 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{par.rho_VARNAME}
+\end_layout
+
+\end_inset
+
+.
+ The aggregated household variables also exists in a version with suffix
+ 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{_from_D}
+\end_layout
+
+\end_inset
+
+, where the response is calculated by linearizing the policy function and
+ then aggregating explicitely.
+\end_layout
+
+\begin_layout Standard
 \begin_inset Newpage newpage
 \end_inset
 
@@ -5186,10 +5654,6 @@ color{background}]
 
 \begin_layout Plain Layout
 
-\end_layout
-
-\begin_layout Plain Layout
-
 from EconModel import EconModelClass
 \end_layout
 
@@ -5219,17 +5683,7 @@ class MyModelClass(EconModelClass,GEModelClass):
 
 \begin_layout Plain Layout
 
-        """ fundamental settings """
-\end_layout
-
-\begin_layout Plain Layout
-
 		
-\end_layout
-
-\begin_layout Plain Layout
-
-		self.namespaces = ['par','sol','sim','ss','path'] # namespaces
 \end_layout
 
 \begin_layout Plain Layout
@@ -5259,6 +5713,10 @@ class MyModelClass(EconModelClass,GEModelClass):
 
 \begin_layout Plain Layout
 
+\end_layout
+
+\begin_layout Plain Layout
+
         self.shocks = [] # exogenous inputs
 \end_layout
 
@@ -5283,7 +5741,7 @@ class MyModelClass(EconModelClass,GEModelClass):
 
 \begin_layout Plain Layout
 
-		self.solve_backwards_step = solve_backwards_step
+		self.solve_hh_backwards_step = solve_hh_backwards_step
 \end_layout
 
 \begin_layout Plain Layout
@@ -5307,16 +5765,21 @@ class MyModelClass(EconModelClass,GEModelClass):
 
 \begin_layout Plain Layout
 
-        """ set baseline parameters """
-\end_layout
-
-\begin_layout Plain Layout
-
 \end_layout
 
 \begin_layout Plain Layout
 
         par = self.par
+\end_layout
+
+\begin_layout Plain Layout
+
+		par.Nfix = 1 
+\end_layout
+
+\begin_layout Plain Layout
+
+		par.Nz = 2
 \end_layout
 
 \begin_layout Plain Layout
@@ -5326,7 +5789,7 @@ class MyModelClass(EconModelClass,GEModelClass):
 
 \begin_layout Plain Layout
 
-        par.jump_VARNAME = -0.01 # initial jump in %
+        par.jump_VARNAME = -0.01 # initial jump
 \end_layout
 
 \begin_layout Plain Layout
@@ -5336,12 +5799,22 @@ class MyModelClass(EconModelClass,GEModelClass):
 
 \begin_layout Plain Layout
 
+		par.std_VARNAME = 0.01 # standard deviation
+\end_layout
+
+\begin_layout Plain Layout
+
         par.T = 500 # length of path        
 \end_layout
 
 \begin_layout Plain Layout
 
-        
+        par.simT = 500 # length of simulation
+\end_layout
+
+\begin_layout Plain Layout
+
+       
 \end_layout
 
 \begin_layout Plain Layout
@@ -5351,36 +5824,16 @@ class MyModelClass(EconModelClass,GEModelClass):
 
 \begin_layout Plain Layout
 
-        """ allocate model """
 \end_layout
 
 \begin_layout Plain Layout
 
-\end_layout
-
-\begin_layout Plain Layout
-
-        par = self.par
-\end_layout
-
-\begin_layout Plain Layout
-
-        sol_shape = (par.Nfix,par.Nz,par.Nendo1)
-\end_layout
-
-\begin_layout Plain Layout
-
-        self.allocate_GE(sol_shape)
+        self.allocate_GE()
 \end_layout
 
 \begin_layout Plain Layout
 
 	
-\end_layout
-
-\begin_layout Plain Layout
-
-	# fully model depenedent functions
 \end_layout
 
 \begin_layout Plain Layout
@@ -5422,10 +5875,10 @@ end{lstlisting}
 \end_layout
 
 \begin_layout Section
-Efficient Computation of the Household Jacobian
+Efficient computation of the household Jacobian
 \begin_inset CommandInset label
 LatexCommand label
-name "sec:Efficient-Computation-of"
+name "sec:Efficient-computation-of"
 
 \end_inset
 
@@ -6216,7 +6669,7 @@ lstinline{.compare_IRFS(...)}
 \begin_inset Newline newline
 \end_inset
 
-Compare IRFs across models
+Compare IRFs across models.
 \end_layout
 
 \begin_layout Enumerate
@@ -6257,12 +6710,25 @@ status open
 
 
 \backslash
-lstinline{.evaluate_path(...)}
+lstinline{.block_pre(...)}
 \end_layout
 
 \end_inset
 
- to screen.
+ and 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{.block_post(...)}
+\end_layout
+
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Enumerate
@@ -6404,7 +6870,9 @@ status open
 
 
 \backslash
-lstinline{par.tol_solve}$
+lstinline{par.tol_solve}
+\backslash
+,$
 \backslash
 downarrow$
 \end_layout
@@ -6423,7 +6891,9 @@ status open
 
 
 \backslash
-lstinline{par.tol_simulate}$
+lstinline{par.tol_simulate}
+\backslash
+,$
 \backslash
 downarrow$
 \end_layout
@@ -6448,6 +6918,8 @@ status open
 \backslash
 lstinline{par.T}$
 \backslash
+,
+\backslash
 uparrow$
 \end_layout
 
@@ -6469,7 +6941,9 @@ status open
 
 
 \backslash
-lstinline{par.jump_VARNAME}$
+lstinline{par.jump_VARNAME}
+\backslash
+,$
 \backslash
 downarrow$
 \end_layout
@@ -6488,7 +6962,9 @@ status open
 
 
 \backslash
-lstinline{par.rho_VARNAME}$
+lstinline{par.rho_VARNAME}
+\backslash
+,$
 \backslash
 downarrow$
 \end_layout

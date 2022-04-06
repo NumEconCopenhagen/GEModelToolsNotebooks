@@ -15,7 +15,7 @@ class AiygariModelClass(EconModelClass,GEModelClass):
         """ fundamental settings """
 
         # a. namespaces (typically not changed)
-        self.namespaces = ['par','sol','sim','ss','path']
+        self.namespaces = ['par','sim','ss','path']
         
         # b. household
         self.grids_hh = ['a'] # grids in household problem
@@ -55,6 +55,9 @@ class AiygariModelClass(EconModelClass,GEModelClass):
 
         par = self.par
 
+        par.Nfix = 1 # number of fixed discrete states (here discount factor)
+        par.Nz = 7 # number of stochastic discrete states (here productivity)
+
         # a. macros
         pass
 
@@ -67,7 +70,6 @@ class AiygariModelClass(EconModelClass,GEModelClass):
         # c. income parameters
         par.rho_z = 0.95 # AR(1) parameter
         par.sigma_psi = 0.30*(1.0-par.rho_z**2.0)**0.5 # std. of persistent shock
-        par.Nz = 7 # number of productivity states
 
         # d. production and investment
         par.alpha = 0.36 # cobb-douglas
@@ -82,8 +84,9 @@ class AiygariModelClass(EconModelClass,GEModelClass):
         par.Na = 300 # number of grid points
 
         # g. shocks
-        par.jump_Gamma = -0.01 # initial jump in %
+        par.jump_Gamma = -0.01 # initial jump
         par.rho_Gamma = 0.8 # AR(1) coefficient
+        par.std_Gamma = 0.01 # std. of innovation
 
         # h. misc.
         par.T = 500 # length of path        
@@ -105,8 +108,7 @@ class AiygariModelClass(EconModelClass,GEModelClass):
         par.beta_grid = np.zeros(par.Nbeta)
         
         # b. solution
-        sol_shape = (par.Nbeta,par.Nz,par.Na) # (Nfix,Nz,Nendo1)
-        self.allocate_GE(sol_shape) # should always be called here
+        self.allocate_GE() # should always be called here
 
     def create_grids(self):
         """ create grids """
@@ -124,7 +126,6 @@ class AiygariModelClass(EconModelClass,GEModelClass):
 
         par = self.par
         ss = self.ss
-        sol = self.sol
 
         # a. beta
         par.beta_grid[:] = np.linspace(par.beta_mean-par.beta_delta,par.beta_mean+par.beta_delta,par.Nbeta)
@@ -146,14 +147,12 @@ class AiygariModelClass(EconModelClass,GEModelClass):
         a = 0.90*m # pure guess
         c = m - a
         
-        sol.Va[:,:,:] = (1+ss.r)*c**(-par.sigma)
+        ss.Va[:,:,:] = (1+ss.r)*c**(-par.sigma)
 
     def find_ss(self,do_print=False):
         """ find the steady state """
 
         par = self.par
-        sol = self.sol
-        sim = self.sim
         ss = self.ss
 
         # a. exogenous and targets
@@ -168,7 +167,7 @@ class AiygariModelClass(EconModelClass,GEModelClass):
         self.simulate_hh_ss(do_print=do_print) # give us sim.D (steady state distribution)
         if do_print: print('')
 
-        ss.K = ss.A_hh = np.sum(sim.D*sol.a)
+        ss.K = ss.A_hh = np.sum(ss.D*ss.a)
         
         # c. back technology and depreciation rate
         ss.Gamma = ss.w / ((1-par.alpha)*(ss.K/ss.L)**par.alpha)
@@ -178,7 +177,7 @@ class AiygariModelClass(EconModelClass,GEModelClass):
         # d. remaining
         ss.Y = ss.Gamma*ss.K**par.alpha*ss.L**(1-par.alpha)
         ss.C = ss.Y - par.delta*ss.K
-        ss.C_hh = np.sum(sim.D*sol.c)
+        ss.C_hh = np.sum(ss.D*ss.c)
 
         # e. print
         if do_print:
@@ -207,7 +206,7 @@ class AiygariModelClass(EconModelClass,GEModelClass):
 # household problem #
 #####################
 
-@nb.njit(parallel=True,cache=False)        
+@nb.njit(parallel=True)        
 def solve_hh_backwards(par,r,w,z_grid,z_trans_plus,Va_plus,Va,a,c):
     """ solve backwards with Va_plus from previous iteration """
 
@@ -237,16 +236,16 @@ def solve_hh_backwards(par,r,w,z_grid,z_trans_plus,Va_plus,Va,a,c):
 # other blocks #
 ################
 
-@nb.njit(cache=False)
-def block_pre(par,sol,sim,ss,path,threads=1):
+@nb.njit
+def block_pre(par,ss,path,ncols=1):
     """ evaluate transition path - before household block """
 
     # par, sol, sim, ss, path are namespaces
-    # threads specifies have many parallel versions of the model to evaluate
+    # ncols specifies have versions of the model to evaluate at once
     #   path.VARNAME have shape=(len(unknowns)*par.T,par.T)
     #   path.VARNAME[0,t] for t in [0,1,...mpar.T] is always used outside of this function
 
-    for thread in nb.prange(threads):
+    for thread in nb.prange(ncols):
         
         # unpack
         Gamma = path.Gamma[thread,:]
@@ -290,16 +289,16 @@ def block_pre(par,sol,sim,ss,path,threads=1):
         Y[:] = Gamma*K_lag**(par.alpha)*L**(1-par.alpha)
         C[:] = Y-(K-K_lag)-par.delta*K_lag
 
-@nb.njit(cache=False)
-def block_post(par,sol,sim,ss,path,threads=1):
+@nb.njit
+def block_post(par,ss,path,ncols=1):
     """ evaluate transition path - after household block """
 
     # par, sol, sim, ss, path are namespaces
-    # threads specifies have many parallel versions of the model to evaluate
+    # ncols specifies have many versions of the model to evaluate at once
     #   path.VARNAME have shape=(len(unknowns)*par.T,par.T)
     #   path.VARNAME[0,t] for t in [0,1,...mpar.T] is always used outside of this function
 
-    for thread in nb.prange(threads):
+    for thread in nb.prange(ncols):
 
         # unpack
         Gamma = path.Gamma[thread,:]
