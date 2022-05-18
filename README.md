@@ -2,7 +2,6 @@
 
 Examples for [GEModelTools](https://github.com/JeppeDruedahl/GEModelTools).
 
-1. Read `GEModelTools.pdf`
-2. Look at `01. Test.ipynb`
-2. Look at `02. Compare IRFs.ipynb`
-
+1. Read the documentation in `GEModelTools.pdf`
+1. See the HANC model in `HANC\`
+1. See the HANK model is in `HANK\`
