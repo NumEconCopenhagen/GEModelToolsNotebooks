@@ -61,7 +61,7 @@ def find_ss(model,do_print=False):
     ss = model.ss
 
     # a. fixed
-    ss.Z = 1.0
+    ss.Gamma = 1.0
     ss.N = 1.0
     ss.Pi = ss.Pi_w = 1.0
     
@@ -74,7 +74,7 @@ def find_ss(model,do_print=False):
     ss.i = ((1.0+ss.r)*ss.Pi)-1.0
 
     # b. firms
-    ss.Y = ss.Z*ss.N
+    ss.Y = ss.Gamma*ss.N
     ss.w = (par.epsilon-1)/par.epsilon
     ss.d = ss.Y-ss.w*ss.N
     

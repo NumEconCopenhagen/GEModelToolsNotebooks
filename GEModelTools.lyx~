@@ -1854,17 +1854,16 @@ A_{t}^{hh} & =\boldsymbol{a}_{t}^{\ast\prime}\boldsymbol{D}_{t}\\
 
 \begin_inset Formula 
 \[
-\boldsymbol{H}(\boldsymbol{K}^{0},\boldsymbol{\Gamma})=\boldsymbol{H}_{K}(\boldsymbol{K}_{ss},)(\boldsymbol{K}^{0}-\boldsymbol{K}_{ss})
+\boldsymbol{H}_{K}\boldsymbol{K}^{0}=\boldsymbol{H}(\boldsymbol{K}^{0},\boldsymbol{\Gamma})
 \]
 
 \end_inset
 
 
 \begin_inset Formula 
-\begin{align*}
-\boldsymbol{K}^{1} & =\boldsymbol{H}_{K}^{-1}\boldsymbol{H}(\boldsymbol{K}^{0},\boldsymbol{\Gamma})\\
-\boldsymbol{K}^{2} & =\boldsymbol{H}_{K}^{-1}\boldsymbol{H}(\boldsymbol{K}^{0},\boldsymbol{\Gamma})
-\end{align*}
+\[
+\boldsymbol{K}^{1}=\boldsymbol{H}_{K}^{-1}\boldsymbol{H}(\boldsymbol{K}^{0},\boldsymbol{\Gamma})
+\]
 
 \end_inset
 
