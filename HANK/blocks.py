@@ -1,32 +1,13 @@
 import numpy as np
 import numba as nb
 
-from GEModelTools import lag, lead, bound, bisection
+from GEModelTools import lag, lead
    
 @nb.njit
-def NKPC_eq(x,par,ss,w,Z,Y,Y_plus,Pi_plus):  
-    
-    LHS_NKPC = (1-par.epsilon) + par.epsilon*w/Z
-        
-    RHS_NKPC_cur = par.theta*(x-ss.Pi)*x
-    RHS_NKPC_fut = par.beta_mean*par.theta*(Pi_plus-ss.Pi)*Pi_plus*Y_plus/Y
+def block_pre(par,ss,ini,path,ncols=1):
 
-    NKPC = LHS_NKPC - (RHS_NKPC_cur-RHS_NKPC_fut)
-    
-    return NKPC    
+    for ncol in nb.prange(ncols):
 
-@nb.njit
-def block_pre(par,ini,ss,path,ncols=1):
-    """ evaluate transition path - before household block """
-
-    # par, sol, sim, ss, path are namespaces
-    # ncols specifies have many versions of the model to evaluate at once
-    #   path.VARNAME have shape=(len(unknowns)*par.T,par.T)
-    #   path.VARNAME[0,t] for t in [0,1,...mpar.T] is always used outside of this function
-
-    for ncol in range(ncols):
-
-        # unpack
         A_hh = path.A_hh[ncol,:]
         A = path.A[ncol,:]
         B = path.B[ncol,:]
@@ -34,97 +15,51 @@ def block_pre(par,ini,ss,path,ncols=1):
         C = path.C[ncol,:]
         clearing_A = path.clearing_A[ncol,:]
         clearing_C = path.clearing_C[ncol,:]
+        clearing_NE = path.clearing_NE[ncol,:]
         d = path.d[ncol,:]
-        EU = path.EU[ncol,:]
         G = path.G[ncol,:]
-        Gamma = path.Gamma[ncol,:]
         i = path.i[ncol,:]
-        N = path.N[ncol,:]
-        NKPC = path.NKPC[ncol,:]
-        Pi_w = path.Pi_w[ncol,:]
-        Pi = path.Pi[ncol,:]
+        NE_hh = path.NE_hh[ncol,:]
+        NE = path.NE[ncol,:]
+        nkpc_res = path.nkpc_res[ncol,:]
+        pi = path.pi[ncol,:]
+        psi = path.psi[ncol,:]
         r = path.r[ncol,:]
-        rh = path.rh[ncol,:]
+        istar = path.istar[ncol,:]
         tau = path.tau[ncol,:]
-        U = path.U[ncol,:]
-        UE = path.UE[ncol,:]
         w = path.w[ncol,:]
-        wh = path.wh[ncol,:]
-        WPC = path.WPC[ncol,:]
         Y = path.Y[ncol,:]
-        
+        Z = path.Z[ncol,:]
 
-        ####################
-        # I. implied paths #
-        ####################
+        #################
+        # implied paths #
+        #################
 
-        # a. solve NKPC
-        for t_ in range(par.T):
+        # a. firms
+        NE[:] = Y/Z
 
-            t = (par.T-1)-t_
-
-            Y_plus = Y[t+1] if t < par.T-1 else ss.Y
-            Pi_plus = Pi[t+1] if t < par.T-1 else ss.Pi
-            Pi[t] = bisection(NKPC_eq,0.9,1.1,args=(par,ss,w[t],Gamma[t],Y[t],Y_plus,Pi_plus))
+        psi[:] = par.mu/(par.mu-1)/(2*par.kappa)*np.log(1+pi)**2*Y
+        d[:] = Y-w*NE-psi
 
         # b. monetary policy
-        i[:] = ((1+ss.r)*Pi**par.varepsilon_pi)-1.0
-        r[:] = ((1+i)/Pi)-1.0
-        rh[:] = r
+        i[:] = istar + par.phi*pi + par.phi_y*(Y-ss.Y)
+        i_lag = lag(ss.i,i)
+        r[:] = (1+i_lag)/(1+pi)-1
 
-        # c. firm behavior
-        N[:] = Y/Gamma
-        d[:] = Y-w*N
+        # c. government
+        B[:] = ss.B
+        tau[:] = ss.r*B + par.tau_r_fac*(r-ss.r)*B
+        G[:] = tau-r*B
         
-        # d. labor market
-        U[:] = ss.U*(N/ss.N)**par.varepsilon_U
-
-        U_lag = lag(ini.U,U)
-        
-        if par.U_residual == 'UE':
-
-            EU[:] = bound(ss.EU*(N/ss.N)**par.varepsilon_EU,0.0,1.0)
-            UE[:] = bound(1.0-(U-EU*(1-U_lag))/U_lag,0.0,1.0)
-
-        elif par.U_residual == 'EU':
-        
-            UE[:] = bound(ss.UE*(N/ss.N)**par.varepsilon_UE,0.0,1.0)
-            EU[:] = bound((U-UE*U_lag)/(1-U_lag),0.0,1.0)
-
-        else:
-
-            raise ValueError('par.U_residual should be UE or EU')
-
-        # e. government
-        for t in range(par.T):
-
-            # i. lag
-            B_lag = B[t-1] if t > 0 else ss.B
-            
-            # ii. tau
-            x = bound((t-par.t_B)/par.Delta_B,0,1)
-            omega = 3*x**2-2*x**3
-            tau_tilde = ss.tau*(B_lag/ss.B)**par.varepsilon_B
-
-            tau[t] = (1.0-omega)*ss.tau + omega*tau_tilde
-            
-            # iii. government debt
-            B[t] = (1+r[t])*B_lag+G[t]-tau[t]*w[t]*N[t]-d[t]
-        
-        # household income
-        wh[:] = (1-tau)*w*N / (par.phi*U+(1-U))
-
-        # e. aggregates
-        A[:] = B
-        C[:] = Y-G
+        # d. aggregates
+        A[:] = B[:] = ss.B
+        C[:] = Y-G-psi
 
 @nb.njit
-def block_post(par,ini,ss,path,ncols=1):
-    """ evaluate transition path """
+def block_post(par,ss,ini,path,ncols=1):
 
-    for ncol in range(ncols):
+    for ncol in nb.prange(ncols):
 
-        # unpack
         A_hh = path.A_hh[ncol,:]
         A = path.A[ncol,:]
         B = path.B[ncol,:]
@@ -132,43 +67,34 @@ def block_post(par,ini,ss,path,ncols=1):
         C = path.C[ncol,:]
         clearing_A = path.clearing_A[ncol,:]
         clearing_C = path.clearing_C[ncol,:]
+        clearing_NE = path.clearing_NE[ncol,:]
         d = path.d[ncol,:]
-        EU = path.EU[ncol,:]
         G = path.G[ncol,:]
-        Gamma = path.Gamma[ncol,:]        
         i = path.i[ncol,:]
-        N = path.N[ncol,:]
-        NKPC = path.NKPC[ncol,:]
-        Pi_w = path.Pi_w[ncol,:]
-        Pi = path.Pi[ncol,:]
+        NE_hh = path.NE_hh[ncol,:]
+        NE = path.NE[ncol,:]
+        nkpc_res = path.nkpc_res[ncol,:]
+        pi = path.pi[ncol,:]
+        psi = path.psi[ncol,:]
         r = path.r[ncol,:]
-        rh = path.rh[ncol,:]
+        istar = path.istar[ncol,:]
         tau = path.tau[ncol,:]
-        U = path.U[ncol,:]
-        UE = path.UE[ncol,:]
         w = path.w[ncol,:]
-        wh = path.wh[ncol,:]
-        WPC = path.WPC[ncol,:]
         Y = path.Y[ncol,:]
-
-
-        # lagged
-        w_lag = lag(ini.w,w)
+        Z = path.Z[ncol,:]
         
-        Pi_w[:] = w/w_lag*Pi
-        Pi_w_plus = lead(Pi_w,ss.Pi_w)
-        N_plus = lead(N,ss.N)
+        #################
+        # check targets #
+        #################
 
-        # b. WPC
-        v_prime = par.nu*N**(1/par.varphi)
-        u_prime = C**(-par.sigma)
-        LHS_WPC = (1-par.epsilon_w)*(1-tau)*w + par.epsilon_w*v_prime/u_prime
-        
-        RHS_WPC_cur = par.theta_w*(Pi_w-ss.Pi_w)*Pi_w
-        RHS_WPC_fut = par.beta_mean*par.theta_w*(Pi_w_plus-ss.Pi_w)*Pi_w_plus*N_plus/N
+        # a. phillips curve
+        r_plus = lead(r,ss.r)
+        pi_plus = lead(pi,ss.pi)
+        Y_plus = lead(Y,ss.Y)
 
-        WPC[:] =  LHS_WPC - (RHS_WPC_cur-RHS_WPC_fut)
+        nkpc_res[:] = par.kappa*(w/Z-1/par.mu) + 1/(1+r_plus)*Y_plus/Y*np.log(1+pi_plus) - np.log(1+pi)
 
-        # c. market clearing
+        # b. market clearing
         clearing_A[:] = A-A_hh
         clearing_C[:] = C-C_hh
+        clearing_NE[:] = NE-NE_hh

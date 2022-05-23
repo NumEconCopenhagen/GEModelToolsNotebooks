@@ -1,7 +1,13 @@
+# find steady state
+
+import time
 import numpy as np
+from scipy import optimize
+
+from consav import elapsed
 
 from consav.grids import equilogspace
-from consav.markov import tauchen, find_ergodic
+from consav.markov import log_rouwenhorst
 
 def prepare_hh_ss(model):
     """ prepare the household block for finding the steady state """
@@ -13,46 +19,92 @@ def prepare_hh_ss(model):
     # 1. grids #
     ############
 
-    # a. beta
-    par.beta_grid[:] = np.linspace(par.beta_mean-par.beta_delta,par.beta_mean+par.beta_delta,par.Nbeta)
-
     # b. a
-    par.a_grid[:] = equilogspace(0.0,par.a_max,par.Na)
+    par.a_grid[:] = equilogspace(par.a_min,par.a_max,par.Na)
 
-    # c. z
-    log_e_grid,_,_,_,_ = tauchen(0,par.rho_e,par.sigma_psi,n=par.Ne)       
-    par.e_grid[:] = np.exp(log_e_grid)
-    par.z_grid[:] = np.tile(par.e_grid,2)
+    # c. e
+    sigma = np.sqrt(par.sigma_e**2*(1-par.rho_e**2))
+    par.z_grid[:],ss.z_trans[0,:,:],e_ergodic,_,_ = log_rouwenhorst(par.rho_e,sigma,n=par.Ne)
 
     #############################################
     # 2. transition matrix initial distribution #
     #############################################
     
-    # a. transition matrix
-    model.fill_z_trans_ss()
-
-    # b. ergodic
-    for i_beta in range(par.Nbeta):
-        ss.Dz[i_beta,:] = find_ergodic(ss.z_trans[i_beta])/par.Nbeta
-        ss.Dbeg[i_beta,:,0] = ss.Dz[i_beta,:]
-
-    # c. impose mean-one for z
-    par.z_grid[:] = par.z_grid/np.sum(par.z_grid*ss.Dz)
+    for i_fix in range(par.Nfix):
+        ss.Dz[i_fix,:] = e_ergodic/par.Nfix
+        ss.Dbeg[i_fix,:,0] = ss.Dz[i_fix,:]
+        ss.Dbeg[i_fix,:,1:] = 0.0    
 
     ################################################
     # 3. initial guess for intertemporal variables #
     ################################################
 
-    Va = np.zeros((par.Nfix,par.Nz,par.Na))
+    va = np.zeros((par.Nfix,par.Nz,par.Na))
+    
+    for i_z in range(par.Nz):
 
-    # a. raw value        
-    y = par.phi**par.u_grid*ss.wh*par.z_grid
-    c = m = (1+ss.rh)*par.a_grid[np.newaxis,:] + y[:,np.newaxis]
-    Va = (1+ss.rh)*c**(-par.sigma)
+        e = par.z_grid[i_z]
+        T = ss.d*e - ss.tau*e
+        ne = 1.0*e
 
-    # b. expectation
-    for i_beta in range(par.Nbeta):
-        ss.EVa[i_beta] = ss.z_trans[i_beta]@Va
+        c = (1+ss.r)*par.a_grid + ss.w*ne + T
+
+        va[0,i_z,:] = c**(-par.sigma)
+
+    ss.vbeg_a[0] = ss.z_trans[0]@va[0]
+        
+def evaluate_ss(model,do_print=False):
+    """ evaluate steady state"""
+
+    par = model.par
+    ss = model.ss
+
+    # a. fixed
+    ss.Z = 1.0
+    ss.NE = 1.0
+    ss.pi = 0.0
+    
+    # b. targets
+    ss.r = par.r_target_ss
+    ss.A = ss.B = par.B_target_ss
+    ss.G = par.G_target_ss
+
+    # c.. monetary policy
+    ss.istar = ss.r
+    ss.i = ss.istar + par.phi*ss.pi
+
+    # d. firms
+    ss.Y = ss.Z*ss.NE
+    ss.w = ss.Z/par.mu
+    ss.psi = 0.0
+    ss.d = ss.Y-ss.w*ss.NE-ss.psi
+    
+    # e. government
+    ss.tau = ss.r*ss.B + ss.G
+
+    # f. household 
+    model.solve_hh_ss(do_print=do_print)
+    model.simulate_hh_ss(do_print=do_print)
+
+    ss.A_hh = np.sum(ss.a*ss.D)
+    ss.C_hh = np.sum(ss.c*ss.D)
+    ss.NE_hh = np.sum(ss.ne*ss.D)
+
+    # g. market clearing
+    ss.C = ss.Y-ss.G-ss.psi
+
+def objective_ss(x,model,do_print=False):
+    """ objective function for finding steady state """
+
+    par = model.par
+    ss = model.ss
+
+    par.beta = x[0]
+    par.varphi = x[1]
+
+    evaluate_ss(model,do_print=do_print)
+    
+    return np.array([ss.A_hh-ss.B,ss.NE_hh-ss.NE])
 
 def find_ss(model,do_print=False):
     """ find the steady state """
@@ -60,56 +112,20 @@ def find_ss(model,do_print=False):
     par = model.par
     ss = model.ss
 
-    # a. fixed
-    ss.Gamma = 1.0
-    ss.N = 1.0
-    ss.Pi = ss.Pi_w = 1.0
-    
-    # targets
-    ss.tau = par.tau_target
-    ss.EU = par.EU_target
-    ss.UE = par.UE_target
+    # a. find steady state
+    t0 = time.time()
+    res = optimize.root(objective_ss,[par.beta, par.varphi],method='hybr',tol=par.tol_ss,args=(model))
 
-    ss.r = par.r_ss_target
-    ss.i = ((1.0+ss.r)*ss.Pi)-1.0
+    # final evaluation
+    objective_ss(res.x,model)
 
-    # b. firms
-    ss.Y = ss.Gamma*ss.N
-    ss.w = (par.epsilon-1)/par.epsilon
-    ss.d = ss.Y-ss.w*ss.N
-    
-    # c. labor markets
-    ss.U = ss.EU/(ss.EU+ss.UE)
-    
-    # d. household problem
-    ss.rh = ss.r
-    ss.wh = (1-ss.tau)*ss.w*ss.N / (par.phi*ss.U+(1-ss.U))
-
-    model.solve_hh_ss(do_print=do_print)
-    model.simulate_hh_ss(do_print=do_print)
-
-    ss.B = ss.A = ss.A_hh = np.sum(ss.a*ss.D)
-    ss.C_hh = np.sum(ss.c*ss.D)
-
-    # e. government
-    ss.G = ss.d + ss.tau*ss.w*ss.N - ss.r*ss.B
-
-    # f. resource constraint
-    ss.C = ss.Y-ss.G
-
+    # b. print
     if do_print:
-        
-        C = ss.C/ss.Y
-        G = ss.G/ss.Y
-        print(f'GDP by spending: C = {C:.3f}, G = {G:.3f}')
 
-        assert np.isclose(1.0,C+G)
-
-        print(f'Implied B = {ss.B:6.3f}')
+        print(f'steady state found in {elapsed(t0)}')
+        print(f' beta   = {res.x[0]:8.4f}')
+        print(f' varphi = {res.x[1]:8.4f}')
+        print('')
+        print(f'Discrepancy in B = {ss.A-ss.A_hh:12.8f}')
         print(f'Discrepancy in C = {ss.C-ss.C_hh:12.8f}')
-
-    # h. union
-    v_prime_N_unscaled = ss.N**(1/par.varphi)
-    u_prime = ss.C**(-par.sigma)
-    par.nu = (par.epsilon_w-1)/par.epsilon_w*(1-ss.tau)*ss.w*u_prime/v_prime_N_unscaled # WPC
-    if do_print: print(f'Implied nu = {par.nu:6.3f}')
+        print(f'Discrepancy in N = {ss.NE-ss.NE_hh:12.8f}')
