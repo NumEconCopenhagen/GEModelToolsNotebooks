@@ -4,7 +4,7 @@ import numba as nb
 from GEModelTools import lag, lead
    
 @nb.njit
-def block_pre(par,ss,ini,path,ncols=1):
+def block_pre(par,ini,ss,path,ncols=1):
 
     for ncol in nb.prange(ncols):
 
@@ -56,7 +56,7 @@ def block_pre(par,ss,ini,path,ncols=1):
         C[:] = Y-G-psi
 
 @nb.njit
-def block_post(par,ss,ini,path,ncols=1):
+def block_post(par,ini,ss,path,ncols=1):
 
     for ncol in nb.prange(ncols):
 
