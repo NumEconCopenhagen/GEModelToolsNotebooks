@@ -787,7 +787,7 @@ Heterogeneous Agent Neo-Classical
  In Appendix 
 \begin_inset CommandInset ref
 LatexCommand ref
-reference "sec:HANK-model-with"
+reference "sec:HANK-model-with-endo-risk"
 plural "false"
 caps "false"
 noprefix "false"
@@ -1289,7 +1289,7 @@ perfect foresight
 v_{t}(\beta_{i},z_{t},a_{t-1}) & =\max_{a_{t},c_{t}}\frac{c_{t}^{1-\sigma}}{1-\sigma}+\beta\mathbb{E}_{t}\left[v_{t+1}(\beta_{i},z_{t+1},a_{t})\right]\label{eq:Bellman_Aiyagari}\\
  & \text{s.t.}\nonumber \\
 a_{t}+c_{t} & =(1+r_{t})a_{t-1}+w_{t}z_{t}\nonumber \\
-\log z_{t} & =\rho\log z_{t-1}+\varepsilon_{t}^{z}\,\,\,,\varepsilon_{t}^{z}\sim\mathcal{N}(\mu_{z},\sigma_{z}),\,\mathbb{E}[z_{t}]=1\,\nonumber \\
+\log z_{t} & =\rho_{z}\log z_{t-1}+\psi_{t}\,\,\,,\psi_{t}\sim\mathcal{N}(\mu_{\psi},\sigma_{\psi}),\,\mathbb{E}[z_{t}]=1\,\nonumber \\
 a_{t} & \geq0,\nonumber 
 \end{align}
 
@@ -1854,16 +1854,17 @@ A_{t}^{hh} & =\boldsymbol{a}_{t}^{\ast\prime}\boldsymbol{D}_{t}\\
 
 \begin_inset Formula 
 \[
-\boldsymbol{H}_{K}\boldsymbol{K}^{0}=\boldsymbol{H}(\boldsymbol{K}^{0},\boldsymbol{\Gamma})
+\boldsymbol{H}(\boldsymbol{K}^{0},\boldsymbol{\Gamma})=\boldsymbol{H}_{K}(\boldsymbol{K}_{ss},)(\boldsymbol{K}^{0}-\boldsymbol{K}_{ss})
 \]
 
 \end_inset
 
 
 \begin_inset Formula 
-\[
-\boldsymbol{K}^{1}=\boldsymbol{H}_{K}^{-1}\boldsymbol{H}(\boldsymbol{K}^{0},\boldsymbol{\Gamma})
-\]
+\begin{align*}
+\boldsymbol{K}^{1} & =\boldsymbol{H}_{K}^{-1}\boldsymbol{H}(\boldsymbol{K}^{0},\boldsymbol{\Gamma})\\
+\boldsymbol{K}^{2} & =\boldsymbol{H}_{K}^{-1}\boldsymbol{H}(\boldsymbol{K}^{0},\boldsymbol{\Gamma})
+\end{align*}
 
 \end_inset
 
@@ -2035,7 +2036,7 @@ and
 \begin_inset Formula $\epsilon_{t}\sim\mathcal{N}(0,1)$
 \end_inset
 
- and the general formulate above applies.
+ and the general formular above applies.
 \begin_inset Newpage newpage
 \end_inset
 
@@ -3574,7 +3575,7 @@ status open
 
 
 \backslash
-lstinline{shape=(par.T,par.Nz),par.Nz}
+lstinline{shape=(par.T,par.Nz,par.Nz)}
 \end_layout
 
 \end_inset
@@ -3605,6 +3606,83 @@ status open
 
 \backslash
 lstinline{shape=(par.T,par.Nfix,par.Nz,)}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+vspace{1mm}
+\end_layout
+
+\end_inset
+
+
+\series bold
+
+\begin_inset Newline newline
+\end_inset
+
+
+\series default
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{sim.z_trans}
+\end_layout
+
+\end_inset
+
+, 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{shape=(par.simT,par.Nz,par.Nz)}
+\end_layout
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{sim.Dz}
+\end_layout
+
+\end_inset
+
+, 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{shape=(par.simT,par.Nfix,par.Nz,)}
 \end_layout
 
 \end_inset
@@ -4301,19 +4379,6 @@ vspace{1mm}
 \end_inset
 
 
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-lstinline{path.VARNAME}
-\end_layout
-
-\end_inset
-
-
 \begin_inset Newline newline
 \end_inset
 
@@ -4344,6 +4409,10 @@ vspace{1mm}
 \end_inset
 
 
+\begin_inset Newline newline
+\end_inset
+
+
 \begin_inset ERT
 status open
 
@@ -4356,11 +4425,7 @@ lstinline{path.VARNAME}
 
 \end_inset
 
-
-\begin_inset Newline newline
-\end_inset
-
-
+, 
 \begin_inset ERT
 status open
 
@@ -4369,17 +4434,6 @@ status open
 
 \backslash
 lstinline{shape=(par.T,}
-\end_layout
-
-\end_inset
-
-
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
 \backslash
 lstinline{len(inputs_endo)}$
 \backslash
@@ -5178,7 +5232,7 @@ lstinline{.intertemps_hh}
 
 \end_inset
 
- with suffice 
+ with suffix 
 \begin_inset ERT
 status open
 
@@ -7342,7 +7396,7 @@ status open
 
 
 \backslash
-lstinline{.test_jac(...)}
+lstinline{.test_jacs(...)}
 \end_layout
 
 \end_inset
@@ -7568,7 +7622,7 @@ options "apalike"
 HANK model with endogenous idiosyncratic risk
 \begin_inset CommandInset label
 LatexCommand label
-name "sec:HANK-model-with"
+name "sec:HANK-model-with-endo-risk"
 
 \end_inset
 
@@ -7582,7 +7636,7 @@ Households
 \begin_layout Standard
 The real interest rate and the after-tax wage income as employed are now
  denoted 
-\begin_inset Formula $r_{t}^{h}$
+\begin_inset Formula $r_{t}$
 \end_inset
 
  and 
@@ -7590,7 +7644,6 @@ The real interest rate and the after-tax wage income as employed are now
 \end_inset
 
 .
- Details on these are provided later.
  We additionally assume the households are members of a union, which determines
  its labor supply, and pays out wages and unemployment benefits.
  Finally, households are now assumed to have ex ante heterogeneous discount
@@ -7607,8 +7660,8 @@ The Bellman equation for the household problem is
 \begin{align}
 v_{t}\left(\beta_{i},u_{t},e_{t},a_{t-1}\right) & =\max_{c_{t},a_{t}\geq0}\frac{c_{t}^{1-\rho}}{1-\rho}+\beta_{i}\mathbb{E}_{t}\left[v_{t+1}\left(\beta_{i},u_{t+1},e_{t+1},a_{t}\right)\right]\label{eq:Bellman_stylized_GE}\\
  & \text{s.t.}\nonumber \\
-c_{t}+a_{t} & =(1+r_{t}^{h})a_{t-1}+\phi^{u_{t}}w_{t}^{h}e_{t}\nonumber \\
-e_{t+1} & =z_{t}^{\rho_{e}}\psi_{t},\,\,\,\log\psi_{t}\sim\mathcal{N}\left(-\frac{(1-\rho_{z}\sigma_{\psi}^{2}}{2(1-\rho_{z}^{2})},\sigma_{\psi}\right)\nonumber \\
+c_{t}+a_{t} & =(1+r_{t})a_{t-1}+\phi^{u_{t}}w_{t}^{h}e_{t}\nonumber \\
+\log e_{t} & =\rho_{e}\log e_{t-1}+\psi_{t}\,\,\,,\psi_{t}\sim\mathcal{N}(\mu_{\psi},\sigma_{\psi}),\,\mathbb{E}[e_{t}]=1\,\nonumber \\
 \text{Pr[}u_{t+1}=1\,|\,u_{t}=0] & =\pi_{t+1}^{EU}\nonumber \\
 \text{Pr[}u_{t+1}=0\,|\,u_{t}=1] & =\pi_{t+1}^{UE}\nonumber \\
 a_{t} & \geq0.\nonumber 
@@ -7715,7 +7768,7 @@ where
 \end_layout
 
 \begin_layout Standard
-We assume ad hoc processes for unemployment, 
+We assume an ad hoc processes for unemployment, 
 \begin_inset Formula $U_{t}$
 \end_inset
 
@@ -7768,10 +7821,6 @@ where
 \end_inset
 
  is government bonds, 
-\begin_inset Formula $(d_{t}-d_{ss})/B_{t-1}$
-\end_inset
-
- is a premium paid on bonds financed by taxing dividends, 
 \begin_inset Formula $G_{t}$
 \end_inset
 
@@ -7780,15 +7829,6 @@ where
 \end_inset
 
  are total labor taxes.
- The real interest rate faced by households thus is
-\begin_inset Formula 
-\begin{equation}
-r_{t}^{h}=r_{t}+\frac{d_{t}-d_{ss}}{B_{t-1}}.\label{eq:rh}
-\end{equation}
-
-\end_inset
-
-
 \end_layout
 
 \begin_layout Standard
@@ -7845,7 +7885,7 @@ Monetary policy is set a according to a Taylor Rule,
 
 \begin_inset Formula 
 \begin{equation}
-i_{t}=(1+r_{ss})\Pi_{t}^{\varepsilon_{\pi}}.\label{eq:Taylor}
+i_{t}=(1+r_{ss})\Pi_{t}^{\varepsilon_{\pi}}-1.\label{eq:Taylor}
 \end{equation}
 
 \end_inset
@@ -7855,7 +7895,7 @@ i_{t}=(1+r_{ss})\Pi_{t}^{\varepsilon_{\pi}}.\label{eq:Taylor}
 The Fisher equation implies
 \begin_inset Formula 
 \begin{equation}
-1+r_{t}=\frac{1+i_{t}}{\Pi_{t}}.\label{eq:Fisher}
+r_{t}=\frac{1+i_{t-1}}{\Pi_{t}}-1.\label{eq:Fisher}
 \end{equation}
 
 \end_inset
@@ -7907,7 +7947,7 @@ In terms of the general formulation above, we can write the model in terms
 
 \begin_layout Enumerate
 Shocks: 
-\begin_inset Formula $\boldsymbol{Z}=\{\boldsymbol{G},\boldsymbol{\Gamma}\}$
+\begin_inset Formula $\boldsymbol{Z}=\{\boldsymbol{\Gamma},\boldsymbol{G}\}$
 \end_inset
 
 
@@ -7915,14 +7955,14 @@ Shocks:
 
 \begin_layout Enumerate
 Unknowns: 
-\begin_inset Formula $\boldsymbol{U}=\{\boldsymbol{P},\boldsymbol{W},\boldsymbol{N}\}$
+\begin_inset Formula $\boldsymbol{U}=\{\boldsymbol{Y},\boldsymbol{w}\}$
 \end_inset
 
 
 \end_layout
 
 \begin_layout Enumerate
-Targets: NKPC, WPC and goods market clearing
+Targets: WPC and goods market clearing
 \end_layout
 
 \begin_layout Standard
@@ -7931,19 +7971,17 @@ In sequence space, the model can be summarized as the equation system,
 
 \begin_inset Formula 
 \begin{align*}
-\boldsymbol{H}(\{P_{t},W_{t},N_{t},Z_{t},G_{t}\}_{t=0}^{T}) & =\boldsymbol{0}\Leftrightarrow\\
+\boldsymbol{H}(\{Y_{t},w_{t},\Gamma_{t},G_{t}\}_{t=0}^{T}) & =\boldsymbol{0}\Leftrightarrow\\
 \left[\begin{array}{c}
-\text{NKPC}\\
 \text{WPC}\\
 \text{Goods market clearing}
 \end{array}\right] & =\boldsymbol{0}\\
 \left[\begin{array}{c}
-(1-\epsilon)+\epsilon w_{t}/Z_{t}-\left[\theta\left(\Pi_{t}-1\right)\Pi_{t}-\overline{\beta}\left(\theta\left(\Pi_{t+1}-1\right)\Pi_{t+1}\frac{Y_{t+1}}{Y_{t}}\right)\right]\\
+\\
 \left(1-\epsilon_{w}\right)(1-\tau_{t})w_{t}+\epsilon_{w}\frac{\vartheta N_{t}^{\frac{1}{\varphi}}}{C_{t}^{-\rho}}-\left[\theta_{w}\left(\Pi_{t}^{w}-\bar{\Pi}^{w}\right)\Pi_{t}^{w}-\overline{\beta}\theta_{w}\left(\Pi_{t+1}^{w}-\bar{\Pi}^{w}\right)\Pi_{t+1}^{w}\frac{N_{t+1}}{N_{t}}\right]\\
 Y_{t}=G_{t}+C_{t}
 \end{array}\right] & =\left[\begin{array}{c}
-0\\
-0\\
+\\
 0
 \end{array}\right]\\
 \forall t\in\{0,1,\dots,T-1\}
@@ -7953,17 +7991,35 @@ Y_{t}=G_{t}+C_{t}
 
 
 \size default
-where we implicitly have,
+where we solve the NKPC backwards 
+\begin_inset Formula $t\in\{T-1,T-2,\dots,0\}$
+\end_inset
+
+ for 
+\begin_inset Formula $\Pi_{t}$
+\end_inset
+
+ 
+\begin_inset Formula 
+\[
+(1-\epsilon)+\epsilon w_{t}/\Gamma_{t}-\left[\theta\left(\Pi_{t}-1\right)\Pi_{t}-\overline{\beta}\left(\theta\left(\Pi_{t+1}-1\right)\Pi_{t+1}\frac{Y_{t+1}}{Y_{t}}\right)\right]
+\]
+
+\end_inset
+
+and we implicitly have,
 \begin_inset Formula 
 \begin{align*}
-\Pi_{t} & =P_{t}/P_{t-1}\\
-\Pi_{t}^{w} & =W_{t}/W_{t-1}\\
+\Pi_{t}^{w} & =w_{t}/w_{t-1}\Pi_{t}\\
 w_{t} & =W_{t}/P_{t}\\
 i_{t} & =(1+r_{ss})\Pi_{t}^{\varepsilon_{\pi}}\\
-r_{t} & =(1+i_{t})/\Pi_{t}-1\\
-Y_{t} & =\Gamma_{t}N_{t}\\
+r_{t} & =(1+i_{t-1})/\Pi_{t}-1\\
+N_{t} & =Y_{t}/\Gamma_{t}\\
 d_{t} & =Y_{t}-w_{t}N_{t}\\
-B_{t} & =(1+r_{t}+\frac{d_{t}-d_{ss}}{B_{t-1}})B_{t-1}+G_{t}-\tau_{t}w_{t}N_{t}-d_{t}\\
+U_{t} & =U_{ss}(N_{t}/N_{ss})^{\varepsilon_{U}}\\
+\pi_{t}^{UE} & =\pi_{ss}^{UE}(N_{t}/N_{ss})^{\varepsilon_{UE}}\\
+\pi_{t}^{EU} & =\frac{U_{t}-\pi_{t}^{UE}U_{t-1}}{1-U_{t-1}}\\
+B_{t} & =(1+r_{t})B_{t-1}+G_{t}-\tau_{t}w_{t}N_{t}-d_{t}\\
 \tau_{t} & =\begin{cases}
 \tau_{ss} & \text{if }t<t_{B}\\
 (1-\omega(\tilde{t}))\tau_{ss}+\omega(\tilde{t})\tilde{\tau}_{t} & \text{if }t\in[t_{B},t_{B}+\Delta_{B}],\,\tilde{t}=(t-t_{B})/\Delta_{B}\\
@@ -7971,12 +8027,9 @@ B_{t} & =(1+r_{t}+\frac{d_{t}-d_{ss}}{B_{t-1}})B_{t-1}+G_{t}-\tau_{t}w_{t}N_{t}-
 \end{cases}\\
  & \,\,\,\tilde{\tau}_{t}=\tau_{ss}(B_{t}/B_{ss})^{\varepsilon_{B}}\\
  & \,\,\,\omega(x)=3x^{2}-2x^{3}\\
-r_{t}^{h} & =r_{t}+\frac{d_{t}-d_{ss}}{B_{t-1}}\\
-w_{t}^{h} & =(1-\tau_{t})w_{t}N_{t}\\
+w_{t}^{h} & =\frac{(1-\tau_{t})w_{t}N_{t}}{\phi U_{t}+(1-U_{t})}\\
 A_{t} & =B_{t}\\
-U_{t} & =U_{ss}(N_{t}/N_{ss})^{\varepsilon_{U}}\\
-\pi_{t}^{UE} & =\pi_{ss}^{UE}(N_{t}/N_{ss})^{\varepsilon_{UE}}\\
-\pi_{t}^{EU} & =\frac{U_{t}-\pi_{t}^{UE}U_{t-1}}{1-U_{t-1}}\\
+C_{t} & =Y_{t}-G_{t}\\
 \boldsymbol{D}_{t} & =\Pi_{z}(\pi_{t}^{UE},\pi_{t}^{EU})^{\prime}\underline{\boldsymbol{D}}_{t}\\
 \underline{\boldsymbol{D}}_{t+1} & =\Lambda_{t}\boldsymbol{D}_{t}\\
  & \boldsymbol{\underline{D}}_{0}\text{ is given}

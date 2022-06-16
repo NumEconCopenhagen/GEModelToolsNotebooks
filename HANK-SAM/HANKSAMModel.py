@@ -18,22 +18,22 @@ class HANKSAMModelClass(EconModelClass,GEModelClass):
         # b. household
         self.grids_hh = ['a'] # grids
         self.pols_hh = ['a'] # policy functions
-        self.inputs_hh = ['rh','wh',] # direct inputs
+        self.inputs_hh = ['r','wh'] # direct inputs
         self.inputs_hh_z = ['EU','UE'] # transition matrix inputs
         self.outputs_hh = ['a','c'] # outputs
-        self.intertemps_hh = ['EVa'] # intertemporal variables
+        self.intertemps_hh = ['vbeg_a'] # intertemporal variables
 
         # c. GE
-        self.shocks = ['G','Z'] # exogenous shocks
+        self.shocks = ['Gamma','G'] # exogenous shocks
         self.unknowns = ['Y','w'] # endogenous unknown
         self.targets = ['WPC','clearing_A'] # targets = 0
         
         # d. all variables
         self.varlist = [
-            'A_hh','A','B','C_hh','C',
+            'A','B','C',
             'clearing_A','clearing_C',
-            'd','EU','G','Z','i','N','NKPC','Pi_w','Pi',
-            'r','rh','tau','U','UE','w','wh','WPC','Y',
+            'd','EU','G','Gamma','i','N','NKPC','Pi_w','Pi',
+            'r','tau','U','UE','w','wh','WPC','Y',
         ]
 
         # e. functions
@@ -66,7 +66,7 @@ class HANKSAMModelClass(EconModelClass,GEModelClass):
         par.phi = 0.50 # unemployment benefit share
 
         par.U_residual = 'EU' # variable to take residual adjustment
-        par.varepsilon_U = 0.0 # elasticity of U wrt. N 
+        par.varepsilon_U = -5.0 # elasticity of U wrt. N 
         par.varepsilon_EU = 0.0 # elasticity of EU wrt. N (if U_residual == UE)
         par.varepsilon_UE = 0.0 # elasticity of EU wrt. N (if U_residual == EU)
 
@@ -92,10 +92,12 @@ class HANKSAMModelClass(EconModelClass,GEModelClass):
         par.Na = 300 # number of grid points
 
         # h. shocks
-        par.jump_Z = 0.0 # initial jump in %
+        par.jump_Gamma = 0.00 # initial jump in %
+        par.rho_Gamma = 0.00 # AR(1) coefficeint
+        par.std_Gamma = 0.00 # AR(1) coefficeint
         par.jump_G = 0.01
-        par.rho_Z = 0.00 # AR(1) coefficeint
         par.rho_G = 0.75
+        par.std_G = 0.01
 
         # i. misc.
         par.T = 500 # length of path        

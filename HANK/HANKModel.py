@@ -30,14 +30,12 @@ class HANKModelClass(EconModelClass,GEModelClass):
         # c. GE
         self.shocks = ['istar','Z'] # exogenous inputs
         self.unknowns = ['pi','w','Y'] # endogenous inputs
-        self.targets = ['nkpc_res','clearing_A','clearing_NE'] # targets
+        self.targets = ['NKPC_res','clearing_A','clearing_NE'] # targets
         
         # d. all variables
         self.varlist = [ # all variables
-            'A_hh',
             'A',
             'B',
-            'C_hh',
             'C',
             'clearing_A',
             'clearing_C',
@@ -45,9 +43,8 @@ class HANKModelClass(EconModelClass,GEModelClass):
             'd',
             'G',
             'i',
-            'NE_hh',
             'NE',
-            'nkpc_res',
+            'NKPC_res',
             'pi',
             'psi',
             'r',
@@ -94,18 +91,18 @@ class HANKModelClass(EconModelClass,GEModelClass):
         par.G_target_ss = 0.0 # government spending
         par.B_target_ss = 5.6 # bond supply
 
-        par.tau_r_fac = 1.0 # effect of r changes on taxes
-        
         # f. grids         
         par.a_min = 0.0 # maximum point in grid for a
         par.a_max = 150.0 # maximum point in grid for a
         par.Na = 500 # number of grid points
 
         # g. shocks
-        par.jump_Z = 0.0 # initial jump in %
-        par.jump_istar = -0.0025
+        par.jump_Z = 0.0 # initial jump
         par.rho_Z = 0.00 # AR(1) coefficeint
+        par.std_Z = 0.00 # std.
+        par.jump_istar = -0.0025
         par.rho_istar = 0.61
+        par.std_istar = 0.0025
 
         # h. misc.
         par.T = 500 # length of path        

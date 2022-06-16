@@ -48,12 +48,12 @@ def prepare_hh_ss(model):
 
     # a. raw value        
     y = par.phi**par.u_grid*ss.wh*par.z_grid
-    c = m = (1+ss.rh)*par.a_grid[np.newaxis,:] + y[:,np.newaxis]
-    Va = (1+ss.rh)*c**(-par.sigma)
+    c = m = (1+ss.r)*par.a_grid[np.newaxis,:] + y[:,np.newaxis]
+    v_a = (1+ss.r)*c**(-par.sigma)
 
     # b. expectation
     for i_beta in range(par.Nbeta):
-        ss.EVa[i_beta] = ss.z_trans[i_beta]@Va
+        ss.vbeg_a[i_beta] = ss.z_trans[i_beta]@v_a
 
 def find_ss(model,do_print=False):
     """ find the steady state """
@@ -62,7 +62,7 @@ def find_ss(model,do_print=False):
     ss = model.ss
 
     # a. fixed
-    ss.Z = 1.0
+    ss.Gamma = 1.0
     ss.N = 1.0
     ss.Pi = ss.Pi_w = 1.0
     
@@ -75,7 +75,7 @@ def find_ss(model,do_print=False):
     ss.i = ((1.0+ss.r)*ss.Pi)-1.0
 
     # b. firms
-    ss.Y = ss.Z*ss.N
+    ss.Y = ss.Gamma*ss.N
     ss.w = (par.epsilon-1)/par.epsilon
     ss.d = ss.Y-ss.w*ss.N
     
@@ -83,14 +83,12 @@ def find_ss(model,do_print=False):
     ss.U = ss.EU/(ss.EU+ss.UE)
     
     # d. household problem
-    ss.rh = ss.r
     ss.wh = (1-ss.tau)*ss.w*ss.N / (par.phi*ss.U+(1-ss.U))
 
     model.solve_hh_ss(do_print=do_print)
     model.simulate_hh_ss(do_print=do_print)
 
-    ss.B = ss.A = ss.A_hh = np.sum(ss.a*ss.D)
-    ss.C_hh = np.sum(ss.c*ss.D)
+    ss.B = ss.A = ss.A_hh
 
     # e. government
     ss.G = ss.d + ss.tau*ss.w*ss.N - ss.r*ss.B

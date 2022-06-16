@@ -10,34 +10,31 @@ def block_pre(par,ini,ss,path,ncols=1):
     # par, ini, ss, path are namespaces
     # ncols specifies have many versions of the model to evaluate at once
     #   path.VARNAME have shape=(len(unknowns)*par.T,par.T)
-    #   path.VARNAME[0,t] for t in [0,1,...mpar.T] is always used outside of this function
+    #   path.VARNAME[0,t] for t in [0,1,...,par.T] is always used outside of this function
 
     for thread in nb.prange(ncols):
         
         # unpack
+        A = path.A[thread,:]
+        A_hh = path.A_hh[thread,:]
+        C = path.C[thread,:]
+        C_hh = path.C_hh[thread,:]
+        clearing_A = path.clearing_A[thread,:]
+        clearing_C = path.clearing_C[thread,:]
         Gamma = path.Gamma[thread,:]
         K = path.K[thread,:]
         L = path.L[thread,:]
-
-        rk = path.rk[thread,:]
         r = path.r[thread,:]
+        rk = path.rk[thread,:]
         w = path.w[thread,:]
-        
         Y = path.Y[thread,:]
-        C = path.C[thread,:]
-
-        A_hh = path.A_hh[thread,:]
-        C_hh = path.C_hh[thread,:]
-
-        clearing_A = path.clearing_A[thread,:]
-        clearing_C = path.clearing_C[thread,:]
 
         #################
         # implied paths #
         #################
 
         # lags and leads of unknowns and shocks
-        K_lag = lag(ini.K,K) # copy, same as [ss.K,K[0],K[1],...,K[-2]]
+        K_lag = lag(ini.K,K) # copy, same as [ini.K,K[0],K[1],...,K[-2]]
         
         # example: K_lead = lead(K,ss.K) # copy, same as [K[1],K[1],...,K[-1],ss.K]
 
@@ -56,6 +53,9 @@ def block_pre(par,ini,ss,path,ncols=1):
         Y[:] = Gamma*K_lag**(par.alpha)*L**(1-par.alpha)
         C[:] = Y-(K-K_lag)-par.delta*K_lag
 
+        # d. total assets
+        A[:] = K[:]
+
 @nb.njit
 def block_post(par,ini,ss,path,ncols=1):
     """ evaluate transition path - after household block """
@@ -63,22 +63,19 @@ def block_post(par,ini,ss,path,ncols=1):
     for thread in nb.prange(ncols):
 
         # unpack
+        A = path.A[thread,:]
+        A_hh = path.A_hh[thread,:]
+        C = path.C[thread,:]
+        C_hh = path.C_hh[thread,:]
+        clearing_A = path.clearing_A[thread,:]
+        clearing_C = path.clearing_C[thread,:]
         Gamma = path.Gamma[thread,:]
         K = path.K[thread,:]
         L = path.L[thread,:]
-
-        rk = path.rk[thread,:]
         r = path.r[thread,:]
+        rk = path.rk[thread,:]
         w = path.w[thread,:]
-        
         Y = path.Y[thread,:]
-        C = path.C[thread,:]
-
-        A_hh = path.A_hh[thread,:]
-        C_hh = path.C_hh[thread,:]
-
-        clearing_A = path.clearing_A[thread,:]
-        clearing_C = path.clearing_C[thread,:]
 
         ###########
         # targets #

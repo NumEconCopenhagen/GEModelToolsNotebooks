@@ -4,9 +4,9 @@ import numba as nb
 from GEModelTools import lag, lead, bound, bisection
    
 @nb.njit
-def NKPC_eq(x,par,ss,w,Z,Y,Y_plus,Pi_plus):  
+def NKPC_eq(x,par,ss,w,Gamma,Y,Y_plus,Pi_plus):  
     
-    LHS_NKPC = (1-par.epsilon) + par.epsilon*w/Z
+    LHS_NKPC = (1-par.epsilon) + par.epsilon*w/Gamma
         
     RHS_NKPC_cur = par.theta*(x-ss.Pi)*x
     RHS_NKPC_fut = par.beta_mean*par.theta*(Pi_plus-ss.Pi)*Pi_plus*Y_plus/Y
@@ -37,14 +37,13 @@ def block_pre(par,ini,ss,path,ncols=1):
         d = path.d[ncol,:]
         EU = path.EU[ncol,:]
         G = path.G[ncol,:]
-        Z = path.Z[ncol,:]
+        Gamma = path.Gamma[ncol,:]
         i = path.i[ncol,:]
         N = path.N[ncol,:]
         NKPC = path.NKPC[ncol,:]
         Pi_w = path.Pi_w[ncol,:]
         Pi = path.Pi[ncol,:]
         r = path.r[ncol,:]
-        rh = path.rh[ncol,:]
         tau = path.tau[ncol,:]
         U = path.U[ncol,:]
         UE = path.UE[ncol,:]
@@ -65,7 +64,7 @@ def block_pre(par,ini,ss,path,ncols=1):
 
             Y_plus = Y[t+1] if t < par.T-1 else ss.Y
             Pi_plus = Pi[t+1] if t < par.T-1 else ss.Pi
-            Pi[t] = bisection(NKPC_eq,0.9,1.1,args=(par,ss,w[t],Z[t],Y[t],Y_plus,Pi_plus))
+            Pi[t] = bisection(NKPC_eq,0.9,1.1,args=(par,ss,w[t],Gamma[t],Y[t],Y_plus,Pi_plus))
 
         # b. monetary policy
         i[:] = ((1+ss.r)*Pi**par.varepsilon_pi)-1.0
@@ -73,7 +72,7 @@ def block_pre(par,ini,ss,path,ncols=1):
         r[:] = ((1+i_lag)/Pi)-1.0
 
         # c. firm behavior
-        N[:] = Y/Z
+        N[:] = Y/Gamma
         d[:] = Y-w*N
         
         # d. labor market
@@ -99,7 +98,7 @@ def block_pre(par,ini,ss,path,ncols=1):
         for t in range(par.T):
 
             # i. lag
-            B_lag = B[t-1] if t > 0 else ss.B
+            B_lag = B[t-1] if t > 0 else ini.B
             
             # ii. tau
             x = bound((t-par.t_B)/par.Delta_B,0,1)
@@ -109,7 +108,7 @@ def block_pre(par,ini,ss,path,ncols=1):
             tau[t] = (1.0-omega)*ss.tau + omega*tau_tilde
             
             # iii. government debt
-            B[t] = (1+rh[t])*B_lag+G[t]-tau[t]*w[t]*N[t]-d[t]
+            B[t] = (1+r[t])*B_lag+G[t]-tau[t]*w[t]*N[t]-d[t]
         
         # household income
         wh[:] = (1-tau)*w*N / (par.phi*U+(1-U))
@@ -135,14 +134,13 @@ def block_post(par,ini,ss,path,ncols=1):
         d = path.d[ncol,:]
         EU = path.EU[ncol,:]
         G = path.G[ncol,:]
-        Z = path.Z[ncol,:]        
+        Gamma = path.Gamma[ncol,:]        
         i = path.i[ncol,:]
         N = path.N[ncol,:]
         NKPC = path.NKPC[ncol,:]
         Pi_w = path.Pi_w[ncol,:]
         Pi = path.Pi[ncol,:]
         r = path.r[ncol,:]
-        rh = path.rh[ncol,:]
         tau = path.tau[ncol,:]
         U = path.U[ncol,:]
         UE = path.UE[ncol,:]

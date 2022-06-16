@@ -4,8 +4,8 @@ import numba as nb
 from consav.linear_interp import interp_1d_vec
 
 @nb.njit(parallel=True)        
-def solve_hh_backwards(par,z_trans,r,w,EVa_plus,EVa,a,c):
-    """ solve backwards with EVa from previous iteration (here EVa_plus) """
+def solve_hh_backwards(par,z_trans,r,w,vbeg_a_plus,vbeg_a,a,c):
+    """ solve backwards with vbeg_a from previous iteration (here vbeg_a_plus) """
 
     for i_fix in nb.prange(par.Nfix):
 
@@ -13,7 +13,7 @@ def solve_hh_backwards(par,z_trans,r,w,EVa_plus,EVa,a,c):
         for i_z in nb.prange(par.Nz):
         
             # i. EGM
-            c_endo = (par.beta_grid[i_fix]*EVa_plus[i_fix,i_z])**(-1/par.sigma)
+            c_endo = (par.beta_grid[i_fix]*vbeg_a_plus[i_fix,i_z])**(-1/par.sigma)
             m_endo = c_endo + par.a_grid
             
             # ii. interpolation to fixed grid
@@ -23,6 +23,5 @@ def solve_hh_backwards(par,z_trans,r,w,EVa_plus,EVa,a,c):
             c[i_fix,i_z] = m-a[i_fix,i_z]
 
         # b. expectation step
-        Va = (1+r)*c[i_fix]**(-par.sigma)
-        EVa[i_fix] = z_trans[i_fix]@Va
-
+        v_a = (1+r)*c[i_fix]**(-par.sigma)
+        vbeg_a[i_fix] = z_trans[i_fix]@v_a

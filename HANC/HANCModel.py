@@ -21,7 +21,7 @@ class HANCModelClass(EconModelClass,GEModelClass):
         self.inputs_hh = ['r','w'] # direct inputs
         self.inputs_hh_z = [] # transition matrix inputs
         self.outputs_hh = ['a','c'] # outputs
-        self.intertemps_hh = ['EVa'] # intertemporal variables
+        self.intertemps_hh = ['vbeg_a'] # intertemporal variables
 
         # c. GE
         self.shocks = ['Gamma'] # exogenous shocks
@@ -30,7 +30,7 @@ class HANCModelClass(EconModelClass,GEModelClass):
 
         # d. all variables
         self.varlist = [
-            'A_hh','C_hh','C','clearing_A','clearing_C',
+            'A','C','clearing_A','clearing_C',
             'Gamma','K','L','r','rk','w','Y']
 
         # e. functions
@@ -74,6 +74,7 @@ class HANCModelClass(EconModelClass,GEModelClass):
 
         # h. misc.
         par.T = 500 # length of transition path        
+        par.simT = 2_000 # length of simulation 
         
         par.max_iter_solve = 50_000 # maximum number of iterations when solving household problem
         par.max_iter_simulate = 50_000 # maximum number of iterations when simulating household problem
@@ -82,8 +83,6 @@ class HANCModelClass(EconModelClass,GEModelClass):
         par.tol_solve = 1e-12 # tolerance when solving household problem
         par.tol_simulate = 1e-12 # tolerance when simulating household problem
         par.tol_broyden = 1e-10 # tolerance when solving eq. system
-        
-        par.simT = 2_000 # length of simulation 
         
     def allocate(self):
         """ allocate model """

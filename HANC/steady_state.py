@@ -39,10 +39,10 @@ def prepare_hh_ss(model):
     # a. raw value
     y = ss.w*par.z_grid
     c = m = (1+ss.r)*par.a_grid[np.newaxis,:] + y[:,np.newaxis]
-    Va = (1+ss.r)*c**(-par.sigma)
+    v_a = (1+ss.r)*c**(-par.sigma)
 
     # b. expectation
-    ss.EVa[:] = ss.z_trans@Va
+    ss.vbeg_a[:] = ss.z_trans@v_a
 
 def find_ss(model,do_print=False):
     """ find the steady state """
@@ -58,11 +58,11 @@ def find_ss(model,do_print=False):
     assert (1+ss.r)*par.beta_mean < 1.0, '(1+r)*beta < 1, otherwise problems might arise'
 
     # b. stock and capital stock from household behavior
-    model.solve_hh_ss(do_print=do_print) # give us sol.a and sol.c (steady state policy functions)
-    model.simulate_hh_ss(do_print=do_print) # give us sim.D (steady state distribution)
+    model.solve_hh_ss(do_print=do_print) # give us sol.a and sol.c
+    model.simulate_hh_ss(do_print=do_print) # give us sim.D, ss.A_hh and ss.C_hh 
     if do_print: print('')
 
-    ss.K = ss.A_hh = np.sum(ss.D*ss.a)
+    ss.A = ss.K = ss.A_hh
     
     # c. back technology and depreciation rate
     ss.Gamma = ss.w / ((1-par.alpha)*(ss.K/ss.L)**par.alpha)
@@ -72,7 +72,6 @@ def find_ss(model,do_print=False):
     # d. remaining
     ss.Y = ss.Gamma*ss.K**par.alpha*ss.L**(1-par.alpha)
     ss.C = ss.Y - par.delta*ss.K
-    ss.C_hh = np.sum(ss.D*ss.c)
 
     # e. print
     if do_print:

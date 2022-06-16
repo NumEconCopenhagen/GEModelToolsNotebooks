@@ -67,5 +67,5 @@ def solve_hh_backwards(par,z_trans,w,r,d,tau,vbeg_a_plus,vbeg_a,a,c,ne):
                     break
 
         # b. expectation step
-        va = c[i_fix,:,:]**(-par.sigma)
-        vbeg_a[i_fix] = (1+r)*z_trans[i_fix]@va
+        v_a = c[i_fix,:,:]**(-par.sigma)
+        vbeg_a[i_fix] = (1+r)*z_trans[i_fix]@v_a

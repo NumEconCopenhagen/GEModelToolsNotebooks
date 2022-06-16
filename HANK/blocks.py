@@ -21,7 +21,7 @@ def block_pre(par,ini,ss,path,ncols=1):
         i = path.i[ncol,:]
         NE_hh = path.NE_hh[ncol,:]
         NE = path.NE[ncol,:]
-        nkpc_res = path.nkpc_res[ncol,:]
+        NKPC_res = path.NKPC_res[ncol,:]
         pi = path.pi[ncol,:]
         psi = path.psi[ncol,:]
         r = path.r[ncol,:]
@@ -43,12 +43,12 @@ def block_pre(par,ini,ss,path,ncols=1):
 
         # b. monetary policy
         i[:] = istar + par.phi*pi + par.phi_y*(Y-ss.Y)
-        i_lag = lag(ss.i,i)
+        i_lag = lag(ini.i,i)
         r[:] = (1+i_lag)/(1+pi)-1
 
         # c. government
         B[:] = ss.B
-        tau[:] = ss.r*B + par.tau_r_fac*(r-ss.r)*B
+        tau[:] = r*B
         G[:] = tau-r*B
         
         # d. aggregates
@@ -73,7 +73,7 @@ def block_post(par,ini,ss,path,ncols=1):
         i = path.i[ncol,:]
         NE_hh = path.NE_hh[ncol,:]
         NE = path.NE[ncol,:]
-        nkpc_res = path.nkpc_res[ncol,:]
+        NKPC_res = path.NKPC_res[ncol,:]
         pi = path.pi[ncol,:]
         psi = path.psi[ncol,:]
         r = path.r[ncol,:]
@@ -92,7 +92,7 @@ def block_post(par,ini,ss,path,ncols=1):
         pi_plus = lead(pi,ss.pi)
         Y_plus = lead(Y,ss.Y)
 
-        nkpc_res[:] = par.kappa*(w/Z-1/par.mu) + 1/(1+r_plus)*Y_plus/Y*np.log(1+pi_plus) - np.log(1+pi)
+        NKPC_res[:] = par.kappa*(w/Z-1/par.mu) + 1/(1+r_plus)*Y_plus/Y*np.log(1+pi_plus) - np.log(1+pi)
 
         # b. market clearing
         clearing_A[:] = A-A_hh

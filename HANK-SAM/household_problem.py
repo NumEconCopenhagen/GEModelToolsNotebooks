@@ -8,8 +8,8 @@ from consav.linear_interp import interp_1d_vec
 ###################
 
 @nb.njit
-def solve_hh_backwards(par,z_trans,rh,wh,EVa_plus,EVa,a,c):
-    """ solve backwards with EVa from previous iteration (here EVa_plus) """
+def solve_hh_backwards(par,z_trans,r,wh,vbeg_a_plus,vbeg_a,a,c):
+    """ solve backwards with vbeg_a from previous iteration (here vbeg_a_plus) """
 
     for i_fix in range(par.Nfix):
 
@@ -17,20 +17,20 @@ def solve_hh_backwards(par,z_trans,rh,wh,EVa_plus,EVa,a,c):
         for i_z in range(par.Nz):
       
             # i. EGM
-            c_endo = (par.beta_grid[i_fix]*EVa_plus[i_fix,i_z])**(-1/par.sigma)
+            c_endo = (par.beta_grid[i_fix]*vbeg_a_plus[i_fix,i_z])**(-1/par.sigma)
             m_endo = c_endo + par.a_grid
             
             # ii. interpolation to fixed grid
             y = par.phi**par.u_grid[i_z]*wh*par.z_grid[i_z]
-            m = (1+rh)*par.a_grid + y
+            m = (1+r)*par.a_grid + y
 
             interp_1d_vec(m_endo,par.a_grid,m,a[i_fix,i_z])
             a[i_fix,i_z,:] = np.fmax(a[i_fix,i_z,:],0.0) # enforce borrowing constraint
             c[i_fix,i_z] = m-a[i_fix,i_z]
 
         # b. expectation step
-        Va = (1+rh)*c[i_fix]**(-par.sigma)
-        EVa[i_fix] = z_trans[i_fix]@Va
+        v_a = (1+r)*c[i_fix]**(-par.sigma)
+        vbeg_a[i_fix] = z_trans[i_fix]@v_a
 
 ################
 # fill_z_trans #

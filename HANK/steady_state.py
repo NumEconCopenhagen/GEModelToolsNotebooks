@@ -86,10 +86,6 @@ def evaluate_ss(model,do_print=False):
     model.solve_hh_ss(do_print=do_print)
     model.simulate_hh_ss(do_print=do_print)
 
-    ss.A_hh = np.sum(ss.a*ss.D)
-    ss.C_hh = np.sum(ss.c*ss.D)
-    ss.NE_hh = np.sum(ss.ne*ss.D)
-
     # g. market clearing
     ss.C = ss.Y-ss.G-ss.psi
 
