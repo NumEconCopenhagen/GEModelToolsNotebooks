@@ -15,20 +15,19 @@ def prepare_hh_ss(model):
     par = model.par
     ss = model.ss
 
-    ############
-    # 1. grids #
-    ############
+    ##################################
+    # 1. grids and transition matrix #
+    ##################################
 
     # b. a
     par.a_grid[:] = equilogspace(par.a_min,par.a_max,par.Na)
 
-    # c. e
-    sigma = np.sqrt(par.sigma_e**2*(1-par.rho_e**2))
-    par.z_grid[:],ss.z_trans[0,:,:],e_ergodic,_,_ = log_rouwenhorst(par.rho_e,sigma,n=par.Ne)
+    # c. z
+    par.z_grid[:],ss.z_trans[0,:,:],e_ergodic,_,_ = log_rouwenhorst(par.rho_z,par.sigma_psi,n=par.Nz)
 
-    #############################################
-    # 2. transition matrix initial distribution #
-    #############################################
+    ###########################
+    # 2. initial distribution #
+    ###########################
     
     for i_fix in range(par.Nfix):
         ss.Dz[i_fix,:] = e_ergodic/par.Nfix
@@ -43,12 +42,11 @@ def prepare_hh_ss(model):
     
     for i_z in range(par.Nz):
 
-        e = par.z_grid[i_z]
-        T = ss.d*e - ss.tau*e
-        ne = 1.0*e
+        z = par.z_grid[i_z]
+        T = ss.d*z - ss.tau*z
+        n = 1.0*z
 
-        c = (1+ss.r)*par.a_grid + ss.w*ne + T
-
+        c = (1+ss.r)*par.a_grid + ss.w*n + T
         va[0,i_z,:] = c**(-par.sigma)
 
     ss.vbeg_a[0] = ss.z_trans[0]@va[0]
@@ -61,7 +59,7 @@ def evaluate_ss(model,do_print=False):
 
     # a. fixed
     ss.Z = 1.0
-    ss.NE = 1.0
+    ss.N = 1.0
     ss.pi = 0.0
     
     # b. targets
@@ -70,14 +68,13 @@ def evaluate_ss(model,do_print=False):
     ss.G = par.G_target_ss
 
     # c.. monetary policy
-    ss.istar = ss.r
-    ss.i = ss.istar + par.phi*ss.pi
+    ss.i = ss.r = ss.istar = 0.0
 
     # d. firms
-    ss.Y = ss.Z*ss.NE
+    ss.Y = ss.Z*ss.N
     ss.w = ss.Z/par.mu
-    ss.psi = 0.0
-    ss.d = ss.Y-ss.w*ss.NE-ss.psi
+    ss.adjcost = 0.0
+    ss.d = ss.Y-ss.w*ss.N-ss.adjcost
     
     # e. government
     ss.tau = ss.r*ss.B + ss.G
@@ -87,7 +84,7 @@ def evaluate_ss(model,do_print=False):
     model.simulate_hh_ss(do_print=do_print)
 
     # g. market clearing
-    ss.C = ss.Y-ss.G-ss.psi
+    ss.C = ss.Y-ss.G-ss.adjcost
 
 def objective_ss(x,model,do_print=False):
     """ objective function for finding steady state """
@@ -100,7 +97,7 @@ def objective_ss(x,model,do_print=False):
 
     evaluate_ss(model,do_print=do_print)
     
-    return np.array([ss.A_hh-ss.B,ss.NE_hh-ss.NE])
+    return np.array([ss.A_hh-ss.B,ss.N_hh-ss.N])
 
 def find_ss(model,do_print=False):
     """ find the steady state """
@@ -124,4 +121,4 @@ def find_ss(model,do_print=False):
         print('')
         print(f'Discrepancy in B = {ss.A-ss.A_hh:12.8f}')
         print(f'Discrepancy in C = {ss.C-ss.C_hh:12.8f}')
-        print(f'Discrepancy in N = {ss.NE-ss.NE_hh:12.8f}')
+        print(f'Discrepancy in N = {ss.N-ss.N_hh:12.8f}')

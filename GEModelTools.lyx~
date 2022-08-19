@@ -308,6 +308,35 @@ vspace{3mm}
 \begin_layout Standard
 
 \series bold
+Course:
+\series default
+ 
+\begin_inset CommandInset href
+LatexCommand href
+name "Adv. Macro: Heterogenous Agent Models"
+target "https://sites.google.com/view/numeconcph-advmacrohet/"
+literal "false"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+noindent 
+\end_layout
+
+\end_inset
+
+
+\series bold
 Literature: 
 \series default
 \size small
@@ -544,8 +573,8 @@ vspace{1mm}
 Package: 
 \begin_inset CommandInset href
 LatexCommand href
-name "github.com/JeppeDruedahl/GEModelTools"
-target "https://github.com/JeppeDruedahl/GEModelTools"
+name "github.com/NumEconCopenhagen/GEModelTools"
+target "https://github.com/NumEconCopenhagen/GEModelTools"
 literal "false"
 
 \end_inset
@@ -557,8 +586,8 @@ literal "false"
 Notebooks: 
 \begin_inset CommandInset href
 LatexCommand href
-name "github.com/JeppeDruedahl/GEModelToolsNotebooks"
-target "https://github.com/JeppeDruedahl/GEModelToolsNotebooks"
+name "github.com/NumEconCopenhagen/GEModelToolsNotebooks"
+target "https://github.com/NumEconCopenhagen/GEModelToolsNotebooks"
 literal "false"
 
 \end_inset

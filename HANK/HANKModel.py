@@ -24,13 +24,13 @@ class HANKModelClass(EconModelClass,GEModelClass):
         self.pols_hh = ['a'] # policy functions
         self.inputs_hh = ['w','r','d','tau'] # direct inputs
         self.inputs_hh_z = [] # transition matrix inputs
-        self.outputs_hh = ['a','c','ne'] # outputs
+        self.outputs_hh = ['a','c','ell','n'] # outputs
         self.intertemps_hh = ['vbeg_a'] # intertemporal variables
 
         # c. GE
         self.shocks = ['istar','Z'] # exogenous inputs
         self.unknowns = ['pi','w','Y'] # endogenous inputs
-        self.targets = ['NKPC_res','clearing_A','clearing_NE'] # targets
+        self.targets = ['NKPC_res','clearing_A','clearing_N'] # targets
         
         # d. all variables
         self.varlist = [ # all variables
@@ -39,14 +39,14 @@ class HANKModelClass(EconModelClass,GEModelClass):
             'C',
             'clearing_A',
             'clearing_C',
-            'clearing_NE',
+            'clearing_N',
             'd',
             'G',
             'i',
-            'NE',
+            'N',
             'NKPC_res',
             'pi',
-            'psi',
+            'adjcost',
             'r',
             'istar',
             'tau',
@@ -76,9 +76,9 @@ class HANKModelClass(EconModelClass,GEModelClass):
         par.nu = 2.0 # inverse Frisch elasticity
         
         # c. income parameters
-        par.rho_e = 0.966 # AR(1) parameter
-        par.sigma_e = 0.50 # std. of e
-        par.Ne = 7 # number of productivity states
+        par.rho_z = 0.966 # AR(1) parameter
+        par.sigma_psi = np.sqrt(0.50**2*(1-par.rho_z**2)) # std. of psi
+        par.Nz = 7 # number of productivity states
 
         # d. price setting
         par.mu = 1.2 # mark-up
@@ -120,8 +120,6 @@ class HANKModelClass(EconModelClass,GEModelClass):
         """ allocate model """
 
         par = self.par
-
-        par.Nz = par.Ne
 
         # b. solution
         self.allocate_GE()
