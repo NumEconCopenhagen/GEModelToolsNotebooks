@@ -827,7 +827,11 @@ noprefix "false"
 \emph on
  Heterogeneous Agent New Keynesian 
 \emph default
-(HANK) is considered.
+with 
+\emph on
+Search-And-Matching
+\emph default
+ (HANK-SAM) is considered.
 \end_layout
 
 \begin_layout Subsection
@@ -1076,10 +1080,10 @@ after
 
 \begin_layout Enumerate
 Given the sequence of shocks, 
-\begin_inset Formula $\boldsymbol{Z},$
+\begin_inset Formula $\boldsymbol{Z}$
 \end_inset
 
-there exists a 
+, there exists a 
 \emph on
 truncation period
 \emph default
@@ -1582,8 +1586,8 @@ Market clearing.
 Market clearing requires
 \begin_inset Formula 
 \begin{align*}
-\text{Labour: }L_{t} & =\int z_{t}dD_{t}=1\\
 \text{Capital: }K_{t} & =A_{t}^{hh}\\
+\text{Labour: }L_{t} & =\int z_{t}dD_{t}=1\\
 \text{Goods: }Y_{t} & =C_{t}^{hh}+K_{t}-K_{t-1}+\delta K_{t-1}
 \end{align*}
 
@@ -1665,6 +1669,18 @@ are such that
 \end_layout
 
 \begin_layout Enumerate
+Firms maximize profits, 
+\begin_inset Formula $r_{ss}=\alpha A_{ss}(K_{ss}/L_{ss})^{\alpha-1}$
+\end_inset
+
+ and 
+\begin_inset Formula $w_{ss}=(1-\alpha)A_{ss}\left(\frac{r_{t}+\delta}{\alpha A_{ss}}\right)^{\frac{\alpha}{\alpha-1}}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
 \begin_inset Formula $a_{ss}^{\ast}(\bullet)$
 \end_inset
 
@@ -1687,12 +1703,9 @@ are such that
 \end_layout
 
 \begin_layout Enumerate
-Firms maximize profits, 
-\begin_inset Formula $r_{ss}=\alpha A_{ss}(K_{ss}/L_{ss})^{\alpha-1}$
-\end_inset
-
- and 
-\begin_inset Formula $w_{ss}=(1-\alpha)A_{ss}\left(\frac{r_{t}+\delta}{\alpha A_{ss}}\right)^{\frac{\alpha}{\alpha-1}}$
+The capital market clears, i.e.
+ 
+\begin_inset Formula $K_{ss}=\int a_{ss}^{\ast}(\beta_{i},z_{t},a_{t-1})dD_{ss}$
 \end_inset
 
 
@@ -1702,15 +1715,6 @@ Firms maximize profits,
 The labor market clears, i.e.
  
 \begin_inset Formula $L_{ss}=\int z_{ss}dD_{ss}=1$
-\end_inset
-
-
-\end_layout
-
-\begin_layout Enumerate
-The capital market clears, i.e.
- 
-\begin_inset Formula $K_{ss}=\int a_{ss}^{\ast}(\beta_{i},z_{t},a_{t-1})dD_{ss}$
 \end_inset
 
 
@@ -1876,23 +1880,6 @@ A_{t}^{hh} & =\boldsymbol{a}_{t}^{\ast\prime}\boldsymbol{D}_{t}\\
 \boldsymbol{D}_{t} & =\Pi_{z}^{\prime}\underline{\boldsymbol{D}}_{t}\\
 \underline{\boldsymbol{D}}_{t+1} & =\Lambda_{t}\boldsymbol{D}_{t}\\
  & \boldsymbol{\underline{D}}_{0}\text{ is given}
-\end{align*}
-
-\end_inset
-
-
-\begin_inset Formula 
-\[
-\boldsymbol{H}(\boldsymbol{K}^{0},\boldsymbol{\Gamma})=\boldsymbol{H}_{K}(\boldsymbol{K}_{ss},)(\boldsymbol{K}^{0}-\boldsymbol{K}_{ss})
-\]
-
-\end_inset
-
-
-\begin_inset Formula 
-\begin{align*}
-\boldsymbol{K}^{1} & =\boldsymbol{H}_{K}^{-1}\boldsymbol{H}(\boldsymbol{K}^{0},\boldsymbol{\Gamma})\\
-\boldsymbol{K}^{2} & =\boldsymbol{H}_{K}^{-1}\boldsymbol{H}(\boldsymbol{K}^{0},\boldsymbol{\Gamma})
 \end{align*}
 
 \end_inset
@@ -2698,7 +2685,7 @@ lstinline{VARNAME.upper()_hh}
 
 \end_inset
 
- must be in 
+ is added to 
 \begin_inset ERT
 status open
 
@@ -2706,7 +2693,7 @@ status open
 
 
 \backslash
-lstinline{.varlist_hh}
+lstinline{.varlist}
 \end_layout
 
 \end_inset
@@ -2789,7 +2776,7 @@ status open
 
 
 \backslash
-lstinline{.pols_hh}
+lstinline{.intertemps_hh}
 \end_layout
 
 \end_inset
@@ -2852,7 +2839,7 @@ lstinline{.shocks}
 \begin_inset Newline newline
 \end_inset
 
-Should be in 
+Must be in 
 \begin_inset ERT
 status open
 
@@ -2902,7 +2889,7 @@ lstinline{.unknowns}
 \begin_inset Newline newline
 \end_inset
 
-Should be in 
+Must be in 
 \begin_inset ERT
 status open
 
@@ -2952,7 +2939,7 @@ lstinline{.targets}
 \begin_inset Newline newline
 \end_inset
 
-Should be in 
+Must be in 
 \begin_inset ERT
 status open
 
@@ -3591,6 +3578,36 @@ status open
 
 
 \backslash
+lstinline{ini.Dz}
+\end_layout
+
+\end_inset
+
+, 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{shape=(par.Nfix,par.Nz,)}
+\end_layout
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
 lstinline{path.z_trans}
 \end_layout
 
@@ -3735,40 +3752,6 @@ vspace{1mm}
 \begin_inset Newline newline
 \end_inset
 
-
-\series default
-
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-lstinline{ini.Dz}
-\end_layout
-
-\end_inset
-
-, 
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-lstinline{shape=(par.Nfix,par.Nz,)}
-\end_layout
-
-\end_inset
-
-
-\series bold
-
-\begin_inset Newline newline
-\end_inset
-
 Remark:
 \series default
  
@@ -3871,6 +3854,36 @@ status open
 
 
 \backslash
+lstinline{ini.Dbeg}
+\end_layout
+
+\end_inset
+
+, 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{shape=sol_shape}
+\end_layout
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
 lstinline{path.Dbeg}
 \end_layout
 
@@ -3915,36 +3928,6 @@ status open
 
 \backslash
 lstinline{shape=(par.simT,*sol_shape)}
-\end_layout
-
-\end_inset
-
-
-\begin_inset Newline newline
-\end_inset
-
-
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-lstinline{ini.Dbeg}
-\end_layout
-
-\end_inset
-
-, 
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-lstinline{shape=sol_shape}
 \end_layout
 
 \end_inset
@@ -5167,7 +5150,7 @@ lstinline{.solve_hh_bakcwards()}
 \end_inset
 
  which iterates one step backwards in the household problem.
- Arguments must by: 
+ Arguments must be:
 \begin_inset Newline newline
 \end_inset
 
@@ -6634,7 +6617,7 @@ This implies that
 \begin_inset Formula $\Lambda_{t}^{T-1,i}$
 \end_inset
 
- and is known for 
+ is known for 
 \begin_inset Formula $t\in\{0,1,\dots,T-1\}$
 \end_inset
 
@@ -6750,9 +6733,6 @@ noprefix "false"
 \end_inset
 
  around the steady state
-\end_layout
-
-\begin_layout Standard
 \begin_inset Formula 
 \begin{align}
 d\boldsymbol{\underline{D}}_{t+1}^{s,i} & =\Lambda_{ss}^{\prime}\Pi_{ss}^{\prime}d\boldsymbol{\underline{D}}_{t}^{s,i}+(d\Lambda_{t}^{s,i})^{\prime}\Pi_{ss}^{\prime}\boldsymbol{\underline{D}}_{ss}+\Lambda_{ss}d\Pi_{t}^{s,i}\boldsymbol{\underline{D}}_{ss}\label{eq:dD_ubars}\\
@@ -6842,10 +6822,11 @@ noprefix "false"
 
 \begin_inset Formula 
 \begin{align}
-d\underline{\boldsymbol{D}}_{t}^{0,i} & =\Lambda_{ss}^{\prime}\Pi_{ss}^{\prime}d\boldsymbol{\underline{D}}_{t-1}^{0,i}+\underset{=0}{\underbrace{\left(d\Lambda_{t-1}^{0,i}\right)^{\prime}}}\Pi_{ss}^{\prime}\boldsymbol{\underline{D}}_{ss}+\Lambda_{ss}^{\prime}\underset{=0}{\underbrace{\left(d\Pi_{t}^{0,i}\right)^{\prime}}}\boldsymbol{\underline{D}}_{ss}\label{eq:diff_D_ubars_edge}\\
- & =\Lambda_{ss}^{\prime}\Pi_{ss}^{\prime}d\boldsymbol{\underline{D}}_{t-1}^{0,i}\nonumber \\
+d\underline{\boldsymbol{D}}_{t}^{0,i}= & \Lambda_{ss}^{\prime}\Pi_{ss}^{\prime}d\boldsymbol{\underline{D}}_{t-1}^{0,i}\label{eq:diff_D_ubars_edge}\\
+ & +\underset{=0}{\underbrace{\left(d\Lambda_{t-1}^{0,i}\right)^{\prime}}}\Pi_{ss}^{\prime}\boldsymbol{\underline{D}}_{ss}+\Lambda_{ss}^{\prime}\underset{=0}{\underbrace{\left(d\Pi_{t}^{0,i}\right)^{\prime}}}\boldsymbol{\underline{D}}_{ss}\nonumber \\
+= & \Lambda_{ss}^{\prime}\Pi_{ss}^{\prime}d\boldsymbol{\underline{D}}_{t-1}^{0,i}\nonumber \\
  & \vdots\nonumber \\
- & =\left(\Lambda_{ss}^{\prime}\Pi_{ss}^{\prime}\right)^{t-1}d\underline{\boldsymbol{D}}_{1}^{0,i}.\nonumber 
+= & \left(\Lambda_{ss}^{\prime}\Pi_{ss}^{\prime}\right)^{t-1}d\underline{\boldsymbol{D}}_{1}^{0,i}.\nonumber 
 \end{align}
 
 \end_inset
@@ -6901,9 +6882,10 @@ noprefix "false"
  
 \begin_inset Formula 
 \begin{align}
-dY_{t}^{o,0,i} & =\left(\boldsymbol{y}_{ss}^{o}\right)^{\prime}\Pi_{ss}^{\prime}d\underline{\boldsymbol{D}}_{t}^{0,i}+\underset{=0}{\underbrace{\left(d\boldsymbol{y}_{t}^{o,0,i}\right)^{\prime}}}\boldsymbol{\underline{D}}_{ss}+\Lambda_{ss}^{\prime}\underset{=0}{\underbrace{\left(d\Pi_{t}^{0,i}\right)^{\prime}}}\boldsymbol{\underline{D}}_{ss}.\label{eq:diff_Ys_edge}\\
- & =\left(\boldsymbol{y}_{ss}^{o}\right)^{\prime}\Pi_{ss}^{\prime}d\underline{\boldsymbol{D}}_{t}^{0,i}\nonumber \\
- & =\left(\boldsymbol{y}_{ss}^{o}\right)^{\prime}\Pi_{ss}^{\prime}\left(\Lambda_{ss}^{\prime}\Pi_{ss}^{\prime}\right)^{t-1}d\underline{\boldsymbol{D}}_{1}^{0,i}\nonumber 
+dY_{t}^{o,0,i}= & \left(\boldsymbol{y}_{ss}^{o}\right)^{\prime}\Pi_{ss}^{\prime}d\underline{\boldsymbol{D}}_{t}^{0,i}\label{eq:diff_Ys_edge}\\
+ & +\underset{=0}{\underbrace{\left(d\boldsymbol{y}_{t}^{o,0,i}\right)^{\prime}}}\boldsymbol{\underline{D}}_{ss}+\Lambda_{ss}^{\prime}\underset{=0}{\underbrace{\left(d\Pi_{t}^{0,i}\right)^{\prime}}}\boldsymbol{\underline{D}}_{ss}.\nonumber \\
+= & \left(\boldsymbol{y}_{ss}^{o}\right)^{\prime}\Pi_{ss}^{\prime}d\underline{\boldsymbol{D}}_{t}^{0,i}\nonumber \\
+= & \left(\boldsymbol{y}_{ss}^{o}\right)^{\prime}\Pi_{ss}^{\prime}\left(\Lambda_{ss}^{\prime}\Pi_{ss}^{\prime}\right)^{t-1}d\underline{\boldsymbol{D}}_{1}^{0,i}\nonumber 
 \end{align}
 
 \end_inset
@@ -6990,11 +6972,12 @@ noprefix "false"
 \begin_layout Standard
 \begin_inset Formula 
 \begin{align}
-d\boldsymbol{\underline{D}}_{t}^{s,i}-d\boldsymbol{\underline{D}}_{t-1}^{s-1,i} & =\Lambda_{ss}^{\prime}\Pi_{ss}^{\prime}\left(d\boldsymbol{\underline{D}}_{t-1}^{s,i}-d\boldsymbol{\underline{D}}_{t-2}^{s-1,i}\right)+\underset{=0}{\underbrace{\left(d\Lambda_{t-1}^{s,i}-d\Lambda_{t-2}^{s-1,i}\right)^{\prime}}}\Pi_{ss}^{\prime}\boldsymbol{D}_{ss}+\Lambda_{ss}^{\prime}\underset{=0}{\underbrace{\left(d\Pi_{t-1}^{s,i}-d\Pi_{t-2}^{s-1,i}\right)^{\prime}}}\boldsymbol{\underline{D}}_{ss}\nonumber \\
- & =\Lambda_{ss}^{\prime}\Pi_{ss}^{\prime}\left(d\boldsymbol{\underline{D}}_{t}^{s,i}-d\boldsymbol{\underline{D}}_{t-1}^{s-1,i}\right)\nonumber \\
+d\boldsymbol{\underline{D}}_{t}^{s,i}-d\boldsymbol{\underline{D}}_{t-1}^{s-1,i}= & \Lambda_{ss}^{\prime}\Pi_{ss}^{\prime}\left(d\boldsymbol{\underline{D}}_{t-1}^{s,i}-d\boldsymbol{\underline{D}}_{t-2}^{s-1,i}\right)\nonumber \\
+ & +\underset{=0}{\underbrace{\left(d\Lambda_{t-1}^{s,i}-d\Lambda_{t-2}^{s-1,i}\right)^{\prime}}}\Pi_{ss}^{\prime}\boldsymbol{D}_{ss}+\Lambda_{ss}^{\prime}\underset{=0}{\underbrace{\left(d\Pi_{t-1}^{s,i}-d\Pi_{t-2}^{s-1,i}\right)^{\prime}}}\boldsymbol{\underline{D}}_{ss}\nonumber \\
+= & \Lambda_{ss}^{\prime}\Pi_{ss}^{\prime}\left(d\boldsymbol{\underline{D}}_{t}^{s,i}-d\boldsymbol{\underline{D}}_{t-1}^{s-1,i}\right)\nonumber \\
  & \vdots\nonumber \\
- & =\left(\Lambda_{ss}^{\prime}\Pi_{ss}^{\prime}\right)^{t-1}\left(d\boldsymbol{\underline{D}}_{1}^{s,i}-\underset{=0}{\underbrace{d\boldsymbol{\underline{D}}_{0}^{s-1,i}}}\right)\nonumber \\
- & =\left(\Lambda_{ss}^{\prime}\Pi_{ss}^{\prime}\right)^{t-1}d\boldsymbol{\underline{D}}_{1}^{s,i}\label{eq:diff_dDs}
+= & \left(\Lambda_{ss}^{\prime}\Pi_{ss}^{\prime}\right)^{t-1}\left(d\boldsymbol{\underline{D}}_{1}^{s,i}-\underset{=0}{\underbrace{d\boldsymbol{\underline{D}}_{0}^{s-1,i}}}\right)\nonumber \\
+= & \left(\Lambda_{ss}^{\prime}\Pi_{ss}^{\prime}\right)^{t-1}d\boldsymbol{\underline{D}}_{1}^{s,i}\label{eq:diff_dDs}
 \end{align}
 
 \end_inset
@@ -7056,15 +7039,13 @@ noprefix "false"
 \end_inset
 
 
-\end_layout
-
-\begin_layout Standard
 \begin_inset Formula 
 \begin{align}
-dY_{t}^{o,s,i}-dY_{t-1}^{o,s-1,i} & =(\boldsymbol{y}_{ss}^{o})^{\prime}\Pi_{ss}^{\prime}\left(d\boldsymbol{\underline{D}}_{t}^{s,i}-d\boldsymbol{\underline{D}}_{t-1}^{s-1,i}\right)+\underset{=0}{\underbrace{\left(d\boldsymbol{y}_{t}^{o,s,i}-d\boldsymbol{y}_{t-1}^{o,s-1,i}\right)^{\prime}}}\Pi_{ss}^{\prime}\boldsymbol{D}_{ss}+\boldsymbol{y}_{ss}^{o}\underset{=0}{\underbrace{\left(d\Pi_{t}^{s,i}-d\Pi_{t-1}^{s-1,i}\right)^{\prime}}}\boldsymbol{\underline{D}}_{ss}\label{eq:diff_dYs}\\
- & =(\boldsymbol{y}_{ss}^{o})^{\prime}\Pi_{ss}^{\prime}\left(d\boldsymbol{\underline{D}}_{t}^{s,i}-d\underline{\boldsymbol{D}}_{t-1}^{s-1,i}\right)\nonumber \\
- & =(\boldsymbol{y}_{ss}^{o})^{\prime}\Pi_{ss}^{\prime}\left(\Lambda_{ss}^{\prime}\Pi_{ss}^{\prime}\right)^{t-1}d\boldsymbol{\underline{D}}_{1}^{s,i}\nonumber \\
- & =\left(\mathcal{E}_{t-1}^{o}\right)^{\prime}d\boldsymbol{\underline{D}}_{1}^{s,i}\nonumber 
+dY_{t}^{o,s,i}-dY_{t-1}^{o,s-1,i}= & (\boldsymbol{y}_{ss}^{o})^{\prime}\Pi_{ss}^{\prime}\left(d\boldsymbol{\underline{D}}_{t}^{s,i}-d\boldsymbol{\underline{D}}_{t-1}^{s-1,i}\right)\label{eq:diff_dYs}\\
+ & +\underset{=0}{\underbrace{\left(d\boldsymbol{y}_{t}^{o,s,i}-d\boldsymbol{y}_{t-1}^{o,s-1,i}\right)^{\prime}}}\Pi_{ss}^{\prime}\boldsymbol{D}_{ss}+\boldsymbol{y}_{ss}^{o}\underset{=0}{\underbrace{\left(d\Pi_{t}^{s,i}-d\Pi_{t-1}^{s-1,i}\right)^{\prime}}}\boldsymbol{\underline{D}}_{ss}\nonumber \\
+= & (\boldsymbol{y}_{ss}^{o})^{\prime}\Pi_{ss}^{\prime}\left(d\boldsymbol{\underline{D}}_{t}^{s,i}-d\underline{\boldsymbol{D}}_{t-1}^{s-1,i}\right)\nonumber \\
+= & (\boldsymbol{y}_{ss}^{o})^{\prime}\Pi_{ss}^{\prime}\left(\Lambda_{ss}^{\prime}\Pi_{ss}^{\prime}\right)^{t-1}d\boldsymbol{\underline{D}}_{1}^{s,i}\nonumber \\
+= & \left(\mathcal{E}_{t-1}^{o}\right)^{\prime}d\boldsymbol{\underline{D}}_{1}^{s,i}\nonumber 
 \end{align}
 
 \end_inset

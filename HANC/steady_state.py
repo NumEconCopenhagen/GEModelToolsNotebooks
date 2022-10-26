@@ -28,7 +28,7 @@ def prepare_hh_ss(model):
     
     for i_beta in range(par.Nbeta):
         ss.z_trans[i_beta,:,:] = z_trans
-        ss.Dz[i_beta,:] = z_ergodic
+        ss.Dz[i_beta,:] = z_ergodic/par.Nbeta
         ss.Dbeg[i_beta,:,0] = ss.Dz[i_beta,:]
         ss.Dbeg[i_beta,:,1:] = 0.0
 
