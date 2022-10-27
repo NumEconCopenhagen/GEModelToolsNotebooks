@@ -48,8 +48,7 @@ def block_pre(par,ini,ss,path,ncols=1):
 
         # c. government
         B[:] = ss.B
-        tau[:] = r*B
-        G[:] = tau-r*B
+        tau[:] = r*B + G
         
         # d. aggregates
         A[:] = B[:] = ss.B
@@ -95,6 +94,6 @@ def block_post(par,ini,ss,path,ncols=1):
         NKPC_res[:] = par.kappa*(w/Z-1/par.mu) + Y_plus/Y*np.log(1+pi_plus)/(1+r_plus) - np.log(1+pi)
 
         # b. market clearing
+        clearing_N[:] = N-N_hh
         clearing_A[:] = A-A_hh
         clearing_C[:] = C-C_hh
-        clearing_N[:] = N-N_hh

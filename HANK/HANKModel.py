@@ -28,9 +28,9 @@ class HANKModelClass(EconModelClass,GEModelClass):
         self.intertemps_hh = ['vbeg_a'] # intertemporal variables
 
         # c. GE
-        self.shocks = ['istar','Z'] # exogenous inputs
-        self.unknowns = ['pi','w','Y'] # endogenous inputs
-        self.targets = ['NKPC_res','clearing_A','clearing_N'] # targets
+        self.shocks = ['Z','istar','G'] # exogenous inputs
+        self.unknowns = ['Y','w','pi'] # endogenous inputs
+        self.targets = ['NKPC_res','clearing_N','clearing_A'] # targets
         
         # d. all variables
         self.varlist = [ # all variables
@@ -100,9 +100,14 @@ class HANKModelClass(EconModelClass,GEModelClass):
         par.jump_Z = 0.0 # initial jump
         par.rho_Z = 0.00 # AR(1) coefficeint
         par.std_Z = 0.00 # std.
+
         par.jump_istar = -0.0025
         par.rho_istar = 0.61
         par.std_istar = 0.0025
+
+        par.jump_G = 0.0
+        par.rho_G = 0.00
+        par.std_G = 0.00
 
         # h. misc.
         par.T = 500 # length of path        
