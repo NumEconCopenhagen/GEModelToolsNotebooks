@@ -8,26 +8,26 @@ def block_pre(par,ini,ss,path,ncols=1):
     """ evaluate transition path - before household block """
 
     # par, ini, ss, path are namespaces
-    # ncols specifies have many versions of the model to evaluate at once
+    # nncols specifies have many versions of the model to evaluate at once
     #   path.VARNAME have shape=(len(unknowns)*par.T,par.T)
     #   path.VARNAME[0,t] for t in [0,1,...,par.T] is always used outside of this function
 
-    for thread in nb.prange(ncols):
+    for ncol in nb.prange(ncols):
         
         # unpack
-        A = path.A[thread,:]
-        A_hh = path.A_hh[thread,:]
-        C = path.C[thread,:]
-        C_hh = path.C_hh[thread,:]
-        clearing_A = path.clearing_A[thread,:]
-        clearing_C = path.clearing_C[thread,:]
-        Gamma = path.Gamma[thread,:]
-        K = path.K[thread,:]
-        L = path.L[thread,:]
-        r = path.r[thread,:]
-        rk = path.rk[thread,:]
-        w = path.w[thread,:]
-        Y = path.Y[thread,:]
+        A = path.A[ncol,:]
+        A_hh = path.A_hh[ncol,:]
+        C = path.C[ncol,:]
+        C_hh = path.C_hh[ncol,:]
+        clearing_A = path.clearing_A[ncol,:]
+        clearing_C = path.clearing_C[ncol,:]
+        Gamma = path.Gamma[ncol,:]
+        K = path.K[ncol,:]
+        L = path.L[ncol,:]
+        r = path.r[ncol,:]
+        rk = path.rk[ncol,:]
+        w = path.w[ncol,:]
+        Y = path.Y[ncol,:]
 
         #################
         # implied paths #
@@ -60,22 +60,22 @@ def block_pre(par,ini,ss,path,ncols=1):
 def block_post(par,ini,ss,path,ncols=1):
     """ evaluate transition path - after household block """
 
-    for thread in nb.prange(ncols):
+    for ncol in nb.prange(ncols):
 
         # unpack
-        A = path.A[thread,:]
-        A_hh = path.A_hh[thread,:]
-        C = path.C[thread,:]
-        C_hh = path.C_hh[thread,:]
-        clearing_A = path.clearing_A[thread,:]
-        clearing_C = path.clearing_C[thread,:]
-        Gamma = path.Gamma[thread,:]
-        K = path.K[thread,:]
-        L = path.L[thread,:]
-        r = path.r[thread,:]
-        rk = path.rk[thread,:]
-        w = path.w[thread,:]
-        Y = path.Y[thread,:]
+        A = path.A[ncol,:]
+        A_hh = path.A_hh[ncol,:]
+        C = path.C[ncol,:]
+        C_hh = path.C_hh[ncol,:]
+        clearing_A = path.clearing_A[ncol,:]
+        clearing_C = path.clearing_C[ncol,:]
+        Gamma = path.Gamma[ncol,:]
+        K = path.K[ncol,:]
+        L = path.L[ncol,:]
+        r = path.r[ncol,:]
+        rk = path.rk[ncol,:]
+        w = path.w[ncol,:]
+        Y = path.Y[ncol,:]
 
         ###########
         # targets #

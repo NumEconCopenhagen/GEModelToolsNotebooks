@@ -7074,7 +7074,7 @@ noprefix "false"
 \begin_inset Formula $t,s\geq1$
 \end_inset
 
- implies 
+ implies
 \begin_inset Formula 
 \begin{align}
 \mathcal{J}_{t,s}^{hh,i,o}-\mathcal{J}_{t-1,s-1}^{hh,i,o} & =\frac{dY_{t}^{o,s,i}-dY_{t-1}^{o,s-1,i}}{dx}\Leftrightarrow\nonumber \\
@@ -7092,9 +7092,6 @@ Recursive formulation
 
 \begin_layout Standard
 Define the object
-\end_layout
-
-\begin_layout Standard
 \begin_inset Formula 
 \begin{equation}
 \mathcal{F}_{t,s}^{,i,o}\equiv\begin{cases}

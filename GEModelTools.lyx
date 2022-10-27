@@ -1862,7 +1862,7 @@ This implies the equation system
 \begin{align}
 \boldsymbol{H}(\boldsymbol{K},\boldsymbol{\Gamma}) & =\boldsymbol{0}\Leftrightarrow\label{eq:H_Ayagari}\\
 \left[\begin{array}{c}
-K_{t}-A_{t}^{hh}\end{array}\right] & =\left[\begin{array}{c}
+A_{t}^{hh}-K_{t}\end{array}\right] & =\left[\begin{array}{c}
 0\end{array}\right],\,\,\,\forall t\in\{0,1,\dots,T-1\}\nonumber 
 \end{align}
 
@@ -1874,7 +1874,7 @@ where we have
 \begin_inset Formula 
 \begin{align*}
 L_{t} & =1\\
-r_{t} & =\alpha\Gamma_{t}(K_{t-1}/L_{t})^{\alpha-1}\\
+r_{t} & =\alpha\Gamma_{t}(K_{t-1}/L_{t})^{\alpha-1}-\delta\\
 w_{t} & =(1-\alpha)\Gamma_{t}\left(\frac{r_{t}+\delta}{\alpha\Gamma_{t}}\right)^{\frac{\alpha}{\alpha-1}}\\
 A_{t}^{hh} & =\boldsymbol{a}_{t}^{\ast\prime}\boldsymbol{D}_{t}\\
 \boldsymbol{D}_{t} & =\Pi_{z}^{\prime}\underline{\boldsymbol{D}}_{t}\\
