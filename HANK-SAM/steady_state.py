@@ -44,8 +44,6 @@ def prepare_hh_ss(model):
     # 3. initial guess for intertemporal variables #
     ################################################
 
-    Va = np.zeros((par.Nfix,par.Nz,par.Na))
-
     # a. raw value        
     y = par.phi**par.u_grid*ss.wh*par.z_grid
     c = m = (1+ss.r)*par.a_grid[np.newaxis,:] + y[:,np.newaxis]
@@ -93,22 +91,23 @@ def find_ss(model,do_print=False):
     # e. government
     ss.G = ss.d + ss.tau*ss.w*ss.N - ss.r*ss.B
 
-    # f. resource constraint
-    ss.C = ss.Y-ss.G
+    # f. market clearing
+    ss.clearing_A = ss.A-ss.A_hh
+    ss.clearing_Y = ss.Y-ss.C_hh-ss.G
 
     if do_print:
         
-        C = ss.C/ss.Y
+        C = ss.C_hh/ss.Y
         G = ss.G/ss.Y
         print(f'GDP by spending: C = {C:.3f}, G = {G:.3f}')
 
         assert np.isclose(1.0,C+G)
 
         print(f'Implied B = {ss.B:6.3f}')
-        print(f'Discrepancy in C = {ss.C-ss.C_hh:12.8f}')
+        print(f'Discrepancy in Y = {ss.clearing_Y:12.8f}')
 
     # h. union
     v_prime_N_unscaled = ss.N**(1/par.varphi)
-    u_prime = ss.C**(-par.sigma)
+    u_prime = ss.C_hh**(-par.sigma)
     par.nu = (par.epsilon_w-1)/par.epsilon_w*(1-ss.tau)*ss.w*u_prime/v_prime_N_unscaled # WPC
     if do_print: print(f'Implied nu = {par.nu:6.3f}')

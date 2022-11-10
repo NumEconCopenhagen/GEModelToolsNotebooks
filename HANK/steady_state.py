@@ -68,7 +68,7 @@ def evaluate_ss(model,do_print=False):
     ss.G = par.G_target_ss
 
     # c.. monetary policy
-    ss.i = ss.r = ss.istar = 0.0
+    ss.i = ss.istar = (1+ss.r)*(1+ss.pi)-1
 
     # d. firms
     ss.Y = ss.Z*ss.N
@@ -84,7 +84,9 @@ def evaluate_ss(model,do_print=False):
     model.simulate_hh_ss(do_print=do_print)
 
     # g. market clearing
-    ss.C = ss.Y-ss.G-ss.adjcost
+    ss.clearing_N = ss.N - ss.N_hh
+    ss.clearing_A = ss.A - ss.A_hh
+    ss.clearing_Y = ss.Y - (ss.C_hh+ss.G+ss.adjcost)
 
 def objective_ss(x,model,do_print=False):
     """ objective function for finding steady state """
@@ -97,7 +99,7 @@ def objective_ss(x,model,do_print=False):
 
     evaluate_ss(model,do_print=do_print)
     
-    return np.array([ss.A_hh-ss.B,ss.N_hh-ss.N])
+    return np.array([ss.clearing_A,ss.clearing_N])
 
 def find_ss(model,do_print=False):
     """ find the steady state """
@@ -119,6 +121,6 @@ def find_ss(model,do_print=False):
         print(f' beta   = {res.x[0]:8.4f}')
         print(f' varphi = {res.x[1]:8.4f}')
         print('')
-        print(f'Discrepancy in B = {ss.A-ss.A_hh:12.8f}')
-        print(f'Discrepancy in C = {ss.C-ss.C_hh:12.8f}')
-        print(f'Discrepancy in N = {ss.N-ss.N_hh:12.8f}')
+        print(f'Discrepancy in A = {ss.clearing_A:12.8f}')
+        print(f'Discrepancy in N = {ss.clearing_N:12.8f}')
+        print(f'Discrepancy in Y = {ss.clearing_Y:12.8f}')

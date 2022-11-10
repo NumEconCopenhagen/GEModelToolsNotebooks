@@ -42,7 +42,8 @@ def prepare_hh_ss(model):
     v_a = (1+ss.r)*c**(-par.sigma)
 
     # b. expectation
-    ss.vbeg_a[:] = ss.z_trans@v_a
+    for i_beta in range(par.Nbeta):
+        ss.vbeg_a[i_beta] = ss.z_trans@v_a
 
 def find_ss(model,do_print=False):
     """ find the steady state """
@@ -69,11 +70,15 @@ def find_ss(model,do_print=False):
     ss.rk = par.alpha*ss.Gamma*(ss.K/ss.L)**(par.alpha-1)
     par.delta = ss.rk - ss.r
 
-    # d. remaining
+    # d. produktion and investment
     ss.Y = ss.Gamma*ss.K**par.alpha*ss.L**(1-par.alpha)
-    ss.C = ss.Y - par.delta*ss.K
+    ss.I = par.delta*ss.K
 
-    # e. print
+    # e. market clearing
+    ss.clearing_A = ss.A-ss.A_hh
+    ss.clearing_Y = ss.Y-ss.C_hh-ss.I
+
+    # f. print
     if do_print:
 
         print(f'Implied K = {ss.K:6.3f}')
@@ -81,6 +86,6 @@ def find_ss(model,do_print=False):
         print(f'Implied Gamma = {ss.Gamma:6.3f}')
         print(f'Implied delta = {par.delta:6.3f}') # check is positive
         print(f'Implied K/Y = {ss.K/ss.Y:6.3f}') 
-        print(f'Discrepancy in K-A_hh = {ss.K-ss.A_hh:12.8f}') # = 0 by construction
-        print(f'Discrepancy in C-C_hh = {ss.C-ss.C_hh:12.8f}') # != 0 due to numerical error 
+        print(f'Discrepancy in A = {ss.clearing_A:12.8f}') # = 0 by construction
+        print(f'Discrepancy in Y = {ss.clearing_Y:12.8f}') # != 0 due to numerical error 
 

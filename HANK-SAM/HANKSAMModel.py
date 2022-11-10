@@ -30,8 +30,8 @@ class HANKSAMModelClass(EconModelClass,GEModelClass):
         
         # d. all variables
         self.varlist = [
-            'A','B','C',
-            'clearing_A','clearing_C',
+            'A','B',
+            'clearing_A','clearing_Y',
             'd','EU','G','Gamma','i','N','NKPC','Pi_w','Pi',
             'r','tau','U','UE','w','wh','WPC','Y',
         ]

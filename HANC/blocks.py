@@ -17,11 +17,11 @@ def block_pre(par,ini,ss,path,ncols=1):
         # unpack
         A = path.A[ncol,:]
         A_hh = path.A_hh[ncol,:]
-        C = path.C[ncol,:]
         C_hh = path.C_hh[ncol,:]
         clearing_A = path.clearing_A[ncol,:]
-        clearing_C = path.clearing_C[ncol,:]
+        clearing_Y = path.clearing_Y[ncol,:]
         Gamma = path.Gamma[ncol,:]
+        I = path.I[ncol,:]
         K = path.K[ncol,:]
         L = path.L[ncol,:]
         r = path.r[ncol,:]
@@ -49,9 +49,9 @@ def block_pre(par,ini,ss,path,ncols=1):
         r[:] = rk-par.delta
         w[:] = (1.0-par.alpha)*Gamma*(rk/(par.alpha*Gamma))**(par.alpha/(par.alpha-1.0))
 
-        # c. production and consumption
+        # c. production and investment
         Y[:] = Gamma*K_lag**(par.alpha)*L**(1-par.alpha)
-        C[:] = Y-(K-K_lag)-par.delta*K_lag
+        I[:] = (K-K_lag)+par.delta*K_lag
 
         # d. total assets
         A[:] = K[:]
@@ -65,11 +65,11 @@ def block_post(par,ini,ss,path,ncols=1):
         # unpack
         A = path.A[ncol,:]
         A_hh = path.A_hh[ncol,:]
-        C = path.C[ncol,:]
         C_hh = path.C_hh[ncol,:]
         clearing_A = path.clearing_A[ncol,:]
-        clearing_C = path.clearing_C[ncol,:]
+        clearing_Y = path.clearing_Y[ncol,:]
         Gamma = path.Gamma[ncol,:]
+        I = path.I[ncol,:]
         K = path.K[ncol,:]
         L = path.L[ncol,:]
         r = path.r[ncol,:]
@@ -81,5 +81,5 @@ def block_post(par,ini,ss,path,ncols=1):
         # targets #
         ###########
 
-        clearing_A[:] = K-A_hh
-        clearing_C[:] = C-C_hh            
+        clearing_A[:] = A-A_hh
+        clearing_Y[:] = Y-C_hh-I

@@ -31,9 +31,8 @@ def block_pre(par,ini,ss,path,ncols=1):
         A = path.A[ncol,:]
         B = path.B[ncol,:]
         C_hh = path.C_hh[ncol,:]
-        C = path.C[ncol,:]
         clearing_A = path.clearing_A[ncol,:]
-        clearing_C = path.clearing_C[ncol,:]
+        clearing_Y = path.clearing_Y[ncol,:]
         d = path.d[ncol,:]
         EU = path.EU[ncol,:]
         G = path.G[ncol,:]
@@ -115,7 +114,6 @@ def block_pre(par,ini,ss,path,ncols=1):
 
         # e. aggregates
         A[:] = B
-        C[:] = Y-G
 
 @nb.njit
 def block_post(par,ini,ss,path,ncols=1):
@@ -128,9 +126,8 @@ def block_post(par,ini,ss,path,ncols=1):
         A = path.A[ncol,:]
         B = path.B[ncol,:]
         C_hh = path.C_hh[ncol,:]
-        C = path.C[ncol,:]
         clearing_A = path.clearing_A[ncol,:]
-        clearing_C = path.clearing_C[ncol,:]
+        clearing_Y = path.clearing_Y[ncol,:]
         d = path.d[ncol,:]
         EU = path.EU[ncol,:]
         G = path.G[ncol,:]
@@ -159,7 +156,7 @@ def block_post(par,ini,ss,path,ncols=1):
 
         # b. WPC
         v_prime = par.nu*N**(1/par.varphi)
-        u_prime = C**(-par.sigma)
+        u_prime = C_hh**(-par.sigma)
         LHS_WPC = (1-par.epsilon_w)*(1-tau)*w + par.epsilon_w*v_prime/u_prime
         
         RHS_WPC_cur = par.theta_w*(Pi_w-ss.Pi_w)*Pi_w
@@ -169,4 +166,4 @@ def block_post(par,ini,ss,path,ncols=1):
 
         # c. market clearing
         clearing_A[:] = A-A_hh
-        clearing_C[:] = C-C_hh
+        clearing_Y[:] = Y-C_hh-G

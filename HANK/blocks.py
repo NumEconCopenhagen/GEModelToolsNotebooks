@@ -13,10 +13,9 @@ def block_pre(par,ini,ss,path,ncols=1):
         A = path.A[ncol,:]
         B = path.B[ncol,:]
         C_hh = path.C_hh[ncol,:]
-        C = path.C[ncol,:]
         clearing_A = path.clearing_A[ncol,:]
-        clearing_C = path.clearing_C[ncol,:]
         clearing_N = path.clearing_N[ncol,:]
+        clearing_Y = path.clearing_Y[ncol,:]
         d = path.d[ncol,:]
         G = path.G[ncol,:]
         i = path.i[ncol,:]
@@ -37,7 +36,6 @@ def block_pre(par,ini,ss,path,ncols=1):
 
         # a. firms
         N[:] = Y/Z
-
         adjcost[:] = par.mu/(par.mu-1)/(2*par.kappa)*np.log(1+pi)**2*Y
         d[:] = Y-w*N-adjcost
 
@@ -51,8 +49,7 @@ def block_pre(par,ini,ss,path,ncols=1):
         tau[:] = r*B + G
         
         # d. aggregates
-        A[:] = B[:] = ss.B
-        C[:] = Y-G-adjcost
+        A[:] = B[:]
 
 @nb.njit
 def block_post(par,ini,ss,path,ncols=1):
@@ -64,10 +61,9 @@ def block_post(par,ini,ss,path,ncols=1):
         A = path.A[ncol,:]
         B = path.B[ncol,:]
         C_hh = path.C_hh[ncol,:]
-        C = path.C[ncol,:]
         clearing_A = path.clearing_A[ncol,:]
-        clearing_C = path.clearing_C[ncol,:]
         clearing_N = path.clearing_N[ncol,:]
+        clearing_Y = path.clearing_Y[ncol,:]
         d = path.d[ncol,:]
         G = path.G[ncol,:]
         i = path.i[ncol,:]
@@ -96,4 +92,4 @@ def block_post(par,ini,ss,path,ncols=1):
         # b. market clearing
         clearing_N[:] = N-N_hh
         clearing_A[:] = A-A_hh
-        clearing_C[:] = C-C_hh
+        clearing_Y[:] = Y-(C_hh+G+adjcost)

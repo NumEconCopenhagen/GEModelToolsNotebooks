@@ -30,8 +30,8 @@ class HANCModelClass(EconModelClass,GEModelClass):
 
         # d. all variables
         self.varlist = [
-            'A','C','clearing_A','clearing_C',
-            'Gamma','K','L','r','rk','w','Y']
+            'A','clearing_A','clearing_Y',
+            'Gamma','I','K','L','r','rk','w','Y']
 
         # e. functions
         self.solve_hh_backwards = household_problem.solve_hh_backwards

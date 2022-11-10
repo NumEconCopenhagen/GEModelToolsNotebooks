@@ -36,10 +36,9 @@ class HANKModelClass(EconModelClass,GEModelClass):
         self.varlist = [ # all variables
             'A',
             'B',
-            'C',
             'clearing_A',
-            'clearing_C',
             'clearing_N',
+            'clearing_Y',
             'd',
             'G',
             'i',
