@@ -25,15 +25,16 @@ def solve_hh_backwards(par,z_trans,w,r,d,tau,vbeg_a_plus,vbeg_a,a,c,ell,n):
             n_endo = ell_endo*z
 
             # iii. re-interpolate
-            m_endo = c_endo + par.a_grid - w*n_endo - T
-            m_exo = (1+r)*par.a_grid
+            a_lag_endo = (c_endo + par.a_grid - w*n_endo - T)/(1+r)
+            a_lag = par.a_grid
 
-            interp_1d_vec(m_endo,c_endo,m_exo,c[i_fix,i_z,:])
-            interp_1d_vec(m_endo,ell_endo,m_exo,ell[i_fix,i_z,:])
+            interp_1d_vec(a_lag_endo,c_endo,a_lag,c[i_fix,i_z,:])
+            interp_1d_vec(a_lag_endo,ell_endo,a_lag,ell[i_fix,i_z,:])
+
             n[i_fix,i_z,:] = ell[i_fix,i_z,:]*z
 
             # iv. saving
-            a[i_fix,i_z,:] = m_exo + w*n[i_fix,i_z,:] + T - c[i_fix,i_z,:]
+            a[i_fix,i_z,:] = (1+r)*a_lag + w*n[i_fix,i_z,:] + T - c[i_fix,i_z,:]
 
             # v. refinement at constraint
             for i_a in range(par.Na):
