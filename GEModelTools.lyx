@@ -2144,7 +2144,7 @@ noprefix "false"
 \end_inset
 
 .
- The three methods 
+ The foure methods 
 \begin_inset ERT
 status open
 
@@ -2153,6 +2153,19 @@ status open
 
 \backslash
 lstinline{.settings()}
+\end_layout
+
+\end_inset
+
+, 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{.set_functions()}
 \end_layout
 
 \end_inset
@@ -4884,7 +4897,7 @@ lstinline{shape=(par.T,)}
 \end_layout
 
 \begin_layout Standard
-Finally, the user must also provide the following 
+The user must also provide the following 
 \series bold
 methods
 \series default
@@ -5089,7 +5102,20 @@ lstinline{.simulate_hh_ss()}
 \begin_layout Standard
 Compared to the general model formulation above the code, currently, only
  allows for a structure with the household block and pre- and post-blocks.
- The user must provide the following 
+ In 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{.set_functions()}
+\end_layout
+
+\end_inset
+
+, The user must provide the following 
 \series bold
 jitted
 \begin_inset Foot
@@ -6240,6 +6266,16 @@ class MyModelClass(EconModelClass,GEModelClass):
 \begin_layout Plain Layout
 
         self.varlist = [] # all variables
+\end_layout
+
+\begin_layout Plain Layout
+
+	
+\end_layout
+
+\begin_layout Plain Layout
+
+	def set_functions(self):
 \end_layout
 
 \begin_layout Plain Layout
