@@ -54,7 +54,9 @@ class HANKModelClass(EconModelClass,GEModelClass):
             'Z',
         ]
 
-        # e. functions
+    def set_functions(self):
+        """ set functions """
+
         self.solve_hh_backwards = household_problem.solve_hh_backwards
         self.block_pre = blocks.block_pre
         self.block_post = blocks.block_post

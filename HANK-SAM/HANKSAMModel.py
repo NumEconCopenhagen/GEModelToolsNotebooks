@@ -36,7 +36,9 @@ class HANKSAMModelClass(EconModelClass,GEModelClass):
             'r','tau','U','UE','w','wh','WPC','Y',
         ]
 
-        # e. functions
+    def set_functions(self):
+        """ set functions """
+
         self.solve_hh_backwards = household_problem.solve_hh_backwards
         self.fill_z_trans = household_problem.fill_z_trans
         self.block_pre = blocks.block_pre

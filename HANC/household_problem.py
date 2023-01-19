@@ -14,7 +14,7 @@ def solve_hh_backwards(par,z_trans,r,w,vbeg_a_plus,vbeg_a,a,c):
         
             # i. EGM
             c_endo = (par.beta_grid[i_fix]*vbeg_a_plus[i_fix,i_z])**(-1/par.sigma)
-            m_endo = c_endo + par.a_grid
+            m_endo = c_endo + par.a_grid # current consumption + end-of-period assets
             
             # ii. interpolation to fixed grid
             m = (1+r)*par.a_grid + w*par.z_grid[i_z]

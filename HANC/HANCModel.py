@@ -33,7 +33,9 @@ class HANCModelClass(EconModelClass,GEModelClass):
             'A','clearing_A','clearing_Y',
             'Gamma','I','K','L','r','rk','w','Y']
 
-        # e. functions
+    def set_functions(self):
+        """ set functions to """
+
         self.solve_hh_backwards = household_problem.solve_hh_backwards
         self.block_pre = blocks.block_pre
         self.block_post = blocks.block_post
