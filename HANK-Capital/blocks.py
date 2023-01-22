@@ -45,8 +45,8 @@ def block_pre(par,ini,ss,path,ncols=1):
         # a. production #
         #################
 
-            # inputs: N,Ip,s,r,Q
-            # outputs: Y,w,rk,S,Div
+            # inputs: N,Ip,r,rk
+            # outputs: Y,w,s,S,Div
 
         # Ip -> I and K
         I[:] = lag(ini.Ip, Ip)
@@ -59,18 +59,20 @@ def block_pre(par,ini,ss,path,ncols=1):
 
         # N,K,s -> w,rk
         w[:] = s*(1-par.alpha)*par.Theta*K**par.alpha*N**(-par.alpha)
-        rk[:] = s*par.alpha*par.Theta*K**(par.alpha-1)*N**(1-par.alpha)
+        rk[:] = s*(par.alpha*par.Theta*K**(par.alpha-1)*N**(1-par.alpha))
 
         # check valuation residual
-        Q_plus = lead(Q,ss.Q)
-        r_plus = lead(r,ss.r)
-        rk_plus = lead(rk,ss.rk)
-        rk_plus2 = lead(rk_plus,ss.rk)
+        for k in range(par.T):
 
-        Q_alt = 1.0/(1.0+r_plus)*(rk_plus2+(1.0-par.delta_K)*Q_plus)
-        valuation_res[:] = Q_alt - Q[:]
+            t = par.T-1-k
+            
+            Q_plus = Q[t+1] if t < par.T-1 else ss.Q
+            rk_plus = rk[t+1] if t < par.T-1 else ss.rk
+
+            Q[t] = (rk_plus+(1-par.delta_K)*Q_plus)/(1+r[t])
 
         # check investment residual
+        r_plus = lead(r,ss.r)
         Ip_plus = lead(Ip,ss.I)
         I_plus = lead(I,ss.I)
 
@@ -99,23 +101,20 @@ def block_pre(par,ini,ss,path,ncols=1):
             # input: s, Pi
             # output: 
 
-        for t_ in range(par.T):
+        kappa = (1-par.xi_p)*(1-par.xi_p/(1+ss.r))/par.xi_p*par.e_p/(par.v_p+par.e_p-1)
 
-            t = (par.T-1)-t_
+        gap = 0.0
+        for k in range(par.T):
             
-            kappa = (1-par.xi_p)*(1-par.xi_p/(1+ss.r))/par.xi_p*par.e_p/(par.v_p+par.e_p-1)
+            t = (par.T-1)-k
 
-            gap = 0
-            for k in range(t_+1):
-                gap += 1/(1+ss.r)**k*(s[t+k]-(par.e_p-1)/par.e_p)
+            ds = s[t]-(par.e_p-1)/par.e_p
+            gap = ds + 1/(1+ss.r)*gap
 
             Pi_increase[t] = kappa*gap
 
-        for t in range(par.T):
-
-            Pi_lag = Pi[t-1] if t > 0 else ini.Pi
-            NKPC_res[t] = (Pi[t]-Pi_lag)-Pi_increase[t]
-
+        Pi_lag = lag(ini.Pi,Pi)
+        NKPC_res[:] = (Pi-Pi_lag)-Pi_increase
 
         ##################
         # c. mutual fund #
@@ -213,18 +212,20 @@ def block_post(par, ini, ss, path, ncols=1):
         # a. wage phillips curve #
         ##########################
 
+            # inputs: N,tau,w,UCE_hh,Pi,Pi_w
+            # outputs: s_w
+
         kappa_w = (1-par.xi_w)*(1-par.xi_w*par.beta_mean)/par.xi_w*par.e_w/(par.v_w+par.e_w-1)
 
-        for t_ in range(par.T):
+        gap_w = 0.0
+        for k in range(par.T):
 
-            t = (par.T-1) - t_
+            t = (par.T-1) - k
 
-            s_w[t] = par.nu*N[t]**(1/par.frisch) / ((1-tau[t])*w[t]*UCE_hh[t])
+            s_w[t] = par.nu*N[t]**(1/par.frisch)/((1-tau[t])*w[t]*UCE_hh[t])
+            ds_w = s_w[t]-(par.e_w-1)/par.e_w
+            gap_w = ds_w + gap_w/par.beta_mean
 
-            gap_w = 0
-            for k in range(t_+1):
-                gap_w += par.beta_mean**k * (s_w[t+k]-(par.e_w-1)/par.e_w)
-                
             Pi_w_increase[t] = kappa_w*gap_w
 
         for t in range(par.T):

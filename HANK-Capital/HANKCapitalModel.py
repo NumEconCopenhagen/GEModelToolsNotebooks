@@ -25,8 +25,8 @@ class HANKCapitalModelClass(EconModelClass,GEModelClass):
 
         # c. GE
         self.shocks = ['eg','em']  # exogenous shocks
-        self.unknowns = ['r','s','N','Ip','Q','Pi','Pi_w']  # endogenous unknowns
-        self.targets = ['fisher_res','w_res','clearing_Y','invest_res','valuation_res','NKPC_res','NKPC_w_res']  # targets = 0
+        self.unknowns = ['r','s','N','Ip','Pi','Pi_w']  # endogenous unknowns
+        self.targets = ['fisher_res','w_res','clearing_Y','invest_res','NKPC_res','NKPC_w_res']  # targets = 0
 
         # d. all variables
         self.varlist = [
@@ -102,7 +102,6 @@ class HANKCapitalModelClass(EconModelClass,GEModelClass):
         par.beta_delta = 0.00000  # discount factor, width, range is [mean-width,mean+width]
         par.frisch = 0.5  # Frisch elasticity
         par.nu = np.nan   # Disutility from labor
-        par.inattention = 0.0
 
         # b. income and saving parameters
         par.rho_e = 0.966  # AR(1) parameter
@@ -139,8 +138,8 @@ class HANKCapitalModelClass(EconModelClass,GEModelClass):
 
         # h. grids
         par.a_min = 0.0  # maximum point in grid for a
-        par.a_max = 1000.0  # maximum point in grid for a
-        par.Na = 100  # number of grid points
+        par.a_max = 500.0  # maximum point in grid for a
+        par.Na = 500  # number of grid points
 
         # i. shocks
 
