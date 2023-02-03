@@ -1,169 +1,97 @@
 import numpy as np
 import numba as nb
 
-from GEModelTools import lag, lead, bound, bisection
-   
-@nb.njit
-def NKPC_eq(x,par,ss,w,Gamma,Y,Y_plus,Pi_plus):  
-    
-    LHS_NKPC = (1-par.epsilon) + par.epsilon*w/Gamma
-        
-    RHS_NKPC_cur = par.theta*(x-ss.Pi)*x
-    RHS_NKPC_fut = par.beta_mean*par.theta*(Pi_plus-ss.Pi)*Pi_plus*Y_plus/Y
-
-    NKPC = LHS_NKPC - (RHS_NKPC_cur-RHS_NKPC_fut)
-    
-    return NKPC    
+from GEModelTools import lag, lead
 
 @nb.njit
-def block_pre(par,ini,ss,path,ncols=1):
-    """ evaluate transition path - before household block """
+def production(par,ini,ss,shock_TFP,delta,w,px,Vj,errors_Vj):
 
-    # par, sol, sim, ss, path are namespaces
-    # ncols specifies have many versions of the model to evaluate at once
-    #   path.VARNAME have shape=(len(unknowns)*par.T,par.T)
-    #   path.VARNAME[0,t] for t in [0,1,...mpar.T] is always used outside of this function
+    Vj_plus = lead(Vj,ss.Vj)
+    delta_plus = lead(delta,ss.delta)
 
-    for ncol in range(ncols):
+    LHS = Vj
+    RHS = shock_TFP*px-w + (1-delta_plus)*par.beta*Vj_plus
+    
+    errors_Vj[:] = LHS-RHS
 
-        # unpack
-        A_hh = path.A_hh[ncol,:]
-        A = path.A[ncol,:]
-        B = path.B[ncol,:]
-        C_hh = path.C_hh[ncol,:]
-        clearing_A = path.clearing_A[ncol,:]
-        clearing_Y = path.clearing_Y[ncol,:]
-        d = path.d[ncol,:]
-        EU = path.EU[ncol,:]
-        G = path.G[ncol,:]
-        Gamma = path.Gamma[ncol,:]
-        i = path.i[ncol,:]
-        N = path.N[ncol,:]
-        NKPC = path.NKPC[ncol,:]
-        Pi_w = path.Pi_w[ncol,:]
-        Pi = path.Pi[ncol,:]
-        r = path.r[ncol,:]
-        tau = path.tau[ncol,:]
-        U = path.U[ncol,:]
-        UE = path.UE[ncol,:]
-        w = path.w[ncol,:]
-        wh = path.wh[ncol,:]
-        WPC = path.WPC[ncol,:]
-        Y = path.Y[ncol,:]
-        NKPC = path.NKPC[ncol,:]
+@nb.njit
+def labor_market(par,ini,ss,vt,ut,S,theta,delta,lambda_v,lambda_u,v,u,entry,errors_ut):
+
+    theta[:] = vt/S
+
+    lambda_v[:] = par.A*theta**(-par.alpha)
+    lambda_u[:] = par.A*theta**(1-par.alpha)
+
+    u[:] = (1-lambda_u)*ut
+    v[:] = (1-lambda_v)*vt
+
+    u_lag = lag(ini.u,u)
+    v_lag = lag(ini.v,v)
+
+    entry[:] = vt -(1-delta)*v_lag
+    errors_ut[:] = ut - (u_lag + delta*(1-u_lag))
+
+@nb.njit
+def entry(par,ini,ss,lambda_v,Vj,errors_entry):
         
-        ####################
-        # I. implied paths #
-        ####################
+    LHS = -par.kappa + lambda_v*Vj
+    RHS = 0
 
-        # a. solve NKPC                
-        for t_ in range(par.T):
+    errors_entry[:] = LHS-RHS
 
-            t = (par.T-1)-t_
+@nb.njit
+def price_setters(par,ini,ss,shock_TFP,u,px,Pi,errors_Pi):
 
-            Y_plus = Y[t+1] if t < par.T-1 else ss.Y
-            Pi_plus = Pi[t+1] if t < par.T-1 else ss.Pi
-            Pi[t] = bisection(NKPC_eq,0.9,1.1,args=(par,ss,w[t],Gamma[t],Y[t],Y_plus,Pi_plus))
+        LHS = 1-par.epsilon_p + par.epsilon_p*px
 
-        # b. monetary policy
-        i[:] = ((1+ss.r)*Pi**par.varepsilon_pi)-1.0
-        i_lag = lag(ini.i,i)
-        r[:] = ((1+i_lag)/Pi)-1.0
+        Pi_plus = lead(Pi,ss.Pi)        
+        shock_TFP_plus = lead(shock_TFP,ss.shock_TFP)
+        u_plus = lead(u,ss.u)
 
-        # c. firm behavior
-        N[:] = Y/Gamma
-        d[:] = Y-w*N
-        
-        # d. labor market
-        U[:] = ss.U*(N/ss.N)**par.varepsilon_U
+        RHS = par.phi*(Pi-ss.Pi)*Pi - par.beta*par.phi*((Pi_plus-ss.Pi)*Pi_plus*(shock_TFP_plus*u_plus)/(shock_TFP*u))
 
-        U_lag = lag(ini.U,U)
-        
-        if par.U_residual == 'UE':
+        errors_Pi[:] = LHS-RHS
 
-            EU[:] = bound(ss.EU*(N/ss.N)**par.varepsilon_EU,0.0,1.0)
-            UE[:] = bound(1.0-(U-EU*(1-U_lag))/U_lag,0.0,1.0)
+@nb.njit
+def central_bank(par,ini,ss,Pi,R,RealR,q,RealR_ex_post):
 
-        elif par.U_residual == 'EU':
-        
-            UE[:] = bound(ss.UE*(N/ss.N)**par.varepsilon_UE,0.0,1.0)
-            EU[:] = bound((U-UE*U_lag)/(1-U_lag),0.0,1.0)
+    for t in range(par.T):
 
+        R_lag = ss.R if t == 0 else R[t-1]
+        R[t] = ss.R*(R_lag/ss.R)**(par.rho_R)*(Pi[t]/ss.Pi)**(par.delta_pi*(1-par.rho_R))
+            
+        if t < par.T-1:
+            RealR[t] = R[t]/Pi[t+1]
         else:
+            RealR[t] = R[t]/ss.Pi
 
-            raise ValueError('par.U_residual should be UE or EU')
+    # iv. arbitrage
+    for k in range(par.T):
+        t = par.T-1-k
+        q_plus = q[t+1] if t < par.T-1 else ss.q
+        q[t] = (1+par.delta_q*q_plus)/RealR[t]
 
-        # e. government
-        for t in range(par.T):
-
-            # i. lag
-            B_lag = B[t-1] if t > 0 else ini.B
-            
-            # ii. tau
-            x = bound((t-par.t_B)/par.Delta_B,0,1)
-            omega = 3*x**2-2*x**3
-            tau_tilde = ss.tau*(B_lag/ss.B)**par.varepsilon_B
-
-            tau[t] = (1.0-omega)*ss.tau + omega*tau_tilde
-            
-            # iii. government debt
-            B[t] = (1+r[t])*B_lag+G[t]-tau[t]*w[t]*N[t]-d[t]
-        
-        # household income
-        wh[:] = (1-tau)*w*N / (par.phi*U+(1-U))
-
-        # e. aggregates
-        A[:] = B
+    q_lag = lag(ini.q,q)
+    RealR_ex_post[:] = (1+par.delta_q*q)/q_lag
 
 @nb.njit
-def block_post(par,ini,ss,path,ncols=1):
-    """ evaluate transition path """
+def government(par,ini,ss,w,u,q,tau,B,qB,UI,Yt_hh):
 
-    for ncol in range(ncols):
+    UI[:] = par.phi*w*u
+    Yt_hh[:] = w*(1-u) + UI
 
-        # unpack
-        A_hh = path.A_hh[ncol,:]
-        A = path.A[ncol,:]
-        B = path.B[ncol,:]
-        C_hh = path.C_hh[ncol,:]
-        clearing_A = path.clearing_A[ncol,:]
-        clearing_Y = path.clearing_Y[ncol,:]
-        d = path.d[ncol,:]
-        EU = path.EU[ncol,:]
-        G = path.G[ncol,:]
-        Gamma = path.Gamma[ncol,:]        
-        i = path.i[ncol,:]
-        N = path.N[ncol,:]
-        NKPC = path.NKPC[ncol,:]
-        Pi_w = path.Pi_w[ncol,:]
-        Pi = path.Pi[ncol,:]
-        r = path.r[ncol,:]
-        tau = path.tau[ncol,:]
-        U = path.U[ncol,:]
-        UE = path.UE[ncol,:]
-        w = path.w[ncol,:]
-        wh = path.wh[ncol,:]
-        WPC = path.WPC[ncol,:]
-        Y = path.Y[ncol,:]
-
-
-        # lagged
-        w_lag = lag(ini.w,w)
+    for t in range(par.T):
         
-        Pi_w[:] = w/w_lag*Pi
-        Pi_w_plus = lead(Pi_w,ss.Pi_w)
-        N_plus = lead(N,ss.N)
+        B_lag = B[t-1] if t > 0 else ini.B
+        tau[t] = ss.tau + par.omega*ss.q*(B_lag-ss.B)/ss.Yt_hh
 
-        # b. WPC
-        v_prime = par.nu*N**(1/par.varphi)
-        u_prime = C_hh**(-par.sigma)
-        LHS_WPC = (1-par.epsilon_w)*(1-tau)*w + par.epsilon_w*v_prime/u_prime
-        
-        RHS_WPC_cur = par.theta_w*(Pi_w-ss.Pi_w)*Pi_w
-        RHS_WPC_fut = par.beta_mean*par.theta_w*(Pi_w_plus-ss.Pi_w)*Pi_w_plus*N_plus/N
+        expenses = UI[t] 
+        B[t] = ((1+par.delta_q*q[t])*B_lag + expenses - tau[t]*Yt_hh[t])/q[t]
 
-        WPC[:] =  LHS_WPC - (RHS_WPC_cur-RHS_WPC_fut)
+    qB[:] = q*B
+    
+@nb.njit
+def market_clearing(par,ini,ss,qB,S,A_hh,S_hh,errors_assets,errors_search):
 
-        # c. market clearing
-        clearing_A[:] = A-A_hh
-        clearing_Y[:] = Y-C_hh-G
+    errors_assets[:] = qB-A_hh
+    errors_search[:] = S-S_hh

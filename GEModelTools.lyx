@@ -813,25 +813,7 @@ aggregate risk
 Heterogeneous Agent Neo-Classical
 \emph default
  (HANC) is used as an example.
- In Appendix 
-\begin_inset CommandInset ref
-LatexCommand ref
-reference "sec:HANK-model-with-endo-risk"
-plural "false"
-caps "false"
-noprefix "false"
-
-\end_inset
-
- a
-\emph on
- Heterogeneous Agent New Keynesian 
-\emph default
-with 
-\emph on
-Search-And-Matching
-\emph default
- (HANK-SAM) is considered.
+ Additional undocumented model are included in the example repository.
 \end_layout
 
 \begin_layout Subsection
@@ -1670,11 +1652,19 @@ are such that
 
 \begin_layout Enumerate
 Firms maximize profits, 
-\begin_inset Formula $r_{ss}=\alpha A_{ss}(K_{ss}/L_{ss})^{\alpha-1}$
+\begin_inset Formula 
+\[
+r_{ss}=\alpha\Gamma_{ss}(K_{ss}/L_{ss})^{\alpha-1}-\delta
+\]
+
 \end_inset
 
  and 
-\begin_inset Formula $w_{ss}=(1-\alpha)A_{ss}\left(\frac{r_{t}+\delta}{\alpha A_{ss}}\right)^{\frac{\alpha}{\alpha-1}}$
+\begin_inset Formula 
+\[
+w_{ss}=(1-\alpha)\Gamma_{ss}\left(K_{ss}/L_{ss}\right)^{\alpha}
+\]
+
 \end_inset
 
 
@@ -2144,7 +2134,7 @@ noprefix "false"
 \end_inset
 
 .
- The foure methods 
+ The three methods 
 \begin_inset ERT
 status open
 
@@ -2157,20 +2147,7 @@ lstinline{.settings()}
 
 \end_inset
 
-, 
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-lstinline{.set_functions()}
-\end_layout
-
-\end_inset
-
-, 
+, , 
 \begin_inset ERT
 status open
 
@@ -2408,6 +2385,97 @@ lstinline{.ini}
 \end_layout
 
 \begin_layout Standard
+The user is required to specify a 
+\series bold
+list of ordered blocks 
+\series default
+in 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{.settings()}
+\end_layout
+
+\end_inset
+
+.
+ This is a list of strings with paths to jitted
+\series bold
+
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+The function should be decorated with 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{@numba.njit}
+\end_layout
+
+\end_inset
+
+.
+\end_layout
+
+\end_inset
+
+
+\series default
+ functions for each block.
+ Each block-function must have the format 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{function(par,ini,ss,var1,var2,...}
+\end_layout
+
+\end_inset
+
+.
+ The string 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{hh}
+\end_layout
+
+\end_inset
+
+ designates the household block.
+ The list of variables, 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{.varlist}
+\end_layout
+
+\end_inset
+
+, are derived from the blocks.
+\end_layout
+
+\begin_layout Standard
 The user is required to specify some 
 \series bold
 variable lists
@@ -2426,57 +2494,6 @@ lstinline{.settings()}
 \end_inset
 
  for:
-\end_layout
-
-\begin_layout Enumerate
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-vspace{-3mm}
-\end_layout
-
-\end_inset
-
-
-\series bold
-Aggregate variables:
-\series default
- 
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-lstinline{.varlist}
-\end_layout
-
-\end_inset
-
-.
- 
-\begin_inset Newline newline
-\end_inset
-
-Used as 
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-lstinline{path.VARNAME}
-\end_layout
-
-\end_inset
-
-.
 \end_layout
 
 \begin_layout Enumerate
@@ -3420,6 +3437,74 @@ lstinline{par.tol_broyden}
 
 \end_layout
 
+\begin_layout Enumerate
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+vspace{-3mm}
+\end_layout
+
+\end_inset
+
+
+\series bold
+Optional code settings:
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{par.py_hh}
+\end_layout
+
+\end_inset
+
+ (default: False)
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{par.py_blocks}
+\end_layout
+
+\end_inset
+
+ (default: True)
+\end_layout
+
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{par.full_z_trans}
+\end_layout
+
+\end_inset
+
+ (default: False)
+\end_layout
+
+\end_deeper
 \begin_layout Standard
 Define 
 \begin_inset ERT
@@ -3561,66 +3646,6 @@ status open
 
 
 \backslash
-lstinline{ss.Dz}
-\end_layout
-
-\end_inset
-
-, 
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-lstinline{shape=(par.Nfix,par.Nz,)}
-\end_layout
-
-\end_inset
-
-
-\begin_inset Newline newline
-\end_inset
-
-
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-lstinline{ini.Dz}
-\end_layout
-
-\end_inset
-
-, 
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-lstinline{shape=(par.Nfix,par.Nz,)}
-\end_layout
-
-\end_inset
-
-
-\begin_inset Newline newline
-\end_inset
-
-
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
 lstinline{path.z_trans}
 \end_layout
 
@@ -3639,7 +3664,20 @@ lstinline{shape=(par.T,par.Nz,par.Nz)}
 
 \end_inset
 
+ (or 
+\begin_inset ERT
+status open
 
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{shape=(par.T,par.Nendo1,...,par.Nz,par.Nz)}
+\end_layout
+
+\end_inset
+
+) 
 \begin_inset Newline newline
 \end_inset
 
@@ -3712,49 +3750,6 @@ status open
 
 \backslash
 lstinline{shape=(par.simT,par.Nz,par.Nz)}
-\end_layout
-
-\end_inset
-
-
-\begin_inset Newline newline
-\end_inset
-
-
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-lstinline{sim.Dz}
-\end_layout
-
-\end_inset
-
-, 
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-lstinline{shape=(par.simT,par.Nfix,par.Nz,)}
-\end_layout
-
-\end_inset
-
-
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-vspace{1mm}
 \end_layout
 
 \end_inset
@@ -4458,13 +4453,7 @@ status open
 
 
 \backslash
-lstinline{shape=(par.T,}
-\backslash
-lstinline{len(inputs_endo)}$
-\backslash
-times$
-\backslash
-lstinline{par.T})
+lstinline{shape=(par.T,1)}
 \end_layout
 
 \end_inset
@@ -4519,7 +4508,7 @@ status open
 
 
 \backslash
-lstinline{path.VARNAME[0,t]}
+lstinline{path.VARNAME[t]}
 \end_layout
 
 \end_inset
@@ -4529,44 +4518,6 @@ lstinline{path.VARNAME[0,t]}
 \end_inset
 
 .
-\begin_inset Newline newline
-\end_inset
-
-
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-lstinline{path.VARNAME[i,t]}
-\end_layout
-
-\end_inset
-
- for 
-\begin_inset Formula $i>0$
-\end_inset
-
- should be considered 
-\emph on
-undefined behavior
-\emph default
-.
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-vspace{1mm}
-\end_layout
-
-\end_inset
-
-
 \end_layout
 
 \begin_layout Enumerate
@@ -4943,33 +4894,7 @@ lstinline{.par}
 
 \end_inset
 
-, creates the transition matrix 
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-lstinline{ss.z_trans}
-\end_layout
-
-\end_inset
-
-, choose the initial distributions 
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-lstinline{ss.Dz}
-\end_layout
-
-\end_inset
-
- and 
+, choose the initial distribution 
 \begin_inset ERT
 status open
 
@@ -5100,22 +5025,7 @@ lstinline{.simulate_hh_ss()}
 \end_layout
 
 \begin_layout Standard
-Compared to the general model formulation above the code, currently, only
- allows for a structure with the household block and pre- and post-blocks.
- In 
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-lstinline{.set_functions()}
-\end_layout
-
-\end_inset
-
-, The user must provide the following 
+And the following 
 \series bold
 jitted
 \begin_inset Foot
@@ -5140,7 +5050,7 @@ lstinline{@numba.njit}
 
 \end_inset
 
- functions
+ function
 \series default
 :
 \end_layout
@@ -5235,6 +5145,19 @@ status open
 
 
 \backslash
+lstinline{.inputs_hh_z}
+\end_layout
+
+\end_inset
+
+, 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
 lstinline{.outputs_hh}
 \end_layout
 
@@ -5286,252 +5209,10 @@ lstinline{_plus}
 .
 \end_layout
 
-\begin_layout Enumerate
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-vspace{-1mm}
-\end_layout
-
-\end_inset
-
-
-\series bold
-Evaluate block before household block
-\series default
- (function), 
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-lstinline{.block_pre()}
-\end_layout
-
-\end_inset
-
-.
- Inputs must be: 
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-lstinline{(par,ini,ss,path,ncols)}
-\end_layout
-
-\end_inset
-
-, where 
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-lstinline{ncols}
-\end_layout
-
-\end_inset
-
- is 
-\begin_inset Formula $1$
-\end_inset
-
- or 
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-lstinline{len(unknowns)}$
-\backslash
-times$
-\backslash
-lstinline{par.T}
-\end_layout
-
-\end_inset
-
-, and the latter is used to evaluate the path simultaneously for all one
- step changes.
- After this block has been evaluated all paths in 
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-lstinline{.inputs_hh}
-\end_layout
-
-\end_inset
-
- and 
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-lstinline{.inputs_hh_z}
-\end_layout
-
-\end_inset
-
- must be filled.
-\end_layout
-
-\begin_layout Enumerate
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-vspace{-1mm}
-\end_layout
-
-\end_inset
-
-
-\series bold
-Evaluate block after household block
-\series default
- (function), 
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-lstinline{.block_post()}
-\end_layout
-
-\end_inset
-
-.
- Same requirements as 
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-lstinline{.block_pre()}
-\end_layout
-
-\end_inset
-
-.
- Can rely on paths in 
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-lstinline{.ouputs_hh}
-\end_layout
-
-\end_inset
-
-.
-\end_layout
-
 \begin_layout Standard
-Additionally, the user can provide a jitted function for calculating a time-vary
-ing transition matrix:
-\end_layout
-
-\begin_layout Enumerate
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-vspace{-1mm}
-\end_layout
-
-\end_inset
-
-
-\series bold
-Transition function
-\series default
- (function), 
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-lstinline{.fill_z_trans()}
-\end_layout
-
-\end_inset
-
- which calculates transition matrix.
- Arguments must be 
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-lstinline{par}
-\end_layout
-
-\end_inset
-
-, 
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-lstinline{z_trans}
-\end_layout
-
-\end_inset
-
- and all elements in 
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-lstinline{.inputs_hh_z}
-\end_layout
-
-\end_inset
-
-.
+If the transition matrix is time-varying it must be updated in this function.
+ Otherwise the transition matrix from the stationary distribution will be
+ used.
 \end_layout
 
 \begin_layout Standard
@@ -6076,7 +5757,7 @@ status open
 
 
 \backslash
-lstinline[mathescape]!shock_specs={dSHOCKE:CUSTOMPATH}!
+lstinline[mathescape]!shock_specs={dVARNAME:PATH}!
 \end_layout
 
 \end_inset
@@ -6089,7 +5770,7 @@ status open
 
 
 \backslash
-lstinline{CUSTOMPATH}
+lstinline{PATH}
 \end_layout
 
 \end_inset
@@ -6265,7 +5946,7 @@ class MyModelClass(EconModelClass,GEModelClass):
 
 \begin_layout Plain Layout
 
-        self.varlist = [] # all variables
+        self.blocks = [] # blocks
 \end_layout
 
 \begin_layout Plain Layout
@@ -6275,31 +5956,7 @@ class MyModelClass(EconModelClass,GEModelClass):
 
 \begin_layout Plain Layout
 
-	def set_functions(self):
-\end_layout
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\begin_layout Plain Layout
-
-		self.fill_z_trans = None
-\end_layout
-
-\begin_layout Plain Layout
-
 		self.solve_hh_backwards_step = solve_hh_backwards_step
-\end_layout
-
-\begin_layout Plain Layout
-
-		self.block_pre = block_pre
-\end_layout
-
-\begin_layout Plain Layout
-
-		self.block_post = block_post
 \end_layout
 
 \begin_layout Plain Layout
@@ -7215,6 +6872,72 @@ status open
 
 
 \backslash
+lstinline{.info((...)}
+\end_layout
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+Get an overview of the model.
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+vspace{-1mm}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{.draw_DAG((...)}
+\end_layout
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+Draw a DAG of the model.
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+vspace{-1mm}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
 lstinline{.show_IRFS((...)}
 \end_layout
 
@@ -7291,98 +7014,6 @@ lstinline{.decompose_hh_path(...)}
 \end_inset
 
 Decompose household transition path (varying inputs and initial distribution)
-\end_layout
-
-\begin_layout Enumerate
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-vspace{-1mm}
-\end_layout
-
-\end_inset
-
-
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-lstinline{.print_unpack_varlist(...)}
-\end_layout
-
-\end_inset
-
-:
-\begin_inset Newline newline
-\end_inset
-
-Print unpacking of all variables for use in 
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-lstinline{.block_pre(...)}
-\end_layout
-
-\end_inset
-
- and 
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-lstinline{.block_post(...)}
-\end_layout
-
-\end_inset
-
-.
-\end_layout
-
-\begin_layout Enumerate
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-vspace{-1mm}
-\end_layout
-
-\end_inset
-
-
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-lstinline{.test_hh_z_path(...)}
-\end_layout
-
-\end_inset
-
-:
-\begin_inset Newline newline
-\end_inset
-
-Test time-invariance when inputs are at their steady state values.
 \end_layout
 
 \begin_layout Enumerate
@@ -7650,433 +7281,6 @@ LatexCommand bibtex
 btprint "btPrintCited"
 bibfiles "GEModelToolsNotebooks"
 options "apalike"
-
-\end_inset
-
-
-\begin_inset Newpage newpage
-\end_inset
-
-
-\end_layout
-
-\begin_layout Section
-\start_of_appendix
-HANK model with endogenous idiosyncratic risk
-\begin_inset CommandInset label
-LatexCommand label
-name "sec:HANK-model-with-endo-risk"
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Paragraph*
-Households
-\end_layout
-
-\begin_layout Standard
-The real interest rate and the after-tax wage income as employed are now
- denoted 
-\begin_inset Formula $r_{t}$
-\end_inset
-
- and 
-\begin_inset Formula $w_{t}^{h}$
-\end_inset
-
-.
- We additionally assume the households are members of a union, which determines
- its labor supply, and pays out wages and unemployment benefits.
- Finally, households are now assumed to have ex ante heterogeneous discount
- factors, 
-\begin_inset Formula $\beta_{i}$
-\end_inset
-
-.
-\end_layout
-
-\begin_layout Standard
-The Bellman equation for the household problem is
-\begin_inset Formula 
-\begin{align}
-v_{t}\left(\beta_{i},u_{t},e_{t},a_{t-1}\right) & =\max_{c_{t},a_{t}\geq0}\frac{c_{t}^{1-\rho}}{1-\rho}+\beta_{i}\mathbb{E}_{t}\left[v_{t+1}\left(\beta_{i},u_{t+1},e_{t+1},a_{t}\right)\right]\label{eq:Bellman_stylized_GE}\\
- & \text{s.t.}\nonumber \\
-c_{t}+a_{t} & =(1+r_{t})a_{t-1}+\phi^{u_{t}}w_{t}^{h}e_{t}\nonumber \\
-\log e_{t} & =\rho_{e}\log e_{t-1}+\psi_{t}\,\,\,,\psi_{t}\sim\mathcal{N}(\mu_{\psi},\sigma_{\psi}),\,\mathbb{E}[e_{t}]=1\,\nonumber \\
-\text{Pr[}u_{t+1}=1\,|\,u_{t}=0] & =\pi_{t+1}^{EU}\nonumber \\
-\text{Pr[}u_{t+1}=0\,|\,u_{t}=1] & =\pi_{t+1}^{UE}\nonumber \\
-a_{t} & \geq0.\nonumber 
-\end{align}
-
-\end_inset
-
-We have 
-\begin_inset Formula $z_{t}=(u_{t},e_{t})$
-\end_inset
-
-.
- From a perfect foresight sequence space perspective, the value function
- can be written
-\begin_inset Formula 
-\[
-v_{t}\left(u_{t},e_{t},a_{t-1}\right)=v\left(u_{t},e_{t},a_{t-1};\{r_{\tau}^{h},w_{\tau}^{h},\pi_{t}^{EU},\pi_{t}^{UE}\}_{\tau=t}^{\infty}\right).
-\]
-
-\end_inset
-
-The average discount factor is 
-\begin_inset Formula $\overline{\beta}=\int\beta_{i}\boldsymbol{D}_{t}$
-\end_inset
-
-.
-\end_layout
-
-\begin_layout Paragraph*
-Firms
-\end_layout
-
-\begin_layout Standard
-The firm 
-\begin_inset Formula $j$
-\end_inset
-
- has the production function 
-\begin_inset Formula $y_{jt}=Z_{t}n_{jt}$
-\end_inset
-
-.
- Price setting frictions with Rotemberg adjustment implies a standard New
- Keynesian Phillips Curve (NKPC),
-\begin_inset Formula 
-\begin{equation}
-(1-\epsilon)+\epsilon w_{t}/Z_{t}=\theta\left(\Pi_{t}-1\right)\Pi_{t}-\overline{\beta}\theta\left(\Pi_{t+1}-1\right)\Pi_{t+1}\frac{Y_{t+1}}{Y_{t}}.\label{eq:NKPC}
-\end{equation}
-
-\end_inset
-
-Adjustment costs are considered virtual, and dividends are given by
-\begin_inset Formula 
-\begin{equation}
-d_{t}=Y_{t}-w_{t}N_{t}.\label{eq:d}
-\end{equation}
-
-\end_inset
-
-The dividends are fully taxed away by the government.
-\end_layout
-
-\begin_layout Paragraph*
-Unions
-\end_layout
-
-\begin_layout Standard
-The unions face wage setting costs giving rise to a New Keynesian Wage Phillips
- Curve (WPC)
-\begin_inset Formula 
-\[
-\left(1-\epsilon_{w}\right)(1-\tau_{t})w_{t}+\epsilon_{w}\frac{v'\left(N_{t}\right)}{u'\left(C_{t}\right)}=\theta_{w}\left(\Pi_{t}^{w}-\bar{\Pi}^{w}\right)\Pi_{t}^{w}-\overline{\beta}\theta_{w}\left(\Pi_{t+1}^{w}-\bar{\Pi}^{w}\right)\Pi_{t+1}^{w}\frac{N_{t+1}}{N_{t}},
-\]
-
-\end_inset
-
-where 
-\begin_inset Formula $v'(N_{t})=\vartheta N_{t}^{\frac{1}{\varphi}}$
-\end_inset
-
- is an ad hoc marginal disutility of aggregate labor, 
-\begin_inset Formula $u^{\prime}(C_{t})$
-\end_inset
-
- is an ad hoc marginal utility of aggregate consumption, 
-\begin_inset Formula $C_{t}^{-\rho}$
-\end_inset
-
-, 
-\begin_inset Formula $\Pi_{t}^{w}=W_{t}/W_{t-1}$
-\end_inset
-
- and 
-\begin_inset Formula $W_{t}$
-\end_inset
-
- is the nominal wage.
- The real wage thus is 
-\begin_inset Formula $w_{t}=W_{t}/P_{t}$
-\end_inset
-
-.
- The adjustment costs are again considered virtual.
-\end_layout
-
-\begin_layout Standard
-We assume an ad hoc processes for unemployment, 
-\begin_inset Formula $U_{t}$
-\end_inset
-
-, and the job-finding rate implying the separation rate as a residual,
-\begin_inset Formula 
-\begin{align}
-U_{t} & =U_{ss}(N_{t}/N_{ss})^{\varepsilon_{U}}\label{eq:U}\\
-\pi_{t}^{UE} & =\pi_{ss}^{UE}(N_{t}/N_{ss})^{\varepsilon_{UE}}\label{eq:EU}\\
-\pi_{t}^{EU} & =\frac{U_{t}-\pi_{t}^{UE}U_{t-1}}{1-U_{t-1}}.\label{eq:UE}
-\end{align}
-
-\end_inset
-
-Total after-tax wage income received by the union is 
-\begin_inset Formula $(1-\tau_{t})w_{t}N_{t}$
-\end_inset
-
-.
- For a given unemployment replacement rate, 
-\begin_inset Formula $\phi$
-\end_inset
-
-, this implies that the wage rate per productivity unit faced by the households
- are
-\begin_inset Formula 
-\begin{equation}
-w_{t}^{h}=\frac{(1-\tau_{t})w_{t}N_{t}}{\phi U_{t}+(1-U_{t})}.\label{eq:wh}
-\end{equation}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Paragraph*
-Government
-\end_layout
-
-\begin_layout Standard
-The government budget identity in real terms is
-\begin_inset Formula 
-\[
-B_{t}=(1+r_{t}+(d_{t}-d_{ss})/B_{t-1})B_{t-1}+G_{t}-\tau_{t}w_{t}N_{t}-d_{t},
-\]
-
-\end_inset
-
-where 
-\begin_inset Formula $B_{t}$
-\end_inset
-
- is government bonds, 
-\begin_inset Formula $G_{t}$
-\end_inset
-
- is government consumption, and 
-\begin_inset Formula $\tau_{t}w_{t}N_{t}$
-\end_inset
-
- are total labor taxes.
-\end_layout
-
-\begin_layout Standard
-We assume government debt, 
-\begin_inset Formula $B_{t}$
-\end_inset
-
-, initially takes the adjustment when fiscal policy, 
-\begin_inset Formula $G_{t}$
-\end_inset
-
-, is changed.
- After period 
-\begin_inset Formula $t_{B}$
-\end_inset
-
- taxes begin to adjust smoothly over 
-\begin_inset Formula $\Delta_{B}$
-\end_inset
-
- periods,
-\begin_inset Formula 
-\begin{align}
-\tau_{t} & =\begin{cases}
-\tau_{ss} & \text{if }t<t_{B}\\
-(1-\omega(\tilde{t}))\tau_{ss}+\omega(\tilde{t})\tilde{\tau}_{t} & \text{if }t\in[t_{B},t_{B}+\Delta_{B}],\,\tilde{t}=(t-t_{B})/\Delta_{B}\\
-\tilde{\tau}_{t} & \text{if }t>t_{B}+\Delta_{B},
-\end{cases}\label{eq:taxes}
-\end{align}
-
-\end_inset
-
-with
-\begin_inset Formula 
-\begin{align*}
-\tilde{\tau}_{t} & =\tau_{ss}(B_{t-1}/B_{ss})^{\varepsilon_{B}}\\
-\omega(x) & =3x^{2}-2x^{3}\,\,\,(\text{smooth \emph{S} function) }
-\end{align*}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Paragraph*
-
-\series bold
-Monetary Policy
-\end_layout
-
-\begin_layout Standard
-Monetary policy is set a according to a Taylor Rule,
-\series bold
-
-\begin_inset Formula 
-\begin{equation}
-i_{t}=(1+r_{ss})\Pi_{t}^{\varepsilon_{\pi}}-1.\label{eq:Taylor}
-\end{equation}
-
-\end_inset
-
-
-\series default
-The Fisher equation implies
-\begin_inset Formula 
-\begin{equation}
-r_{t}=\frac{1+i_{t-1}}{\Pi_{t}}-1.\label{eq:Fisher}
-\end{equation}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Paragraph*
-
-\series bold
-Market clearing
-\end_layout
-
-\begin_layout Standard
-The labor market clears per construction.
- The goods market clearing condition is
-\begin_inset Formula 
-\begin{equation}
-Y_{t}=G_{t}+C_{t}.\label{eq:GoodsClearing}
-\end{equation}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-The asset market clearing condition is
-\begin_inset Formula 
-\begin{equation}
-A_{t}=B_{t}.\label{eq:AssetClearing}
-\end{equation}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Paragraph*
-
-\series bold
-Equation system
-\end_layout
-
-\begin_layout Standard
-In terms of the general formulation above, we can write the model in terms
- of
-\end_layout
-
-\begin_layout Enumerate
-Shocks: 
-\begin_inset Formula $\boldsymbol{Z}=\{\boldsymbol{\Gamma},\boldsymbol{G}\}$
-\end_inset
-
-
-\end_layout
-
-\begin_layout Enumerate
-Unknowns: 
-\begin_inset Formula $\boldsymbol{U}=\{\boldsymbol{Y},\boldsymbol{w}\}$
-\end_inset
-
-
-\end_layout
-
-\begin_layout Enumerate
-Targets: WPC and goods market clearing
-\end_layout
-
-\begin_layout Standard
-In sequence space, the model can be summarized as the equation system, 
-\size footnotesize
-
-\begin_inset Formula 
-\begin{align*}
-\boldsymbol{H}(\{Y_{t},w_{t},\Gamma_{t},G_{t}\}_{t=0}^{T}) & =\boldsymbol{0}\Leftrightarrow\\
-\left[\begin{array}{c}
-\text{WPC}\\
-\text{Goods market clearing}
-\end{array}\right] & =\boldsymbol{0}\\
-\left[\begin{array}{c}
-\\
-\left(1-\epsilon_{w}\right)(1-\tau_{t})w_{t}+\epsilon_{w}\frac{\vartheta N_{t}^{\frac{1}{\varphi}}}{C_{t}^{-\rho}}-\left[\theta_{w}\left(\Pi_{t}^{w}-\bar{\Pi}^{w}\right)\Pi_{t}^{w}-\overline{\beta}\theta_{w}\left(\Pi_{t+1}^{w}-\bar{\Pi}^{w}\right)\Pi_{t+1}^{w}\frac{N_{t+1}}{N_{t}}\right]\\
-Y_{t}=G_{t}+C_{t}
-\end{array}\right] & =\left[\begin{array}{c}
-\\
-0
-\end{array}\right]\\
-\forall t\in\{0,1,\dots,T-1\}
-\end{align*}
-
-\end_inset
-
-
-\size default
-where we solve the NKPC backwards 
-\begin_inset Formula $t\in\{T-1,T-2,\dots,0\}$
-\end_inset
-
- for 
-\begin_inset Formula $\Pi_{t}$
-\end_inset
-
- 
-\begin_inset Formula 
-\[
-(1-\epsilon)+\epsilon w_{t}/\Gamma_{t}-\left[\theta\left(\Pi_{t}-1\right)\Pi_{t}-\overline{\beta}\left(\theta\left(\Pi_{t+1}-1\right)\Pi_{t+1}\frac{Y_{t+1}}{Y_{t}}\right)\right]
-\]
-
-\end_inset
-
-and we implicitly have,
-\begin_inset Formula 
-\begin{align*}
-\Pi_{t}^{w} & =w_{t}/w_{t-1}\Pi_{t}\\
-w_{t} & =W_{t}/P_{t}\\
-i_{t} & =(1+r_{ss})\Pi_{t}^{\varepsilon_{\pi}}\\
-r_{t} & =(1+i_{t-1})/\Pi_{t}-1\\
-N_{t} & =Y_{t}/\Gamma_{t}\\
-d_{t} & =Y_{t}-w_{t}N_{t}\\
-U_{t} & =U_{ss}(N_{t}/N_{ss})^{\varepsilon_{U}}\\
-\pi_{t}^{UE} & =\pi_{ss}^{UE}(N_{t}/N_{ss})^{\varepsilon_{UE}}\\
-\pi_{t}^{EU} & =\frac{U_{t}-\pi_{t}^{UE}U_{t-1}}{1-U_{t-1}}\\
-B_{t} & =(1+r_{t})B_{t-1}+G_{t}-\tau_{t}w_{t}N_{t}-d_{t}\\
-\tau_{t} & =\begin{cases}
-\tau_{ss} & \text{if }t<t_{B}\\
-(1-\omega(\tilde{t}))\tau_{ss}+\omega(\tilde{t})\tilde{\tau}_{t} & \text{if }t\in[t_{B},t_{B}+\Delta_{B}],\,\tilde{t}=(t-t_{B})/\Delta_{B}\\
-\tilde{\tau}_{t} & \text{if }t>t_{B}+\Delta_{B},
-\end{cases}\\
- & \,\,\,\tilde{\tau}_{t}=\tau_{ss}(B_{t}/B_{ss})^{\varepsilon_{B}}\\
- & \,\,\,\omega(x)=3x^{2}-2x^{3}\\
-w_{t}^{h} & =\frac{(1-\tau_{t})w_{t}N_{t}}{\phi U_{t}+(1-U_{t})}\\
-A_{t} & =B_{t}\\
-C_{t} & =Y_{t}-G_{t}\\
-\boldsymbol{D}_{t} & =\Pi_{z}(\pi_{t}^{UE},\pi_{t}^{EU})^{\prime}\underline{\boldsymbol{D}}_{t}\\
-\underline{\boldsymbol{D}}_{t+1} & =\Lambda_{t}\boldsymbol{D}_{t}\\
- & \boldsymbol{\underline{D}}_{0}\text{ is given}
-\end{align*}
 
 \end_inset
 

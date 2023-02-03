@@ -5,7 +5,6 @@ from GEModelTools import GEModelClass
 
 import household_problem
 import steady_state
-import blocks
 
 class HANKCapitalModelClass(EconModelClass,GEModelClass):
 
@@ -16,69 +15,34 @@ class HANKCapitalModelClass(EconModelClass,GEModelClass):
         self.namespaces = ['par','ini','sim','ss','path']
 
         # b. household
-        self.grids_hh = ['a']  # grids
-        self.pols_hh = ['a']  # policy functions
-        self.inputs_hh = ['Z','ra']  # direct inputs
+        self.grids_hh = ['l','a']  # grids
+        self.pols_hh = ['l','a']  # policy functions
+        self.inputs_hh = ['Z','ra','rl']  # direct inputs
         self.inputs_hh_z = []  # transition matrix inputs
-        self.outputs_hh = ['c','a','uce']  # outputs
-        self.intertemps_hh = ['vbeg_a']  # intertemporal variables
+        self.outputs_hh = ['c','l','a','uce']  # outputs
+        self.intertemps_hh = ['vbeg_l']  # intertemporal variables
 
         # c. GE
         self.shocks = ['eg','em']  # exogenous shocks
-        self.unknowns = ['r','s','N','Ip','Pi','Pi_w']  # endogenous unknowns
-        self.targets = ['fisher_res','w_res','clearing_Y','invest_res','NKPC_res','NKPC_w_res']  # targets = 0
+        self.unknowns = ['r','w','rk','Y','Ip','Pi','Pi_w']  # endogenous unknowns
+        self.targets = ['fisher_res','w_res','clearing_Y','invest_res','NKPC_res','NKPC_w_res','clearing_K']  # targets = 0
+        self.blocks = [
+            'blocks.production_firm',
+            'blocks.capital_firm',
+            'blocks.price_setters',
+            'blocks.mutual_fund',
+            'blocks.government',
+            'blocks.hh_income',
+            'hh',
+            'blocks.union',
+            'blocks.taylor',
+            'blocks.fisher',
+            'blocks.real_wage',
+            'blocks.market_clearing']
 
-        # d. all variables
-        self.varlist = [
-            'A',
-            'B',
-            'clearing_A',
-            'clearing_Y',
-            'Div_int',
-            'Div_k',
-            'Div',
-            'eg',
-            'em',
-            'fisher_res',
-            'G',
-            'i',
-            'I',
-            'invest_res',
-            'Ip',
-            'K',
-            'N',
-            'NKPC_res',
-            'NKPC_w_res',
-            'p_eq',
-            'p_int',
-            'p_k',
-            'Pi_increase',
-            'Pi_w_increase',
-            'Pi_w',
-            'Pi',
-            'psi',
-            'q',
-            'Q',
-            'qB',
-            'r',
-            'ra',
-            'rk',
-            's_w',
-            's',
-            'tau',
-            'valuation_res',
-            'w_res',
-            'w',
-            'Y',
-            'Z',
-            ]
-
-    def set_functions(self):
-        """ set functions """
-
+        # d. functions
         self.solve_hh_backwards = household_problem.solve_hh_backwards
-        self.block_pre = blocks.block_pre
-        self.block_post = blocks.block_post
+
 
     def setup(self):
         """ set baseline parameters """
@@ -92,13 +56,17 @@ class HANKCapitalModelClass(EconModelClass,GEModelClass):
         r_ss_target_p_a = 0.05
         par.r_ss_target = (1+r_ss_target_p_a)**(1/4) - 1 # quarterly
 
-        par.K_Y_ratio = 2.00*4  # capital to GDP - quarterly
-        par.G_Y_ratio = 0.15  # spending-to-GDP
-        par.qB_Y_ratio = 0.4*4  # government bonds to GDP - quarterly
+        par.K_Y_ratio = 2.23*4  # capital to GDP - quarterly
+        par.L_Y_ratio = 0.23*4  # liquid assets to GDP- quarterly
+        par.hh_wealth_Y_ratio = 3.82*4  # aggregate household wealth- quarterly
+        par.G_Y_ratio = 0.16  # spending-to-GDP
+        par.qB_Y_ratio = 0.42*4  # government bonds to GDP - quarterly
+        par.A_Y_ratio = (par.hh_wealth_Y_ratio - par.L_Y_ratio)
+        par.A_target = np.nan
 
         # a. preferences
         par.sigma = 1.0  # CRRA coefficient
-        par.beta_mean = 0.985   # discount factor, mean, range is [mean-width,mean+width]
+        par.beta_mean = 0.9951   # discount factor, mean, range is [mean-width,mean+width]
         par.beta_delta = 0.00000  # discount factor, width, range is [mean-width,mean+width]
         par.frisch = 0.5  # Frisch elasticity
         par.nu = np.nan   # Disutility from labor
@@ -112,19 +80,16 @@ class HANKCapitalModelClass(EconModelClass,GEModelClass):
         par.Theta = np.nan  # productivity factor
         par.alpha = np.nan  # capital share
         par.delta_K = 0.053/4  # depreciation of capital - quarterly
-
-        par.mu_p = 1.2
-        par.e_p = np.nan
-        par.xi_p = 0.926  # calvo price stickiness
-        par.v_p = 10*2  # Kimball superelasticity for prices
+        par.mu_p = 1.2 # mark-up
+        par.e_p = np.nan # substitution elasticity
+        par.kappa = 0.1 # slope
 
         # d. capital goods firms
         par.phi_K = 9.0 # (inverse of the) elasticity of investment
 
         # e. unions
-        par.xi_w = 0.899  # calvo wage stickiness
-        par.e_w = np.nan
-        par.v_w = 10*2  # Kimball superelasticity for wages
+        par.e_w = np.nan # substitution elasticity
+        par.kappa_w = 0.05 # slope
 
         # f. central bank
         par.rho_m = 0.89  # Taylor rule intertia
@@ -136,12 +101,20 @@ class HANKCapitalModelClass(EconModelClass,GEModelClass):
         maturity = 5*4 # maturity of government debt
         par.delta_q = (maturity-1)*(1+par.r_ss_target)/maturity
 
-        # h. grids
-        par.a_min = 0.0  # maximum point in grid for a
-        par.a_max = 500.0  # maximum point in grid for a
-        par.Na = 500  # number of grid points
+        # h. mutual fund
+        xi_p_a = 0.065  # intermediation spread (p.a.)
+        par.xi = 1+par.r_ss_target-(1+r_ss_target_p_a-xi_p_a)**(1/4) # quarterly
 
-        # i. shocks
+        # i. grids
+        par.l_min = 0.0  # maximum point in grid for a
+        par.l_max = 10.0*3  # maximum point in grid for a
+        par.Nl = 100  # number of grid points
+
+        par.a_min = 0.0  # maximum point in grid for a
+        par.a_max = 10.0*3  # maximum point in grid for a
+        par.Na = 100  # number of grid points
+
+        # j. shocks
 
         # i. fiscal policy
         par.jump_eg = 0.01  # initial jump
@@ -152,11 +125,6 @@ class HANKCapitalModelClass(EconModelClass,GEModelClass):
         par.jump_em = 0.0*0.00025 # initial jump
         par.rho_em = 0.6  # AR(1) coefficient
         par.std_em = 0.0  # std. of innovation
-        
-        # iii. persistent income shock
-        par.jump_ez = 0.0  # initial jump
-        par.rho_ez = 0.6  # AR(1) coefficient
-        par.std_ez = 0.0  # std. of innovation
 
         # j. misc.
         par.T = 400  # length of transition path
@@ -171,6 +139,10 @@ class HANKCapitalModelClass(EconModelClass,GEModelClass):
         par.tol_simulate = 1e-12  # tolerance when simulating household problem
         par.tol_broyden = 1e-12  # tolerance when solving eq. system
 
+        par.py_hh = False # call solve_hh_backwards in Python-model
+        par.py_block = True # call blocks in Python-model
+        par.full_z_trans = False # let z_trans vary over endogenous states
+        
     def allocate(self):
         """ allocate model """
 

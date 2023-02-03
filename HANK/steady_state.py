@@ -30,26 +30,14 @@ def prepare_hh_ss(model):
     ###########################
     
     for i_fix in range(par.Nfix):
-        ss.Dz[i_fix,:] = e_ergodic/par.Nfix
-        ss.Dbeg[i_fix,:,0] = ss.Dz[i_fix,:]
+        ss.Dbeg[i_fix,:,0] = e_ergodic/par.Nfix
         ss.Dbeg[i_fix,:,1:] = 0.0    
 
     ################################################
     # 3. initial guess for intertemporal variables #
     ################################################
 
-    va = np.zeros((par.Nfix,par.Nz,par.Na))
-    
-    for i_z in range(par.Nz):
-
-        z = par.z_grid[i_z]
-        T = ss.d*z - ss.tau*z
-        n = 1.0*z
-
-        c = (1+ss.r)*par.a_grid + ss.w*n + T
-        va[0,i_z,:] = c**(-par.sigma)
-
-    ss.vbeg_a[0] = ss.z_trans[0]@va[0]
+    model.set_hh_initial_guess() # calls .solve_hh_backwards() with ss=True
         
 def evaluate_ss(model,do_print=False):
     """ evaluate steady state"""
@@ -73,8 +61,11 @@ def evaluate_ss(model,do_print=False):
     # d. firms
     ss.Y = ss.Z*ss.N
     ss.w = ss.Z/par.mu
+    ss.s = ss.w/ss.Z
+
     ss.adjcost = 0.0
-    ss.d = ss.Y-ss.w*ss.N-ss.adjcost
+
+    ss.d = (1-ss.s)*ss.Y-ss.adjcost
     
     # e. government
     ss.tau = ss.r*ss.B + ss.G

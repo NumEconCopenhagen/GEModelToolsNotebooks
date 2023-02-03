@@ -31,35 +31,17 @@ class HANKModelClass(EconModelClass,GEModelClass):
         self.shocks = ['Z','istar','G'] # exogenous inputs
         self.unknowns = ['Y','w','pi'] # endogenous inputs
         self.targets = ['NKPC_res','clearing_N','clearing_A'] # targets
+        self.blocks = [
+            'blocks.production',
+            'blocks.taylor',
+            'blocks.fisher',
+            'blocks.government',
+            'blocks.intermediary_goods',
+            'hh',
+            'blocks.market_clearing']
         
-        # d. all variables
-        self.varlist = [ # all variables
-            'A',
-            'B',
-            'clearing_A',
-            'clearing_N',
-            'clearing_Y',
-            'd',
-            'G',
-            'i',
-            'N',
-            'NKPC_res',
-            'pi',
-            'adjcost',
-            'r',
-            'istar',
-            'tau',
-            'w',
-            'Y',
-            'Z',
-        ]
-
-    def set_functions(self):
-        """ set functions """
-
+        # d. functions
         self.solve_hh_backwards = household_problem.solve_hh_backwards
-        self.block_pre = blocks.block_pre
-        self.block_post = blocks.block_post
         
     def setup(self):
         """ set baseline parameters """
@@ -98,17 +80,17 @@ class HANKModelClass(EconModelClass,GEModelClass):
         par.Na = 500 # number of grid points
 
         # g. shocks
-        par.jump_Z = 0.0 # initial jump
-        par.rho_Z = 0.00 # AR(1) coefficeint
+        par.jump_Z = 0.01 # initial jump
+        par.rho_Z = 0.090 # AR(1) coefficeint
         par.std_Z = 0.00 # std.
 
         par.jump_istar = -0.0025
         par.rho_istar = 0.61
         par.std_istar = 0.0025
 
-        par.jump_G = 0.0
-        par.rho_G = 0.00
-        par.std_G = 0.00
+        par.jump_G = 0.01
+        par.rho_G = 0.090
+        par.std_G = 0.000
 
         # h. misc.
         par.T = 500 # length of path        
@@ -117,11 +99,15 @@ class HANKModelClass(EconModelClass,GEModelClass):
         par.max_iter_simulate = 50_000 # maximum number of iterations when simulating
         par.max_iter_broyden = 100 # maximum number of iteration when solving eq. system
         
-        par.tol_ss = 1e-11 # tolerance when finding steady state
-        par.tol_solve = 1e-11 # tolerance when solving
-        par.tol_simulate = 1e-11 # tolerance when simulating
+        par.tol_ss = 1e-12 # tolerance when finding steady state
+        par.tol_solve = 1e-12 # tolerance when solving
+        par.tol_simulate = 1e-12 # tolerance when simulating
         par.tol_broyden = 1e-10 # tolerance when solving eq. system
         
+        par.py_hh = False # call solve_hh_backwards in Python-model
+        par.py_block = True # call blocks in Python-model
+        par.full_z_trans = False # let z_trans vary over endogenous states
+
     def allocate(self):
         """ allocate model """
 

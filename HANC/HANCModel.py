@@ -20,25 +20,22 @@ class HANCModelClass(EconModelClass,GEModelClass):
         self.pols_hh = ['a'] # policy functions
         self.inputs_hh = ['r','w'] # direct inputs
         self.inputs_hh_z = [] # transition matrix inputs
-        self.outputs_hh = ['a','c'] # outputs
+        self.outputs_hh = ['a','c','l'] # outputs
         self.intertemps_hh = ['vbeg_a'] # intertemporal variables
 
         # c. GE
         self.shocks = ['Gamma'] # exogenous shocks
-        self.unknowns = ['K'] # endogenous unknowns
-        self.targets = ['clearing_A'] # targets = 0
+        self.unknowns = ['K','L'] # endogenous unknowns
+        self.targets = ['clearing_A','clearing_L'] # targets = 0
+        self.blocks = [ # list of strings to block-functions
+            'blocks.capital_accumulation',
+            'blocks.production_firm',
+            'blocks.mutual_fund',
+            'hh', # household block
+            'blocks.market_clearing']
 
-        # d. all variables
-        self.varlist = [
-            'A','clearing_A','clearing_Y',
-            'Gamma','I','K','L','r','rk','w','Y']
-
-    def set_functions(self):
-        """ set functions to """
-
+        # d. functions
         self.solve_hh_backwards = household_problem.solve_hh_backwards
-        self.block_pre = blocks.block_pre
-        self.block_post = blocks.block_post
 
     def setup(self):
         """ set baseline parameters """
@@ -86,6 +83,10 @@ class HANCModelClass(EconModelClass,GEModelClass):
         par.tol_simulate = 1e-12 # tolerance when simulating household problem
         par.tol_broyden = 1e-10 # tolerance when solving eq. system
         
+        par.py_hh = False # call solve_hh_backwards in Python-model
+        par.py_block = True # call blocks in Python-model
+        par.full_z_trans = False # let z_trans vary over endogenous states
+
     def allocate(self):
         """ allocate model """
 

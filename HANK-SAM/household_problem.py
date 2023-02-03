@@ -3,93 +3,93 @@ import numba as nb
 
 from consav.linear_interp import interp_1d_vec
 
-###################
-# solve backwards #
-###################
-
 @nb.njit
-def solve_hh_backwards(par,z_trans,r,wh,vbeg_a_plus,vbeg_a,a,c):
-    """ solve backwards with vbeg_a from previous iteration (here vbeg_a_plus) """
+def solve_hh_backwards(par,z_trans,
+    delta,lambda_u,w,RealR_ex_post,tau,
+    vbeg_a_plus,vbeg_a,a,c,s,ss=False):
+    """ solve backwards with vbeg_a_plus from previous iteration """
 
+    # a. solution step
     for i_fix in range(par.Nfix):
-
-        # a. solution step
         for i_z in range(par.Nz):
       
-            # i. EGM
-            c_endo = (par.beta_grid[i_fix]*vbeg_a_plus[i_fix,i_z])**(-1/par.sigma)
-            m_endo = c_endo + par.a_grid
+            # i. income
+            if i_z == 0:
+                y_pre = w
+            else:
+                y_pre = par.phi*w
+
+            # ii. income after tax
+            y = (1-tau)*y_pre
+
+            # iii. EGM
+            m = RealR_ex_post*par.a_grid + y
+
+            # iv. consumption-saving
+            if ss:
+
+                c[i_fix,i_z,:] = 0.9*m
+                a[i_fix,i_z,:] = m-c[i_fix,i_z,:]
+
+            else:
+
+                # o. EGM
+                c_endo = (par.beta*vbeg_a_plus[i_fix,i_z])**(-1/par.sigma)
+                m_endo = c_endo + par.a_grid
             
-            # ii. interpolation to fixed grid
-            y = par.phi**par.u_grid[i_z]*wh*par.z_grid[i_z]
-            m = (1+r)*par.a_grid + y
+                # oo. interpolation to fixed grid
+                interp_1d_vec(m_endo,par.a_grid,m,a[i_fix,i_z])
 
-            interp_1d_vec(m_endo,par.a_grid,m,a[i_fix,i_z])
-            a[i_fix,i_z,:] = np.fmax(a[i_fix,i_z,:],0.0) # enforce borrowing constraint
-            c[i_fix,i_z] = m-a[i_fix,i_z]
+                # ooo. enforce borrowing constraint
+                a[i_fix,i_z,:] = np.fmax(a[i_fix,i_z,:],0.0)
 
-        # b. expectation step
-        v_a = (1+r)*c[i_fix]**(-par.sigma)
-        vbeg_a[i_fix] = z_trans[i_fix]@v_a
+                # oooo. implied consumption
+                c[i_fix,i_z] = m-a[i_fix,i_z]
+
+    # b. search (exogenous for now)
+    for i_fix in range(par.Nfix):
+        for i_z in range(par.Nz):
+            if i_z == 0:
+                s[i_fix,i_z,:] = delta
+            else:
+                s[i_fix,i_z,:] = 1.0
+
+    fill_z_trans(par,z_trans,delta,lambda_u)
+
+    # c. expectation step
+    for i_fix in range(par.Nfix):
+        for i_z_lag in range(par.Nz):
+            for i_a_lag in range(par.Na):
+                vbeg_a[i_fix,i_z_lag,i_a_lag] = 0.0    
+                for i_z in range(par.Nz):
+                    v_a = RealR_ex_post*c[i_fix,i_z,i_a_lag]**(-par.sigma)
+                    vbeg_a[i_fix,i_z_lag,i_a_lag] += z_trans[i_fix,i_a_lag,i_z_lag,i_z]*v_a
 
 ################
 # fill_z_trans #
 ################
 
-import math
-inv_sqrt2 = 1/math.sqrt(2) # precompute
-
 @nb.njit(fastmath=True)
-def _norm_cdf(z):  
-    """ raw normal cdf """
-
-    return 0.5*math.erfc(-z*inv_sqrt2)
-
-@nb.njit(fastmath=True)
-def norm_cdf(z,mean,std):
-    """ normal cdf with scaling """
-
-    # a. check
-    if std <= 0:
-        if z > mean: return 1
-        else: return 0
-
-    # b. scale
-    z_scaled = (z-mean)/std
-
-    # c. return
-    return _norm_cdf(z_scaled)
-
-@nb.njit(fastmath=True)
-def fill_z_trans(par,z_trans,EU,UE):
+def fill_z_trans(par,z_trans,delta,lambda_u):
     """ transition matrix for z """
     
-    # a. logaritn
-    log_e_grid = np.log(par.e_grid)
-
-    # b. unemployment transition
-    u_trans = np.array([[1.0-EU,EU],[UE,1.0-UE]])
-
-    # c. transition matrix
     for i_fix in nb.prange(par.Nfix):
-        for i_e in nb.prange(par.Ne):
-            for i_u in nb.prange(2):
-                for i_e_plus in nb.prange(par.Ne):
-                    for i_u_plus in nb.prange(2):
+        for i_a in nb.prange(par.Na):
+            for i_z in nb.prange(par.Nz):
+                for i_z_plus in nb.prange(par.Nz):
 
-                        if i_e_plus == par.Ne-1:
-                            L = 1.0
+                    if i_z == 0:
+                        
+                        if i_z_plus == 0:
+                            u_trans = 1.0-delta*(1-lambda_u)
                         else:
-                            midpoint = log_e_grid[i_e_plus] + (log_e_grid[i_e_plus+1]-log_e_grid[i_e_plus])/2
-                            L = norm_cdf(midpoint,par.rho_e*log_e_grid[i_e],par.sigma_psi)
+                            u_trans = delta*(1-lambda_u)
+                    
+                    else:
 
-                        if i_e_plus == 0:
-                            R = 0.0
+                        if i_z_plus == 0:
+                            u_trans = lambda_u
                         else:
-                            midpoint = log_e_grid[i_e_plus] - (log_e_grid[i_e_plus]-log_e_grid[i_e_plus-1])/2
-                            R = norm_cdf(midpoint,par.rho_e*log_e_grid[i_e],par.sigma_psi)
+                            u_trans = 1.0-lambda_u
 
-                        i_z = i_u*par.Ne + i_e
-                        i_z_plus = i_u_plus*par.Ne+i_e_plus
-                        u_trans_now = u_trans[i_u,i_u_plus]
-                        z_trans[i_fix,i_z,i_z_plus] = u_trans_now*(L-R)                            
+                    z_trans[i_fix,i_a,i_z,i_z_plus] = u_trans

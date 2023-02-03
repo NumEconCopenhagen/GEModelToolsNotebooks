@@ -1,7 +1,16 @@
+# find steady state
+
+import time
 import numpy as np
+from root_finding import brentq
+
+from EconModel import jit
 
 from consav.grids import equilogspace
 from consav.markov import tauchen, find_ergodic
+from consav.misc import elapsed
+
+import household_problem
 
 def prepare_hh_ss(model):
     """ prepare the household block for finding the steady state """
@@ -13,101 +22,167 @@ def prepare_hh_ss(model):
     # 1. grids #
     ############
 
-    # a. beta
-    par.beta_grid[:] = np.linspace(par.beta_mean-par.beta_delta,par.beta_mean+par.beta_delta,par.Nbeta)
-
-    # b. a
     par.a_grid[:] = equilogspace(0.0,par.a_max,par.Na)
-
-    # c. z
-    log_e_grid,_,_,_,_ = tauchen(0,par.rho_e,par.sigma_psi,n=par.Ne)       
-    par.e_grid[:] = np.exp(log_e_grid)
-    par.z_grid[:] = np.tile(par.e_grid,2)
-
-    #############################################
-    # 2. transition matrix initial distribution #
-    #############################################
+    par.z_grid[:] = np.ones(par.Nz) # not used
     
-    # a. transition matrix
-    model.fill_z_trans_ss()
-
-    # b. ergodic
-    for i_beta in range(par.Nbeta):
-        ss.Dz[i_beta,:] = find_ergodic(ss.z_trans[i_beta])/par.Nbeta
-        ss.Dbeg[i_beta,:,0] = ss.Dz[i_beta,:]
-        ss.Dbeg[i_beta,:,1:] = 0.0
-        
-    # c. impose mean-one for z
-    par.z_grid[:] = par.z_grid/np.sum(par.z_grid*ss.Dz)
-
+    ###########################
+    # 2. initial distribution #
+    ###########################
+    
+    for i_fix in range(par.Nfix):
+        ss.Dbeg[i_fix,:,0] = np.array([1-ss.u,ss.u])   
+        ss.Dbeg[i_fix,:,1:] = 0.0      
+    
     ################################################
     # 3. initial guess for intertemporal variables #
     ################################################
 
-    # a. raw value        
-    y = par.phi**par.u_grid*ss.wh*par.z_grid
-    c = m = (1+ss.r)*par.a_grid[np.newaxis,:] + y[:,np.newaxis]
-    v_a = (1+ss.r)*c**(-par.sigma)
+    model.set_hh_initial_guess()
 
-    # b. expectation
-    for i_beta in range(par.Nbeta):
-        ss.vbeg_a[i_beta] = ss.z_trans[i_beta]@v_a
+def find_ss(model,do_print=False,fix_RealR=False):
+    """ find the steady state"""
 
-def find_ss(model,do_print=False):
-    """ find the steady state """
+    t0 = time.time()
+    
+    find_ss_SAM(model,do_print=do_print)
+    find_ss_HANK(model,do_print=do_print)
+
+    if do_print: print(f'steady state found in {elapsed(t0)}')
+
+def find_ss_SAM(model,do_print=False):
+    """ find the steady state - SAM """
+
+    par = model.par
+    ss = model.ss
+    
+    # a. shocks
+    ss.shock_TFP = 1.0
+
+    # b. fixed
+    ss.delta = par.delta_ss
+    ss.lambda_u = par.lambda_u_ss
+    ss.w = par.w_ss
+    ss.theta = par.theta_ss
+    ss.px = (par.epsilon_p-1)/par.epsilon_p
+
+    # c. direct implications
+    par.A = ss.lambda_u/ss.theta**(1-par.alpha)
+    ss.lambda_v = par.A*ss.theta**(-par.alpha)
+
+    # d. labor market dynamics
+    ss.u = ss.delta*(1-ss.lambda_u)/(ss.lambda_u+ss.delta*(1-ss.lambda_u))
+    ss.ut = ss.u/(1-ss.lambda_u)
+    ss.vt = ss.ut*ss.theta
+    ss.v = (1-ss.lambda_v)*ss.vt
+    ss.entry = ss.vt-(1-ss.delta)*ss.v
+    ss.S = ss.vt/ss.theta
+
+    # e. job and vacancy bellmans
+    ss.Vj = (ss.px*ss.shock_TFP-ss.w)/(1-par.beta*(1-ss.delta))
+    par.kappa = ss.lambda_v*ss.Vj
+
+    if do_print:
+        print(f'{par.A = :6.4f}')
+        print(f'{par.kappa = :6.4f}')
+        print(f'{ss.w = :6.4f}')
+        print(f'{ss.delta = :6.4f}')
+        print(f'{ss.lambda_u = :6.4f}')
+        print(f'{ss.lambda_v = :6.4f}')
+        print(f'{ss.theta = :6.4f}')
+        print(f'{ss.u = :6.4f}')
+        print(f'{ss.ut = :6.4f}')
+        print(f'{ss.S = :6.4f}')
+
+
+def find_ss_HANK(model,do_print=False):
+    """ find the steady state - HANK """
 
     par = model.par
     ss = model.ss
 
-    # a. fixed
-    ss.Gamma = 1.0
-    ss.N = 1.0
-    ss.Pi = ss.Pi_w = 1.0
+    # a. shocks
+    pass
+
+    # b. fixed
+    ss.qB = par.qB_share_ss*ss.w
+    ss.Pi = 1.0
     
-    # targets
-    ss.tau = par.tau_target
-    ss.EU = par.EU_target
-    ss.UE = par.UE_target
+    # c. equilibrium  
+    ss.UI = par.phi*ss.w*ss.u
+    ss.Yt_hh = ss.w*(1-ss.u) + ss.UI
 
-    ss.r = par.r_ss_target
-    ss.i = ((1.0+ss.r)*ss.Pi)-1.0
+    def asset_market_clearing(R):
+        
+        # o. set
+        ss.RealR_ex_post = ss.RealR = R
+        ss.q = 1/(ss.RealR-par.delta_q)
+        ss.B = ss.qB/ss.q
 
-    # b. firms
-    ss.Y = ss.Gamma*ss.N
-    ss.w = (par.epsilon-1)/par.epsilon
-    ss.d = ss.Y-ss.w*ss.N
+        ss.tau = ((1+par.delta_q*ss.q)*ss.B+ss.UI-ss.q*ss.B)/ss.Yt_hh
+
+        # oo. solve + simulate
+        model.solve_hh_ss(do_print=False)
+        model.simulate_hh_ss(do_print=False)
+
+        # ooo. difference
+        ss.A_hh = np.sum(ss.a*ss.D)        
+        diff = ss.qB - ss.A_hh
+        
+        return diff
+
+    # i. initial values
+    R_max = 1.0/par.beta
+    R_min = R_max - 0.05
+    R_guess = (R_min+R_max)/2
+
+    diff = asset_market_clearing(R_guess)
+    if do_print: print(f'guess:\n     R = {R_guess:12.8f} -> B-A_hh = {diff:12.8f}')
+
+    # ii. find bracket
+    if diff > 0:
+        dR = R_max-R_guess
+    else:
+        dR = R_min-R_guess
+
+    if do_print: print(f'find bracket to search in:')
+    fac = 0.95
+    it = 0
+    max_iter = 50
+    R = R_guess
+    while True:
     
-    # c. labor markets
-    ss.U = ss.EU/(ss.EU+ss.UE)
+        oldR = R 
+        olddiff = diff
+        R = R_guess + dR*(1-fac)
+        diff = asset_market_clearing(R)
+        
+        if do_print: print(f'{it:3d}: R = {R:12.8f} -> B-A_hh = {diff:12.8f}')
+
+        if np.sign(diff)*np.sign(olddiff) < 0: 
+            break
+        else:
+            fac *= 0.50 
+            it += 1
+            if it > max_iter: raise ValueError('could not find bracket')
+
+    if oldR < R:
+        a,b = oldR,R
+        fa,fb = olddiff,diff
+    else:
+        a,b = R,oldR
+        fa,fb = diff,olddiff                
     
-    # d. household problem
-    ss.wh = (1-ss.tau)*ss.w*ss.N / (par.phi*ss.U+(1-ss.U))
+    # iii. search
+    if do_print: print(f'brentq:')
+    
+    brentq(asset_market_clearing,a,b,fa=fa,fb=fb,xtol=par.tol_R,rtol=par.tol_R,
+        do_print=do_print,varname='R',funcname='B-A_hh')
 
-    model.solve_hh_ss(do_print=do_print)
-    model.simulate_hh_ss(do_print=do_print)
+    ss.C_hh = np.sum(ss.c*ss.D)
 
-    ss.B = ss.A = ss.A_hh
-
-    # e. government
-    ss.G = ss.d + ss.tau*ss.w*ss.N - ss.r*ss.B
-
-    # f. market clearing
-    ss.clearing_A = ss.A-ss.A_hh
-    ss.clearing_Y = ss.Y-ss.C_hh-ss.G
+    # d. R
+    ss.R = ss.RealR*ss.Pi
 
     if do_print:
-        
-        C = ss.C_hh/ss.Y
-        G = ss.G/ss.Y
-        print(f'GDP by spending: C = {C:.3f}, G = {G:.3f}')
-
-        assert np.isclose(1.0,C+G)
-
-        print(f'Implied B = {ss.B:6.3f}')
-        print(f'Discrepancy in Y = {ss.clearing_Y:12.8f}')
-
-    # h. union
-    v_prime_N_unscaled = ss.N**(1/par.varphi)
-    u_prime = ss.C_hh**(-par.sigma)
-    par.nu = (par.epsilon_w-1)/par.epsilon_w*(1-ss.tau)*ss.w*u_prime/v_prime_N_unscaled # WPC
-    if do_print: print(f'Implied nu = {par.nu:6.3f}')
+        print(f'{ss.qB = :6.4f}')
+        print(f'{ss.RealR = :6.4f}')

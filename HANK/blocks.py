@@ -4,92 +4,48 @@ import numba as nb
 from GEModelTools import lag, lead
    
 @nb.njit
-def block_pre(par,ini,ss,path,ncols=1):
+def production(par,ini,ss,Z,w,Y,N,s):
 
-    for ncol in nb.prange(ncols):
-
-        adjcost = path.adjcost[ncol,:]
-        A_hh = path.A_hh[ncol,:]
-        A = path.A[ncol,:]
-        B = path.B[ncol,:]
-        C_hh = path.C_hh[ncol,:]
-        clearing_A = path.clearing_A[ncol,:]
-        clearing_N = path.clearing_N[ncol,:]
-        clearing_Y = path.clearing_Y[ncol,:]
-        d = path.d[ncol,:]
-        G = path.G[ncol,:]
-        i = path.i[ncol,:]
-        N_hh = path.N_hh[ncol,:]
-        N = path.N[ncol,:]
-        NKPC_res = path.NKPC_res[ncol,:]
-        pi = path.pi[ncol,:]
-        r = path.r[ncol,:]
-        istar = path.istar[ncol,:]
-        tau = path.tau[ncol,:]
-        w = path.w[ncol,:]
-        Y = path.Y[ncol,:]
-        Z = path.Z[ncol,:]
-
-        #################
-        # implied paths #
-        #################
-
-        # a. firms
-        N[:] = Y/Z
-        adjcost[:] = par.mu/(par.mu-1)/(2*par.kappa)*np.log(1+pi)**2*Y
-        d[:] = Y-w*N-adjcost
-
-        # b. monetary policy
-        i[:] = istar + par.phi*pi + par.phi_y*(Y-ss.Y)
-        i_lag = lag(ini.i,i)
-        r[:] = (1+i_lag)/(1+pi)-1
-
-        # c. government
-        B[:] = ss.B
-        tau[:] = r*B + G
-        
-        # d. aggregates
-        A[:] = B[:]
+    N[:] = Y/Z
+    s[:] = w/Z
 
 @nb.njit
-def block_post(par,ini,ss,path,ncols=1):
+def taylor(par,ini,ss,istar,pi,Y,i):
 
-    for ncol in nb.prange(ncols):
+    i[:] = istar + par.phi*pi + par.phi_y*(Y-ss.Y)
 
-        adjcost = path.adjcost[ncol,:]
-        A_hh = path.A_hh[ncol,:]
-        A = path.A[ncol,:]
-        B = path.B[ncol,:]
-        C_hh = path.C_hh[ncol,:]
-        clearing_A = path.clearing_A[ncol,:]
-        clearing_N = path.clearing_N[ncol,:]
-        clearing_Y = path.clearing_Y[ncol,:]
-        d = path.d[ncol,:]
-        G = path.G[ncol,:]
-        i = path.i[ncol,:]
-        N_hh = path.N_hh[ncol,:]
-        N = path.N[ncol,:]
-        NKPC_res = path.NKPC_res[ncol,:]
-        pi = path.pi[ncol,:]
-        r = path.r[ncol,:]
-        istar = path.istar[ncol,:]
-        tau = path.tau[ncol,:]
-        w = path.w[ncol,:]
-        Y = path.Y[ncol,:]
-        Z = path.Z[ncol,:]
-        
-        #################
-        # check targets #
-        #################
+@nb.njit
+def fisher(par,ini,ss,i,pi,r):
 
-        # a. phillips curve
-        r_plus = lead(r,ss.r)
-        pi_plus = lead(pi,ss.pi)
-        Y_plus = lead(Y,ss.Y)
+    i_lag = lag(ini.i,i)
+    r[:] = (1+i_lag)/(1+pi)-1
 
-        NKPC_res[:] = par.kappa*(w/Z-1/par.mu) + Y_plus/Y*np.log(1+pi_plus)/(1+r_plus) - np.log(1+pi)
+@nb.njit
+def government(par,ini,ss,G,r,B,tau):
+    
+    B[:] = ss.B
+    tau[:] = r*B + G
 
-        # b. market clearing
-        clearing_N[:] = N-N_hh
-        clearing_A[:] = A-A_hh
-        clearing_Y[:] = Y-(C_hh+G+adjcost)
+@nb.njit
+def intermediary_goods(par,ini,ss,r,s,Y,pi,NKPC_res,adjcost,d):
+
+    # a. Phillips curve
+    r_plus = lead(r,ss.r)
+    pi_plus = lead(pi,ss.pi)
+    Y_plus = lead(Y,ss.Y)
+
+    LHS = np.log(1+pi)
+    RHS = par.kappa*(s-1/par.mu) + 1/(1+r_plus)*Y_plus/Y*np.log(1+pi_plus)
+    NKPC_res[:] = LHS-RHS
+
+    # b. adjustment costs and dividends
+    adjcost[:] = par.mu/(par.mu-1)/(2*par.kappa)*np.log(1+pi)**2*Y
+    d[:] = (1-s)*Y-adjcost
+
+@nb.njit
+def market_clearing(par,ini,ss,A,B,N,Y,G,adjcost,N_hh,A_hh,C_hh,clearing_N,clearing_A,clearing_Y):
+
+    A[:] = B[:]
+    clearing_N[:] = N-N_hh
+    clearing_A[:] = A-A_hh
+    clearing_Y[:] = Y-(C_hh+G+adjcost)

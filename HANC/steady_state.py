@@ -28,22 +28,14 @@ def prepare_hh_ss(model):
     
     for i_beta in range(par.Nbeta):
         ss.z_trans[i_beta,:,:] = z_trans
-        ss.Dz[i_beta,:] = z_ergodic/par.Nbeta
-        ss.Dbeg[i_beta,:,0] = ss.Dz[i_beta,:]
+        ss.Dbeg[i_beta,:,0] = z_ergodic/par.Nbeta
         ss.Dbeg[i_beta,:,1:] = 0.0
 
     ################################################
     # 3. initial guess for intertemporal variables #
     ################################################
 
-    # a. raw value
-    y = ss.w*par.z_grid
-    c = m = (1+ss.r)*par.a_grid[np.newaxis,:] + y[:,np.newaxis]
-    v_a = (1+ss.r)*c**(-par.sigma)
-
-    # b. expectation
-    for i_beta in range(par.Nbeta):
-        ss.vbeg_a[i_beta] = ss.z_trans@v_a
+    model.set_hh_initial_guess() # calls .solve_hh_backwards() with ss=True
 
 def find_ss(model,do_print=False):
     """ find the steady state """
@@ -63,7 +55,7 @@ def find_ss(model,do_print=False):
     model.simulate_hh_ss(do_print=do_print) # give us sim.D, ss.A_hh and ss.C_hh 
     if do_print: print('')
 
-    ss.A = ss.K = ss.A_hh
+    ss.A = ss.K_lag = ss.K = ss.A_hh
     
     # c. back technology and depreciation rate
     ss.Gamma = ss.w / ((1-par.alpha)*(ss.K/ss.L)**par.alpha)
@@ -76,6 +68,7 @@ def find_ss(model,do_print=False):
 
     # e. market clearing
     ss.clearing_A = ss.A-ss.A_hh
+    ss.clearing_L = ss.L-ss.L_hh
     ss.clearing_Y = ss.Y-ss.C_hh-ss.I
 
     # f. print
@@ -87,5 +80,5 @@ def find_ss(model,do_print=False):
         print(f'Implied delta = {par.delta:6.3f}') # check is positive
         print(f'Implied K/Y = {ss.K/ss.Y:6.3f}') 
         print(f'Discrepancy in A = {ss.clearing_A:12.8f}') # = 0 by construction
+        print(f'Discrepancy in L = {ss.clearing_L:12.8f}') # = 0 by construction
         print(f'Discrepancy in Y = {ss.clearing_Y:12.8f}') # != 0 due to numerical error 
-
