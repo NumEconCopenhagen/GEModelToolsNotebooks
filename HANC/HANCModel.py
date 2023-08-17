@@ -42,13 +42,13 @@ class HANCModelClass(EconModelClass,GEModelClass):
 
         par = self.par
 
-        par.Nfix = 1 # number of fixed discrete states (here discount factor)
+        par.Nfix = 3 # number of fixed discrete states (here discount factor)
         par.Nz = 7 # number of stochastic discrete states (here productivity)
 
         # a. preferences
         par.sigma = 2.0 # CRRA coefficient
-        par.beta_mean = 0.9875 # discount factor, mean, range is [mean-width,mean+width]
-        par.beta_delta = 0.00000 # discount factor, width, range is [mean-width,mean+width]
+        par.beta_mean = 0.975 # discount factor, mean, range is [mean-width,mean+width]
+        par.beta_delta = 0.010 # discount factor, width, range is [mean-width,mean+width]
 
         # b. income parameters
         par.rho_z = 0.95 # AR(1) parameter
@@ -67,8 +67,8 @@ class HANCModelClass(EconModelClass,GEModelClass):
         par.Na = 300 # number of grid points
 
         # g. shocks
-        par.jump_Gamma = -0.01 # initial jump
-        par.rho_Gamma = 0.8 # AR(1) coefficient
+        par.jump_Gamma = -0.10 # initial jump
+        par.rho_Gamma = 0.90 # AR(1) coefficient
         par.std_Gamma = 0.01 # std. of innovation
 
         # h. misc.

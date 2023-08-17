@@ -22,7 +22,16 @@ def prepare_hh_ss(model):
     # 1. grids #
     ############
 
+    # a. beta
+    par.beta_grid = np.array([par.beta_HtM,par.beta_mid,par.beta_PIH])
+    
+    par.beta_shares = np.array([par.HtM_share,0.0,par.PIH_share])
+    par.beta_shares[1] = 1-np.sum(par.beta_shares)
+
+    # b. assets
     par.a_grid[:] = equilogspace(0.0,par.a_max,par.Na)
+
+    # c. income
     par.z_grid[:] = np.ones(par.Nz) # not used
     
     ###########################
@@ -30,8 +39,8 @@ def prepare_hh_ss(model):
     ###########################
     
     for i_fix in range(par.Nfix):
-        ss.Dbeg[i_fix,:,0] = np.array([1-ss.u,ss.u])   
-        ss.Dbeg[i_fix,:,1:] = 0.0      
+        ss.Dbeg[i_fix,:,0] = np.array([1-ss.u,ss.u])*par.beta_shares[i_fix]
+        ss.Dbeg[i_fix,:,1:] = 0.0
     
     ################################################
     # 3. initial guess for intertemporal variables #
@@ -58,12 +67,18 @@ def find_ss_SAM(model,do_print=False):
     # a. shocks
     ss.shock_TFP = 1.0
 
+    # b. inflation and interest rates
+    ss.Pi = 1.0
+    ss.RealR_ex_post = ss.RealR = par.RealR_ss
+    ss.R = ss.RealR*ss.Pi
+    ss.q = 1/(ss.RealR-par.delta_q)
+
     # b. fixed
     ss.delta = par.delta_ss
     ss.lambda_u = par.lambda_u_ss
-    ss.w = par.w_ss
     ss.theta = par.theta_ss
     ss.px = (par.epsilon_p-1)/par.epsilon_p
+    ss.w = par.w_share_ss*ss.px
 
     # c. direct implications
     par.A = ss.lambda_u/ss.theta**(1-par.alpha)
@@ -78,10 +93,11 @@ def find_ss_SAM(model,do_print=False):
     ss.S = ss.vt/ss.theta
 
     # e. job and vacancy bellmans
-    ss.Vj = (ss.px*ss.shock_TFP-ss.w)/(1-par.beta*(1-ss.delta))
+    ss.Vj = (ss.px*ss.shock_TFP-ss.w)/(1-1/ss.RealR*(1-ss.delta))
     par.kappa = ss.lambda_v*ss.Vj
 
     if do_print:
+
         print(f'{par.A = :6.4f}')
         print(f'{par.kappa = :6.4f}')
         print(f'{ss.w = :6.4f}')
@@ -103,86 +119,38 @@ def find_ss_HANK(model,do_print=False):
     # a. shocks
     pass
 
-    # b. fixed
+    # c. policies
+    ss.UI = par.UI_ratio*ss.w*ss.u
     ss.qB = par.qB_share_ss*ss.w
-    ss.Pi = 1.0
-    
-    # c. equilibrium  
-    ss.UI = par.phi*ss.w*ss.u
+    ss.B = ss.qB/ss.q
     ss.Yt_hh = ss.w*(1-ss.u) + ss.UI
+    ss.tau = ((1+par.delta_q*ss.q)*ss.B+ss.UI-ss.q*ss.B)/ss.Yt_hh
 
-    def asset_market_clearing(R):
-        
-        # o. set
-        ss.RealR_ex_post = ss.RealR = R
-        ss.q = 1/(ss.RealR-par.delta_q)
-        ss.B = ss.qB/ss.q
+    # d. dividends  
+    ss.div = ss.shock_TFP*(1-ss.u)*(1-ss.w/ss.shock_TFP)
+    par.div_tax = par.div_tax_share_ss*ss.div
+    ss.G = par.div_tax    
+    ss.p_eq = (ss.div-par.div_tax)/(ss.RealR-1)
 
-        ss.tau = ((1+par.delta_q*ss.q)*ss.B+ss.UI-ss.q*ss.B)/ss.Yt_hh
+    # e. households
+    model.solve_hh_ss(do_print=True)
+    model.simulate_hh_ss(do_print=True)
+    print(f'{ss.A_hh = }')
 
-        # oo. solve + simulate
-        model.solve_hh_ss(do_print=False)
-        model.simulate_hh_ss(do_print=False)
+    A_hh_vec = np.array([np.sum(ss.a[i_fix]*ss.D[i_fix])/np.sum(ss.D[i_fix]) for i_fix in range(par.Nfix)])
 
-        # ooo. difference
-        ss.A_hh = np.sum(ss.a*ss.D)        
-        diff = ss.qB - ss.A_hh
-        
-        return diff
+    nom = ss.qB + par.mutual_fund_share*ss.p_eq - par.HtM_share*A_hh_vec[0] - (1-par.HtM_share)*A_hh_vec[1]
+    denom = A_hh_vec[2]-A_hh_vec[1]
+    par.PIH_share = nom/denom
+    print(f'{par.PIH_share =}')
 
-    # i. initial values
-    R_max = 1.0/par.beta
-    R_min = R_max - 0.05
-    R_guess = (R_min+R_max)/2
+    model.solve_hh_ss(do_print=True)
+    model.simulate_hh_ss(do_print=True)
+    print(f'{ss.A_hh = }')
 
-    diff = asset_market_clearing(R_guess)
-    if do_print: print(f'guess:\n     R = {R_guess:12.8f} -> B-A_hh = {diff:12.8f}')
+    ss.errors_assets = ss.qB + par.mutual_fund_share*ss.p_eq - ss.A_hh
 
-    # ii. find bracket
-    if diff > 0:
-        dR = R_max-R_guess
-    else:
-        dR = R_min-R_guess
-
-    if do_print: print(f'find bracket to search in:')
-    fac = 0.95
-    it = 0
-    max_iter = 50
-    R = R_guess
-    while True:
-    
-        oldR = R 
-        olddiff = diff
-        R = R_guess + dR*(1-fac)
-        diff = asset_market_clearing(R)
-        
-        if do_print: print(f'{it:3d}: R = {R:12.8f} -> B-A_hh = {diff:12.8f}')
-
-        if np.sign(diff)*np.sign(olddiff) < 0: 
-            break
-        else:
-            fac *= 0.50 
-            it += 1
-            if it > max_iter: raise ValueError('could not find bracket')
-
-    if oldR < R:
-        a,b = oldR,R
-        fa,fb = olddiff,diff
-    else:
-        a,b = R,oldR
-        fa,fb = diff,olddiff                
-    
-    # iii. search
-    if do_print: print(f'brentq:')
-    
-    brentq(asset_market_clearing,a,b,fa=fa,fb=fb,xtol=par.tol_R,rtol=par.tol_R,
-        do_print=do_print,varname='R',funcname='B-A_hh')
-
-    ss.C_hh = np.sum(ss.c*ss.D)
-
-    # d. R
-    ss.R = ss.RealR*ss.Pi
-
-    if do_print:
-        print(f'{ss.qB = :6.4f}')
-        print(f'{ss.RealR = :6.4f}')
+    # f. clearing_Y
+    C_cap = ss.div-par.div_tax
+    C_tot = ss.C_hh + C_cap + ss.G
+    ss.clearing_Y = ss.shock_TFP*(1-ss.u)-C_tot        

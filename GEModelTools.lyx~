@@ -184,11 +184,7 @@ lstinline{GEModelTools}
 
 
 \series bold
- Package for
-\begin_inset Newline newline
-\end_inset
-
-Solving HANK Models in Python
+ Package v0.1
 \end_layout
 
 \begin_layout Author
@@ -813,7 +809,7 @@ aggregate risk
 Heterogeneous Agent Neo-Classical
 \emph default
  (HANC) is used as an example.
- Additional undocumented model are included in the example repository.
+ Additional undocumented models are included in the example repository.
 \end_layout
 
 \begin_layout Subsection
@@ -1357,7 +1353,7 @@ The household problem is discretized, and optimal savings function,
 \end_inset
 
 .
- We consider
+ We consider 
 \begin_inset Formula $\underline{\boldsymbol{D}}_{t}$
 \end_inset
 
@@ -2439,7 +2435,7 @@ status open
 
 
 \backslash
-lstinline{function(par,ini,ss,var1,var2,...}
+lstinline{function(par,ini,ss,var1,var2,...)}
 \end_layout
 
 \end_inset
@@ -2521,7 +2517,7 @@ status open
 
 
 \backslash
-lstinline{.grid_hh}
+lstinline{.grids_hh}
 \end_layout
 
 \end_inset
@@ -2540,6 +2536,23 @@ status open
 
 \backslash
 lstinline{par.VARNAME_grid}
+\end_layout
+
+\end_inset
+
+.
+\begin_inset Newline newline
+\end_inset
+
+Must be in 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{.varlist}
 \end_layout
 
 \end_inset
@@ -3190,7 +3203,7 @@ vspace{-3mm}
 
 \end_inset
 
-
+(Optional) 
 \series bold
 Length of transition period:
 \series default
@@ -3202,7 +3215,7 @@ status open
 
 
 \backslash
-lstinline{par.T}
+lstinline{par.T=500}
 \end_layout
 
 \end_inset
@@ -3223,7 +3236,7 @@ vspace{-3mm}
 
 \end_inset
 
-
+(Optional) 
 \series bold
 Length of simulation:
 \series default
@@ -3235,7 +3248,7 @@ status open
 
 
 \backslash
-lstinline{par.simT}
+lstinline{par.simT=1000}
 \end_layout
 
 \end_inset
@@ -3256,9 +3269,9 @@ vspace{-3mm}
 
 \end_inset
 
-
+(Optional)
 \series bold
-For each shock in 
+ For each shock in 
 \series default
 
 \begin_inset ERT
@@ -3344,9 +3357,9 @@ vspace{-3mm}
 
 \end_inset
 
-
+(Optional)
 \series bold
-Optional solver settings:
+ Solver settings:
 \begin_inset Newline newline
 \end_inset
 
@@ -3450,13 +3463,15 @@ vspace{-3mm}
 
 \end_inset
 
-
+(Optional)
 \series bold
-Optional code settings:
-\end_layout
+ Code settings:
+\series default
 
-\begin_deeper
-\begin_layout Standard
+\begin_inset Newline newline
+\end_inset
+
+
 \begin_inset ERT
 status open
 
@@ -3464,15 +3479,16 @@ status open
 
 
 \backslash
-lstinline{par.py_hh}
+lstinline{par.py_hh=True}
 \end_layout
 
 \end_inset
 
- (default: False)
-\end_layout
+: Python (no numba) when solving household problem.
+\begin_inset Newline newline
+\end_inset
 
-\begin_layout Standard
+
 \begin_inset ERT
 status open
 
@@ -3480,15 +3496,16 @@ status open
 
 
 \backslash
-lstinline{par.py_blocks}
+lstinline{par.py_blocks=True}
 \end_layout
 
 \end_inset
 
- (default: True)
-\end_layout
+: Python (no numba) when evaluating blocks.
+\begin_inset Newline newline
+\end_inset
 
-\begin_layout Standard
+
 \begin_inset ERT
 status open
 
@@ -3496,15 +3513,14 @@ status open
 
 
 \backslash
-lstinline{par.full_z_trans}
+lstinline{par.full_z_trans=False}
 \end_layout
 
 \end_inset
 
- (default: False)
+: Endogenous states in transition matrix.
 \end_layout
 
-\end_deeper
 \begin_layout Standard
 Define 
 \begin_inset ERT
@@ -3514,7 +3530,7 @@ status open
 
 
 \backslash
-lstinline{sol_shape = (par.Nfix,par.Nfix,par.Nendo1,par.Nendo1,...)}
+lstinline{sol_shape = (par.Nfix,par.Nfix,par.Nendo1,par.Nendo2,...)}
 \end_layout
 
 \end_inset
@@ -3664,7 +3680,11 @@ lstinline{shape=(par.T,par.Nz,par.Nz)}
 
 \end_inset
 
- (or 
+
+\begin_inset Newline newline
+\end_inset
+
+(or 
 \begin_inset ERT
 status open
 
@@ -4453,7 +4473,7 @@ status open
 
 
 \backslash
-lstinline{shape=(par.T,1))
+lstinline{shape=(par.T,1)}
 \end_layout
 
 \end_inset
@@ -5574,7 +5594,7 @@ status open
 
 
 \backslash
-lstinline{.find_transition_path()}
+lstinline{.find_transition_path(shocks)}
 \end_layout
 
 \end_inset
@@ -5620,12 +5640,16 @@ status open
 
 
 \backslash
-lstinline{.find_IRFs(reuse_G_U=False)}
+lstinline{.find_IRFs(shocks,reuse_G_U=False)}
 \end_layout
 
 \end_inset
 
-: Find linearized impulse-response 
+: 
+\begin_inset Newline newline
+\end_inset
+
+Find linearized impulse-response 
 \begin_inset Formula $\rightarrow$
 \end_inset
 
@@ -5692,11 +5716,51 @@ lstinline{sim.VARNAME}
 \end_layout
 
 \begin_layout Standard
-The default for the 
+In both solution methods 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{.find_transition_path()}
+\end_layout
+
+\end_inset
+
+ and 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{.find_IRFs_path()}
+\end_layout
+
+\end_inset
+
+, the input 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{shocks}
+\end_layout
+
+\end_inset
+
+ can firstly be a list of 
 \emph on
-impulses-responses
+strings
 \emph default
- is to consider AR(1) shocks given by 
+.
+ In this case, each chosen shock is the AR(1) given by 
 \begin_inset ERT
 status open
 
@@ -5723,7 +5787,7 @@ lstinline{par.rho_VARNAME}
 \end_inset
 
 .
- Both solution methods 
+ Secondly, 
 \begin_inset ERT
 status open
 
@@ -5731,25 +5795,12 @@ status open
 
 
 \backslash
-lstinline{.find_transition_path()}
+lstinline{shocks}
 \end_layout
 
 \end_inset
 
- and 
-\begin_inset ERT
-status open
-
-\begin_layout Plain Layout
-
-
-\backslash
-lstinline{.find_IRFs_path()}
-\end_layout
-
-\end_inset
-
- also accepts a dictionary like 
+ can be a dictionary like 
 \begin_inset ERT
 status open
 
@@ -5762,7 +5813,7 @@ lstinline[mathescape]!shock_specs={dVARNAME:PATH}!
 
 \end_inset
 
- as input, where 
+, where 
 \begin_inset ERT
 status open
 
@@ -5775,7 +5826,7 @@ lstinline{PATH}
 
 \end_inset
 
- is an arbitrary path for the shocks for which to compute the solution.
+ is an arbitrary deviation from steady state.
 \end_layout
 
 \begin_layout Standard
@@ -6872,7 +6923,7 @@ status open
 
 
 \backslash
-lstinline{.info((...)}
+lstinline{.info(...)}
 \end_layout
 
 \end_inset
@@ -6905,7 +6956,7 @@ status open
 
 
 \backslash
-lstinline{.draw_DAG((...)}
+lstinline{.draw_DAG(...)}
 \end_layout
 
 \end_inset
@@ -6938,7 +6989,7 @@ status open
 
 
 \backslash
-lstinline{.show_IRFS((...)}
+lstinline{.show_IRFS(...)}
 \end_layout
 
 \end_inset
@@ -7037,7 +7088,73 @@ status open
 
 
 \backslash
+lstinline{.decompose_hh_path(...)}
+\end_layout
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+Decompose blocks.
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+vspace{-1mm}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
 lstinline{.test_hh_path(...)}
+\end_layout
+
+\end_inset
+
+:
+\begin_inset Newline newline
+\end_inset
+
+Test time-invariance when inputs are at their steady state values.
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+vspace{-1mm}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{.test_path(...)}
 \end_layout
 
 \end_inset
@@ -7103,7 +7220,7 @@ status open
 
 
 \backslash
-lstinline{.test_path(...)}
+lstinline{.update_aggregate_settings_jacs(...)}
 \end_layout
 
 \end_inset
@@ -7112,7 +7229,41 @@ lstinline{.test_path(...)}
 \begin_inset Newline newline
 \end_inset
 
-Test time-invariance when inputs are at their steady state values.
+Update aggregate settings in terms of shocks, unknowns and targets.
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+vspace{-1mm}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{.compress_full(...)}
+\end_layout
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+Save memory.
+ No new solution can be found (deallocated Jacobians and policy functions).
 \end_layout
 
 \begin_layout Standard

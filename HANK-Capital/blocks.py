@@ -137,13 +137,13 @@ def fisher(par,ini,ss,Pi,i,r,fisher_res):
     Pi_plus = lead(Pi,ss.Pi)
     fisher_res[:] = 1+i-(1+r)*(1+Pi_plus)
 
-@nb.jit
+@nb.njit
 def real_wage(par,ini,ss,w,Pi_w,Pi,w_res):
 
     w_lag = lag(ini.w,w)
     w_res[:] = np.log(w/w_lag)-(Pi_w-Pi)
 
-@nb.jit
+@nb.njit
 def market_clearing(par,ini,ss,Y,L_hh,C_hh,G,I,psi,Kd,K,q,B,p_eq,A_hh,qB,A,L,clearing_Y,clearing_K,clearing_A,clearing_L):
 
     # Y

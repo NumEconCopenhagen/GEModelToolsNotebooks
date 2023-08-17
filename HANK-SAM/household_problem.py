@@ -8,7 +8,7 @@ def solve_hh_backwards(par,z_trans,
     delta,lambda_u,w,RealR_ex_post,tau,
     vbeg_a_plus,vbeg_a,a,c,s,ss=False):
     """ solve backwards with vbeg_a_plus from previous iteration """
-
+        
     # a. solution step
     for i_fix in range(par.Nfix):
         for i_z in range(par.Nz):
@@ -17,7 +17,7 @@ def solve_hh_backwards(par,z_trans,
             if i_z == 0:
                 y_pre = w
             else:
-                y_pre = par.phi*w
+                y_pre = par.UI_ratio*w
 
             # ii. income after tax
             y = (1-tau)*y_pre
@@ -34,7 +34,7 @@ def solve_hh_backwards(par,z_trans,
             else:
 
                 # o. EGM
-                c_endo = (par.beta*vbeg_a_plus[i_fix,i_z])**(-1/par.sigma)
+                c_endo = (par.beta_grid[i_fix]*vbeg_a_plus[i_fix,i_z])**(-1/par.sigma)
                 m_endo = c_endo + par.a_grid
             
                 # oo. interpolation to fixed grid

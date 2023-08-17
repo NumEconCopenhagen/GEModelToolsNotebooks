@@ -44,6 +44,7 @@ class HANKSAMModelClass(EconModelClass,GEModelClass):
             'blocks.price_setters',
             'blocks.central_bank',
             'blocks.government',
+            'blocks.mutual_fund',
             'hh',
             'blocks.market_clearing']
 
@@ -51,9 +52,22 @@ class HANKSAMModelClass(EconModelClass,GEModelClass):
         """ set baseline parameters """
 
         par = self.par
-        par.Nfix = 1
+        par.Nfix = 3
 
-        # a. preferences
+        # a. targets
+        par.RealR_ss = 1.02**(1/12)
+        par.mutual_fund_share = 0.0
+        par.div_tax_share_ss = 0.90
+        par.div_tax = np.nan
+
+        # b. preferences
+        par.beta_HtM = 0.92**(1/12)
+        par.beta_mid = 0.94**(1/12)
+        par.beta_PIH = 0.975**(1/12)
+
+        par.HtM_share = 0.30
+        par.PIH_share = 0.30
+
         par.beta = 0.96**(1/12) # discount factor
         par.sigma = 2.0 # CRRA coefficient
 
@@ -64,12 +78,12 @@ class HANKSAMModelClass(EconModelClass,GEModelClass):
         par.lambda_u_ss = 0.30
         
         # c. intermediary goods firms
-        par.w_ss = 0.70 # wage in steady state
+        par.w_share_ss = 0.97 # wage in steady state
         par.kappa = np.nan # flow vacancy cost, determined endogenously
         par.delta_ss = 0.025
 
         # d. final goods firms
-        par.epsilon_p = 6.0 # price elasticity      
+        par.epsilon_p = 20.0 # price elasticity      
         par.phi = 600.0 # Rotemberg cost
 
         # e. monetary policy
@@ -79,9 +93,9 @@ class HANKSAMModelClass(EconModelClass,GEModelClass):
         # f. government
         par.qB_share_ss = 1.00 # government bonds (share of wage)
 
-        par.phi = 0.70 # UI ratio
+        par.UI_ratio = 0.25 # UI ratio
     
-        par.omega = 0.10 # responsiveness of tax to debt
+        par.omega = 0.90 # responsiveness of tax to debt
         par.delta_q = 1-1/60 # maturity of government bonds
 
         # g. shocks
@@ -91,7 +105,7 @@ class HANKSAMModelClass(EconModelClass,GEModelClass):
         # h. household problem
         par.Nz = 2 # number of income states
         par.Na = 500 # number of asset grid points
-        par.a_max = 50 # max level of assets
+        par.a_max = 200 # max level of assets
 
         # d. misc
         par.T = 300 # length of path        
@@ -106,14 +120,18 @@ class HANKSAMModelClass(EconModelClass,GEModelClass):
         par.tol_R = 1e-12 # tolerance when finding RealR for ss
         par.tol_calib = 1e-5 # tolerance when calibrating (C_drop and var_u)
 
-        par.py_hh = True
-        par.py_blocks = True
+        par.py_hh = False
+        par.py_blocks = False
         par.full_z_trans = True
 
     def allocate(self):
         """ allocate model """
         
         par = self.par        
+
+        par.beta_grid = np.zeros(par.Nfix)
+        par.beta_shares = np.zeros(par.Nfix)
+
         self.allocate_GE()
 
     prepare_hh_ss = steady_state.prepare_hh_ss

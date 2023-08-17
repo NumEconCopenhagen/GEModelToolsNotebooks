@@ -1,7 +1,7 @@
 import numpy as np
 import numba as nb
 
-from GEModelTools import lag, lead
+from GEModelTools import lag, lead, prev, next
 
 @nb.njit
 def production(par,ini,ss,shock_TFP,delta,w,px,Vj,errors_Vj):
@@ -10,7 +10,7 @@ def production(par,ini,ss,shock_TFP,delta,w,px,Vj,errors_Vj):
     delta_plus = lead(delta,ss.delta)
 
     LHS = Vj
-    RHS = shock_TFP*px-w + (1-delta_plus)*par.beta*Vj_plus
+    RHS = shock_TFP*px-w + (1-delta_plus)*Vj_plus/ss.RealR
     
     errors_Vj[:] = LHS-RHS
 
@@ -42,18 +42,18 @@ def entry(par,ini,ss,lambda_v,Vj,errors_entry):
 @nb.njit
 def price_setters(par,ini,ss,shock_TFP,u,px,Pi,errors_Pi):
 
-        LHS = 1-par.epsilon_p + par.epsilon_p*px
+    LHS = 1-par.epsilon_p + par.epsilon_p*px
 
-        Pi_plus = lead(Pi,ss.Pi)        
-        shock_TFP_plus = lead(shock_TFP,ss.shock_TFP)
-        u_plus = lead(u,ss.u)
+    Pi_plus = lead(Pi,ss.Pi)        
+    shock_TFP_plus = lead(shock_TFP,ss.shock_TFP)
+    u_plus = lead(u,ss.u)
 
-        RHS = par.phi*(Pi-ss.Pi)*Pi - par.beta*par.phi*((Pi_plus-ss.Pi)*Pi_plus*(shock_TFP_plus*u_plus)/(shock_TFP*u))
+    RHS = par.phi*(Pi-ss.Pi)*Pi - par.phi*((Pi_plus-ss.Pi)*Pi_plus*(shock_TFP_plus*u_plus)/(shock_TFP*u))/ss.RealR
 
-        errors_Pi[:] = LHS-RHS
+    errors_Pi[:] = LHS-RHS
 
 @nb.njit
-def central_bank(par,ini,ss,Pi,R,RealR,q,RealR_ex_post):
+def central_bank(par,ini,ss,Pi,R,RealR,q):
 
     for t in range(par.T):
 
@@ -71,13 +71,29 @@ def central_bank(par,ini,ss,Pi,R,RealR,q,RealR_ex_post):
         q_plus = q[t+1] if t < par.T-1 else ss.q
         q[t] = (1+par.delta_q*q_plus)/RealR[t]
 
-    q_lag = lag(ini.q,q)
-    RealR_ex_post[:] = (1+par.delta_q*q)/q_lag
+@nb.njit
+def mutual_fund(par,ini,ss,shock_TFP,u,w,div,q,RealR,p_eq,RealR_ex_post):
+
+    div[:] = shock_TFP*(1-u)*(1-w/shock_TFP)
+
+    for t_ in range(par.T):
+
+        t = (par.T-1) - t_
+
+        p_eq_plus = next(p_eq,t,ss.p_eq)
+        div_plus = next(div,t,ss.div)
+        p_eq[t] = ((div_plus-par.div_tax)+p_eq_plus)/RealR[t]
+
+    term_B = (1+par.delta_q*q[0])*ini.B
+    term_eq = par.mutual_fund_share*(p_eq[0]+div[0]-par.div_tax)
+
+    RealR_ex_post[0] = (term_B+term_eq)/ini.A_hh
+    RealR_ex_post[1:] = RealR[:-1]
 
 @nb.njit
 def government(par,ini,ss,w,u,q,tau,B,qB,UI,Yt_hh):
 
-    UI[:] = par.phi*w*u
+    UI[:] = par.UI_ratio*w*u
     Yt_hh[:] = w*(1-u) + UI
 
     for t in range(par.T):
@@ -91,7 +107,12 @@ def government(par,ini,ss,w,u,q,tau,B,qB,UI,Yt_hh):
     qB[:] = q*B
     
 @nb.njit
-def market_clearing(par,ini,ss,qB,S,A_hh,S_hh,errors_assets,errors_search):
+def market_clearing(par,ini,ss,qB,S,A_hh,S_hh,errors_assets,errors_search,p_eq,div,C_hh,shock_TFP,u,G,clearing_Y):
 
-    errors_assets[:] = qB-A_hh
+    errors_assets[:] = qB+par.mutual_fund_share*p_eq-A_hh
     errors_search[:] = S-S_hh
+
+    G[:] = ss.G
+    C_cap = div
+    C_tot = C_hh + C_cap + G
+    clearing_Y[:] = shock_TFP*(1-u)-C_tot
