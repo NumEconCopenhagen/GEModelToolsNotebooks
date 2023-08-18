@@ -59,8 +59,8 @@ def obj_ss(K_ss,model,do_print=False):
     ss.Y = ss.Gamma*ss.K**par.alpha*ss.L**(1-par.alpha)    
 
     # b. implied prices
-    ss.rk = par.alpha*ss.Gamma*(ss.K/ss.L)**(par.alpha-1.0)
-    ss.r = ss.rk - par.delta
+    ss.rK = par.alpha*ss.Gamma*(ss.K/ss.L)**(par.alpha-1.0)
+    ss.r = ss.rK - par.delta
     ss.w = (1.0-par.alpha)*ss.Gamma*(ss.K/ss.L)**par.alpha
 
     # c. household behavior
@@ -148,12 +148,12 @@ def find_ss_indirect(model,do_print=False):
     model.simulate_hh_ss(do_print=do_print) # give us ss.D (steady state distribution)
     if do_print: print('')
 
-    ss.A = ss.K_lag = ss.K = ss.A_hh
+    ss.A = ss.K = ss.A_hh
     
     # c. back technology and depreciation rate
     ss.Gamma = ss.w / ((1-par.alpha)*(ss.K/ss.L)**par.alpha)
-    ss.rk = par.alpha*ss.Gamma*(ss.K/ss.L)**(par.alpha-1)
-    par.delta = ss.rk - ss.r
+    ss.rK = par.alpha*ss.Gamma*(ss.K/ss.L)**(par.alpha-1)
+    par.delta = ss.rK - ss.r
 
     # d. produktion and investment
     ss.Y = ss.Gamma*ss.K**par.alpha*ss.L**(1-par.alpha)

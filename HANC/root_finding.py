@@ -1,4 +1,4 @@
-def brentq(f,a,b,args=(),xtol=1e-8,rtol=1e-8,max_iter=1_000,
+def brentq(f,a,b,args=(),xtol=1e-12,rtol=1e-12,max_iter=1_000,
     do_print=False,varname='x',funcname='f'):
     """ brentq root-finder """
 
@@ -87,5 +87,8 @@ def brentq(f,a,b,args=(),xtol=1e-8,rtol=1e-8,max_iter=1_000,
     if not converged: raise ValueError('brentq did not find solution')
     
     if do_print: print(f'\n{varname} = {root:12.8f} [{funcname} = {fb:12.8f}]\n')
+
+    # final evaluation
+    fb = f(root,*args)
 
     return root,fb

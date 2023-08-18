@@ -28,7 +28,6 @@ class HANCModelClass(EconModelClass,GEModelClass):
         self.unknowns = ['K','L'] # endogenous unknowns
         self.targets = ['clearing_A','clearing_L'] # targets = 0
         self.blocks = [ # list of strings to block-functions
-            'blocks.capital_accumulation',
             'blocks.production_firm',
             'blocks.mutual_fund',
             'hh', # household block
