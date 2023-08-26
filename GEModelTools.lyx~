@@ -1781,7 +1781,7 @@ Simulate until convergence of
 \end_layout
 
 \begin_layout Enumerate
-Calculate supply 
+Calculate household supply 
 \begin_inset Formula $A_{ss}^{hh}=\boldsymbol{a}_{ss}^{\ast\prime}\boldsymbol{D}_{ss}$
 \end_inset
 
@@ -1793,7 +1793,7 @@ Calculate supply
 \end_layout
 
 \begin_layout Enumerate
-Calculate demand 
+Calculate firm demand 
 \begin_inset Formula $A_{ss}=K_{ss}=\left(\frac{r_{ss}+\delta}{\alpha Z_{ss}}\right)^{\frac{1}{\alpha-1}}L_{ss}$
 \end_inset
 
@@ -6883,8 +6883,8 @@ Define the object
 \begin_inset Formula 
 \begin{equation}
 \mathcal{F}_{t,s}^{,i,o}\equiv\begin{cases}
-\mathcal{Y}_{s}^{o,i} & t=0\\
-\left(\mathcal{E}_{t-1}^{o}\right)^{\prime}\underline{\mathcal{D}}_{s}^{i} & t\geq1
+\mathcal{Y}_{0,s}^{o,i} & t=0\\
+\left(\mathcal{E}_{t-1}^{o}\right)^{\prime}\underline{\mathcal{D}}_{1,s}^{i} & t\geq1
 \end{cases}\label{eq:F}
 \end{equation}
 

@@ -75,8 +75,8 @@ def evaluate_ss(model,do_print=False):
     model.simulate_hh_ss(do_print=do_print)
 
     # g. market clearing
-    ss.clearing_N = ss.N - ss.N_hh
     ss.clearing_A = ss.A - ss.A_hh
+    ss.clearing_N = ss.N - ss.N_hh
     ss.clearing_Y = ss.Y - (ss.C_hh+ss.G+ss.adjcost)
 
 def objective_ss(x,model,do_print=False):

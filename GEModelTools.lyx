@@ -6883,8 +6883,8 @@ Define the object
 \begin_inset Formula 
 \begin{equation}
 \mathcal{F}_{t,s}^{,i,o}\equiv\begin{cases}
-\mathcal{Y}_{s}^{o,i} & t=0\\
-\left(\mathcal{E}_{t-1}^{o}\right)^{\prime}\underline{\mathcal{D}}_{s}^{i} & t\geq1
+\mathcal{Y}_{0,s}^{o,i} & t=0\\
+\left(\mathcal{E}_{t-1}^{o}\right)^{\prime}\underline{\mathcal{D}}_{1,s}^{i} & t\geq1
 \end{cases}\label{eq:F}
 \end{equation}
 
@@ -6923,7 +6923,7 @@ noprefix "false"
 , the household Jacobian can be written recursively by
 \begin_inset Formula 
 \begin{equation}
-\mathcal{J}_{t,s}^{i,o}=\sum_{k=0}^{\min\{t,s\}}\mathcal{F}_{t-k,s-k}^{i,o}\label{eq:Jhh_recursive}
+\mathcal{J}_{t,s}^{hh,i,o}=\sum_{k=0}^{\min\{t,s\}}\mathcal{F}_{t-k,s-k}^{i,o}\label{eq:Jhh_recursive}
 \end{equation}
 
 \end_inset
