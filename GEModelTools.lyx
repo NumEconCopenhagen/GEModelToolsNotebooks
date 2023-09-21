@@ -6318,8 +6318,8 @@ noprefix "false"
 Additionally, only the time span until the shock arrives matter so 
 \begin_inset Formula 
 \begin{align*}
-\boldsymbol{v}_{t}^{s,i} & =\boldsymbol{v}_{t-1}^{s-1,i}\text{ for }t\leq s\\
-\boldsymbol{\underline{v}}_{t}^{s,i} & =\underline{\boldsymbol{v}}_{t-1}^{s-1,i}\text{ for }t\leq s
+\boldsymbol{\underline{v}}_{t}^{s,i} & =\underline{\boldsymbol{v}}_{t-1}^{s-1,i}=\underline{\boldsymbol{v}}_{T-1-(s-t)}^{T-1,i}\text{ for }t\leq s\\
+\boldsymbol{v}_{t}^{s,i} & =\boldsymbol{v}_{t-1}^{s-1,i}=\boldsymbol{v}_{T-1-(s-t)}^{T-1,i}\text{ for }t\leq s
 \end{align*}
 
 \end_inset
@@ -6422,11 +6422,11 @@ This implies that
 For later use, we define the following objects:
 \begin_inset Formula 
 \begin{align*}
-\mathcal{Y}_{0,s}^{o,i} & \equiv\frac{dY_{0}^{o,s,i}}{dx}=\frac{\left(d\boldsymbol{y}_{0}^{o,s,i}\right)^{\prime}}{dx}\left(\Pi_{ss}\right)^{\prime}\underline{\boldsymbol{D}}_{ss}+\begin{cases}
+\mathcal{Y}_{0,s}^{o,i} & \equiv\frac{dY_{0}^{o,s,i}}{dx}=\frac{\left(d\boldsymbol{y}_{0}^{o,s,i}\right)^{\prime}}{dx}\Pi_{ss}^{\prime}\underline{\boldsymbol{D}}_{ss}+\begin{cases}
 \boldsymbol{y}_{ss}^{o}\frac{\left(d\Pi_{0}^{s,i}\right)^{\prime}}{dx}\underline{\boldsymbol{D}}_{ss} & \text{if }s=0\\
 0 & \text{else}
 \end{cases}\\
-\underline{\mathcal{D}}_{1,s}^{i} & \equiv\frac{d\underline{\boldsymbol{D}}_{1}^{s,i}}{dx}=\frac{\left(d\Lambda_{0}^{s,i}\right)^{\prime}}{dx}\left(\Pi_{ss}\right)^{\prime}\underline{\boldsymbol{D}}_{ss}+\begin{cases}
+\underline{\mathcal{D}}_{1,s}^{i} & \equiv\frac{d\underline{\boldsymbol{D}}_{1}^{s,i}}{dx}=\frac{\left(d\Lambda_{0}^{s,i}\right)^{\prime}}{dx}\Pi_{ss}^{\prime}\underline{\boldsymbol{D}}_{ss}+\begin{cases}
 \Lambda_{ss}^{\prime}\frac{\left(d\Pi_{0}^{s,i}\right)^{\prime}}{dx}\underline{\boldsymbol{D}}_{ss} & \text{if }s=0\\
 0 & \text{else}
 \end{cases}\\
