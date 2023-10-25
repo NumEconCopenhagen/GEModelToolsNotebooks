@@ -3563,6 +3563,23 @@ lstinline{par.full_z_trans=False}
 \end_inset
 
 : Endogenous states in transition matrix.
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{par.warnings=True}
+\end_layout
+
+\end_inset
+
+: Show various warnings.
 \end_layout
 
 \begin_layout Standard
