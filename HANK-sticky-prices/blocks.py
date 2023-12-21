@@ -4,10 +4,10 @@ import numba as nb
 from GEModelTools import lag, lead
    
 @nb.njit
-def production(par,ini,ss,Z,w,Y,N,s):
+def production(par,ini,ss,Gamma,w,Y,N,s):
 
-    N[:] = Y/Z
-    s[:] = w/Z
+    N[:] = Y/Gamma
+    s[:] = w/Gamma
 
 @nb.njit
 def taylor(par,ini,ss,istar,pi,Y,i):
@@ -43,9 +43,22 @@ def intermediary_goods(par,ini,ss,r,s,Y,pi,NKPC_res,adjcost,d):
     d[:] = (1-s)*Y-adjcost
 
 @nb.njit
-def market_clearing(par,ini,ss,A,B,N,Y,G,adjcost,N_hh,A_hh,C_hh,clearing_N,clearing_A,clearing_Y):
+def market_clearing(par,ini,ss,A,B,N,Y,G,adjcost,N_hh,A_hh,C_hh,r,w,clearing_N,clearing_A,clearing_Y):
 
     A[:] = B[:]
-    clearing_N[:] = N-N_hh
-    clearing_A[:] = A-A_hh
-    clearing_Y[:] = Y-(C_hh+G+adjcost)
+
+    if par.RA:
+
+        C = Y-G-adjcost # derive consumption from ressource constraint
+        C_plus = lead(C,ss.C_hh)
+        r_plus = lead(r,ss.r)
+
+        clearing_N[:] = N**par.nu - w/par.varphi_RA*C**(-par.sigma) # Euler equation
+        clearing_A[:] = C**(-par.sigma) - par.beta_RA*(1+r_plus)*C_plus**(-par.sigma) # FOC for labor supply
+        clearing_Y[:] = 0.0 # from using ressource constraint
+
+    else:
+
+        clearing_N[:] = N-N_hh
+        clearing_A[:] = A-A_hh
+        clearing_Y[:] = Y-(C_hh+G+adjcost)

@@ -1,0 +1,4166 @@
+#LyX 2.3 created this file. For more info see http://www.lyx.org/
+\lyxformat 544
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass extarticle
+\use_default_options true
+\master ../Thesis_Paper.lyx
+\begin_modules
+theorems-ams
+eqs-within-sections
+figs-within-sections
+\end_modules
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\use_microtype false
+\use_dash_ligatures true
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\spacing onehalf
+\use_hyperref false
+\papersize default
+\use_geometry true
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine biblatex
+\cite_engine_type authoryear
+\biblio_style plain
+\biblatex_bibstyle authoryear
+\biblatex_citestyle authoryear
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 1
+\use_minted 0
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\leftmargin 3cm
+\topmargin 2cm
+\rightmargin 3cm
+\bottommargin 2cm
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation skip
+\defskip smallskip
+\is_math_indent 0
+\math_numbering_side default
+\quotes_style english
+\dynamic_quotes 0
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Section
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:Model"
+
+\end_inset
+
+Model 
+\end_layout
+
+\begin_layout Standard
+In this section, I introduce the full model used to analyze fiscal policy
+ shocks.
+ The model with minor modifications corresponds to the one in 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "auclertMicroJumpsMacro2020"
+literal "false"
+
+\end_inset
+
+.
+ To solve the model, I use the solution method of 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "auclertUsingSequenceSpaceJacobian2021"
+literal "false"
+
+\end_inset
+
+
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Appendix 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "subsec:A-primer-on-solution"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ summarizes the solution method.
+\end_layout
+
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Standard
+Fiscal policy has dynamic effects on households and other agents in the
+ economy.
+ To model these effects accurately, the model comprises a wide range of
+ features that make it suitable for analysing fiscal policy.
+ Specifically, it contains market incompleteness in the form of a zero borrowing
+ constraint for households and a stochastic productivity process to match
+ the high MPCs.
+ Furthermore, it allows the analysis of transfer multipliers as Ricardian
+ equivalence no longer holds.
+ A two-asset structure allows to account for reasonable degrees of household
+ wealth in the economy.
+ On the supply side, nominal rigidities make output demand determined and
+ sticky wages bound the volatility of profits
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+(when wages are flexible, profits react in strongly countercyclical to output
+ increases, which is not in line with the data)
+\end_layout
+
+\end_inset
+
+ and limit the earnings response to a fiscal stimulus (
+\begin_inset CommandInset citation
+LatexCommand cite
+key "auclert2021mpcs,broer2021fiscal"
+literal "false"
+
+\end_inset
+
+ ).
+ Capital allows to account for the effects of crowding-out and for the powerful
+ investment-consumption feedback highlighted by 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "auclertMicroJumpsMacro2020"
+literal "false"
+
+\end_inset
+
+ and 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "hagedornFiscalMultiplier2019"
+literal "false"
+
+\end_inset
+
+.
+ Long-term government bonds reduce the dependence of the government budget
+ on the real interest rate as it has to roll over debt less frequently.
+ A gradual adjustment of the tax rate to debt-financed debt enables a deviation
+ from a balanced budget rule.
+\begin_inset Newline newline
+\end_inset
+
+In contrast to 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "auclertMicroJumpsMacro2020"
+literal "false"
+
+\end_inset
+
+, I leave out permanent heterogeneity and formulate the New Keynesian Philipps
+ and wage Philipps curve without indexation.
+\end_layout
+
+\begin_layout Subsection
+Households
+\end_layout
+
+\begin_layout Standard
+A continuum of households of unit mass populates the economy.
+ Each household is subject to idiosyncratic risk through stochastic changes
+ in its productivity level.
+ The productivity levels 
+\begin_inset Formula $e$
+\end_inset
+
+ with states 
+\begin_inset Formula $s$
+\end_inset
+
+ behave according to a Markov process with a fixed transition matrix 
+\begin_inset Formula $\Pi$
+\end_inset
+
+.
+ In each period, the mass in state 
+\begin_inset Formula $s$
+\end_inset
+
+ is given as 
+\begin_inset Formula $\pi_{s}$
+\end_inset
+
+ and aggregate productivity has mean one such that 
+\begin_inset Formula $\sum_{s}\pi_{s}e(s)=1$
+\end_inset
+
+
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+The Rouwenhorst method is used to transform the productivity process into
+ 
+\begin_inset Formula $n_{z}=7$
+\end_inset
+
+ discrete states.
+ The household distribution is discretized into 
+\begin_inset Formula $n_{\ell}=n_{a}=100$
+\end_inset
+
+ states for the liquid and illiquid along asset distribution with 
+\begin_inset Formula $\ell,a\in[0,30]$
+\end_inset
+
+.
+ To account for the higher convexity of the consumption function at lower
+ levels of wealth, the distance between states is made equidistant in logs.
+\end_layout
+
+\end_inset
+
+.
+ Utility depends on consumption and hours worked through separable preferences
+ 
+\begin_inset Formula $u(c)-v(n)$
+\end_inset
+
+.
+ Households receive after-tax labour income 
+\begin_inset Formula $Z_{t}\equiv(1-\tau_{t})w_{t}N_{t}$
+\end_inset
+
+ that is then weighted by productivity 
+\begin_inset Formula $z_{t}\equiv Z_{t}e(s)$
+\end_inset
+
+ and government lump-sum transfers 
+\begin_inset Formula $T_{t}$
+\end_inset
+
+.
+ They can invest in liquid assets 
+\begin_inset Formula $\ell$
+\end_inset
+
+ and illiquid assets 
+\begin_inset Formula $a$
+\end_inset
+
+ through a financial intermediary subject to a zero borrowing constraint.
+ As in section 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:Sticky_PE"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ households are fully informed about their contemporaneous budget constraint
+ and idiosyncratic productivity process.
+ However, they only update their expectations about future aggregates with
+ probability 
+\begin_inset Formula $\left(1-\theta\right)$
+\end_inset
+
+
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+Cut?
+\end_layout
+
+\end_inset
+
+.
+ 
+\begin_inset Newline newline
+\end_inset
+
+This results in the following dynamic programming problem:
+\begin_inset Formula 
+\begin{align}
+V_{t}(l,a,a\__{k},s,k) & =\underset{c,l}{max\,\,}u(c)-v(N_{t})+\beta\mathbb{E}_{t-k}\left[\theta V_{t+1}(l',a',a\__{k},s',k+1)+(1-\theta)V_{t+1}(l',a',a',s',0)|s\right]\label{eq:V_full}\\
+c+\ell' & =\left(1+r_{t}^{\ell}\right)\ell+Z_{t}e(s)+d\left(a\__{k},k\right)+T_{t}\nonumber \\
+a' & =\left(1+r_{t}^{a}\right)a-d\left(a\__{k},k\right)\nonumber \\
+\ell' & \geq0\nonumber 
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $V_{t}$
+\end_inset
+
+ is the value function in period t, and an apostrophe indicates the value
+ of idiosyncratic states in the next period.
+ A household that has not updated its expectations in period 
+\begin_inset Formula $t$
+\end_inset
+
+ observed the aggregate state 
+\begin_inset Formula $k$
+\end_inset
+
+ periods ago when it had illiquid assets 
+\begin_inset Formula $a\__{k}$
+\end_inset
+
+.
+ The function 
+\begin_inset Formula $d\left(a\__{k},k\right)$
+\end_inset
+
+ governs the distribution from liquid to illiquid accounts
+\begin_inset Formula 
+\begin{align}
+d_{t}\left(a\__{k},k\right) & =\frac{r^{a,ss}}{1+r^{a,ss}}a^{\epsilon}+\chi\left(a^{e}-\left(1+r^{a,ss}\right)\bar{a}\right)\label{eq:d_a}\\
+a^{e} & =a_{t}^{e}\left(a\__{k},k\right)=\mathbb{E}_{t-k}\left[\left(1+r_{t}^{a}\right)a|a\__{k}\right]\nonumber 
+\end{align}
+
+\end_inset
+
+This formulation of the illiquid asset choice simplifies the household problem
+ as it leaves consumption or liquid assets as the only choice variable.
+ At the same time, it ensures to a low MPC out of illiquid assets.
+ The first term in 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:d_a"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ leads to a distribution to the liquid account when the return for illiquid
+ assets or perceived return based on the last information update 
+\begin_inset Formula $k$
+\end_inset
+
+ period increases.
+ Households only distribute a fraction of the increased value to the liquid
+ account, ensuring a low MPC out of the illiquid assets.
+ The second term, with a value of 
+\begin_inset Formula $\chi$
+\end_inset
+
+ close to zero, leads to a slow transition back to the target value of illiquid
+ assets 
+\begin_inset Formula $\bar{a}$
+\end_inset
+
+.
+ In contrast to the predetermined liquid asset return 
+\begin_inset Formula $r_{t}^{\ell}$
+\end_inset
+
+, the illiquid asset return depends on the stock market's value in period
+ 
+\begin_inset Formula $t$
+\end_inset
+
+.
+ If this value rises unexpectedly in zero, 
+\begin_inset Formula $r_{0}^{a}$
+\end_inset
+
+ increases.
+ Thus, households' illiquid assets increase in 
+\begin_inset Formula $t$
+\end_inset
+
+, and a fraction of this increase is redistributed to the liquid account.
+ In the scenario where there is a transition back to the steady state in
+ the following period, the illiquid asset stock is then slowly brought back
+ to its steady state value through positive but low values of 
+\begin_inset Formula $d_{t}$
+\end_inset
+
+.
+ The sticky information also lead to a delayed response to consume out of
+ an increased illiquid asset stock
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+Refer to fitting graph here?
+\end_layout
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsection
+Financial Intermediary
+\end_layout
+
+\begin_layout Standard
+The financial intermediary collects liquid and illiquid savings and performs
+ maturity transformation to invest the funds into long-term government bonds
+ 
+\begin_inset Formula $B_{t}$
+\end_inset
+
+ and shares in firms.
+ 
+\begin_inset Newline newline
+\end_inset
+
+Consistent with financial markets being sensitive to news, the financial
+ intermediary is perfectly attentive to news and updates his expectations
+ each period.
+ When depositing liquid funds, intermediation costs occur, with a share
+ of 
+\begin_inset Formula $\xi$
+\end_inset
+
+ that is fully passed on the deposit interest rate for liquid assets 
+\begin_inset Formula $r_{t}^{\ell}$
+\end_inset
+
+.
+ 
+\begin_inset Newline newline
+\end_inset
+
+There exists a continuum of shares 
+\begin_inset Formula $v_{jt}$
+\end_inset
+
+ in firms with price 
+\begin_inset Formula $p_{jt}$
+\end_inset
+
+ that each pays a dividend 
+\begin_inset Formula $D_{jt}$
+\end_inset
+
+.
+ Shares bought must then sum to one.
+ Government bonds pay a coupon of one unit of money each period and sell
+ at a discount afterwards.
+ Thus, they sell at a coupon rate of 
+\begin_inset Formula $\left(1+\delta q_{t+1}\right)$
+\end_inset
+
+ where 
+\begin_inset Formula $\delta$
+\end_inset
+
+ represents the discount for each year of maturity.
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+\begin_inset Formula $(1+\delta q_{t})B_{t-1}$
+\end_inset
+
+-> decaying coupon
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Formula $q_{t}$
+\end_inset
+
+: price of a government bond in t, s.t.
+ 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+
+\begin_inset Formula $qB/Y$
+\end_inset
+
+ is Government bonds to GDP
+\end_layout
+
+\begin_layout Plain Layout
+Assume maturity 
+\begin_inset Formula $\frac{1+r}{1+r-\delta}=2$
+\end_inset
+
+, then 
+\begin_inset Formula $\delta=\frac{1+r}{2}$
+\end_inset
+
+ and 
+\begin_inset Formula $(1+\frac{1+r}{2}q_{t})B_{t-1}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+Usually 
+\begin_inset Formula $\frac{1+q_{t+1}}{q_{t}}=1+r$
+\end_inset
+
+ or 
+\begin_inset Formula $q=\frac{1}{1+r}$
+\end_inset
+
+: t: Buy bond for 
+\begin_inset Formula $q_{t}$
+\end_inset
+
+ -> t+1: bond pays one unit of money as coupon payment and pays out its
+ price 
+\begin_inset Formula $q_{t+1}$
+\end_inset
+
+ at maturity.
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Formula $\frac{1+\delta q_{t+1}}{q_{t}}=1+r$
+\end_inset
+
+: t: buy the bond at price 
+\begin_inset Formula $q_{t}$
+\end_inset
+
+ –> t+1: bond pays one unit of money as coupon and selling bond at a discount
+ 
+\begin_inset Formula $\delta$
+\end_inset
+
+ (for lower maturity) brings 
+\begin_inset Formula $\delta q_{t+1}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+This leads to 
+\begin_inset Formula $q^{ss}=\frac{1}{1+r^{ss}-\delta}$
+\end_inset
+
+ or 
+\begin_inset Formula $\left(1+r\right)q^{ss}=maturity$
+\end_inset
+
+ -> 
+\begin_inset Formula $q^{ss}=\frac{maturity}{1+r}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+The flow-of-funds constraint at the beginning of the period states that
+ the value of liabilities must be equal to the liquidation value of the
+ intermediaries portfolio:
+\begin_inset Formula 
+\[
+(1+r_{t}^{a})A_{t-1}+(1+r_{t}^{l})L_{t-1}=(1+\delta q_{t})B_{t-1}+\int(p_{jt}+D_{jt})v_{jt-1}dj-\xi L_{t-1}
+\]
+
+\end_inset
+
+At the end of the period, the new investment in bonds and shares must equal
+ the intermediaries liabilities that equal aggregate savings (end-of-period
+ flow of funds constraint):
+\begin_inset Formula 
+\[
+\int p_{jt}v_{jt}dj+q_{t}B_{t}=A_{t}+L_{t}
+\]
+
+\end_inset
+
+The financial intermediary maximizes the return on the illiquid assets 
+\begin_inset Formula $\mathbb{E}\left[1+r_{t+1}^{a}\right]$
+\end_inset
+
+ for the households by choosing 
+\begin_inset Formula $v_{jt},B_{t}$
+\end_inset
+
+ and 
+\begin_inset Formula $L_{t}$
+\end_inset
+
+ through adjusting the portfolio composition.
+ The asset pricing equation states that the expected return on the different
+ assets has to equal out as all arbitrage opportunities have to be exhausted:
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+For an extended derivation of the first-order conditions of the financial
+ intermediary problem, see Appendix C.2 in 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "auclertMicroJumpsMacro2020"
+literal "false"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset Formula 
+\begin{equation}
+\mathbb{E}_{t}[1+r_{t+1}^{a}]=\frac{\mathbb{E}_{t}[1+\delta q_{t+1}]}{q_{t}}=\frac{\mathbb{E}_{t}[p_{jt+1}+D_{jt+1}]}{p_{jt}}=1+r_{t+1}^{l}+\xi\equiv1+r_{t}\label{eq:arbitrage}
+\end{equation}
+
+\end_inset
+
+where 
+\begin_inset Formula $r_{t}$
+\end_inset
+
+ is the ex-ante real interest rate, that is the rate before shocks have
+ realized
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+For instance in period 0, the expected 
+\begin_inset Formula $r_{0}^{a}$
+\end_inset
+
+ is equal to 
+\begin_inset Formula $r^{ss}$
+\end_inset
+
+ but not necessarily the realized 
+\begin_inset Formula $r_{0}^{a}$
+\end_inset
+
+.
+\end_layout
+
+\end_inset
+
+.
+\begin_inset Newline newline
+\end_inset
+
+The model also contains nominal reserves in zero net supply with nominal
+ policy rate 
+\begin_inset Formula $i_{t}$
+\end_inset
+
+.
+ Equivalently to the asset pricing equation, the real return on the nominal
+ reserved has to equal out the ex-ante real return, which implies the Fisher
+ equation
+\begin_inset Formula 
+\[
+1+r_{t}=(1+i_{t})\mathbb{E}_{t}\left[\frac{P_{t+1}}{P_{t}}\right]
+\]
+
+\end_inset
+
+
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+Following a shock in period 0, 
+\begin_inset Formula $r_{0}^{a}$
+\end_inset
+
+ follows from the mutual funds flow of funds constraint
+\begin_inset Formula 
+\[
+t=0:r_{t}^{a}=\frac{(1+\delta q_{t})B_{t-1}+\int(p_{jt}+D_{jt})v_{jt-1}dj-\xi L_{t-1}-(1+r_{t}^{l})L_{t-1}}{A_{t-1}}-1
+\]
+
+\end_inset
+
+Then afterwards, because the model is in perfect-foresight:
+\begin_inset Formula 
+\[
+r_{t}^{a}=r_{t-1}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Firms
+\end_layout
+
+\begin_layout Standard
+The specification follows 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "auclertMicroJumpsMacro2020"
+literal "false"
+
+\end_inset
+
+ with small simplifications.
+ Specifically, production using a standard CES aggregator and no indexation
+ of wages and inflation as in 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "galiMonetaryPolicyInflation2015"
+literal "false"
+
+\end_inset
+
+.
+ 
+\begin_inset Newline newline
+\end_inset
+
+Output is produced by a final good producer that combines intermediate goods.
+ The monopolistic intermediate good firms utilize capital provided by a
+ capital firm and labour pooled by unions.
+\end_layout
+
+\begin_layout Subsubsection*
+Final Good Firm
+\end_layout
+
+\begin_layout Standard
+The competitive and representative final good firm produces a homogeneous
+ good 
+\begin_inset Formula $Y_{t}$
+\end_inset
+
+ with intermediate goods 
+\begin_inset Formula $Y_{jt}$
+\end_inset
+
+ using a CES aggregator
+\begin_inset Formula 
+\[
+Y_{t}=\left(\int_{0}^{1}Y_{jt}^{\frac{e_{p}-1}{e_{p}}}dj\right)^{\frac{e_{p}}{e_{p}-1}}
+\]
+
+\end_inset
+
+where 
+\begin_inset Formula $\epsilon_{p}$
+\end_inset
+
+ is the substitution elasticity between intermediary goods.
+\end_layout
+
+\begin_layout Subsubsection*
+Intermediate Good Firm
+\end_layout
+
+\begin_layout Standard
+There is a continuum of monopolistic intermediate good firms that produce
+ heterogeneous goods with constant productivity 
+\begin_inset Formula $\Theta$
+\end_inset
+
+ and the production function
+\begin_inset Formula 
+\[
+Y_{jt}=\Theta K_{jt}^{\alpha}N_{jt}^{1-\alpha}
+\]
+
+\end_inset
+
+Because firms are identical and rent capital and labour from a common market,
+ they all have the same capital-to-labour ratio 
+\begin_inset Formula $\frac{K_{t}}{N_{t}}=\frac{K_{jt}}{N_{jt}}$
+\end_inset
+
+ and marginal costs 
+\begin_inset Formula $s_{t}$
+\end_inset
+
+.
+ Factor prices are taken as given and satisfy
+\begin_inset Formula 
+\begin{align}
+w_{t} & =s_{t}(1-\alpha)\Theta K_{t}^{\alpha}N_{t}^{-\alpha}=s_{t}(1-\alpha)\frac{Y_{t}}{N_{t}}\nonumber \\
+r_{t}^{K} & =s_{t}\alpha\Theta K_{t}^{\alpha-1}N_{t}^{1-\alpha}=s_{t}\alpha\frac{Y_{t}}{K_{t}}\label{eq:rk}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Each firm sells its good for price 
+\begin_inset Formula $P_{jt}$
+\end_inset
+
+ to the final good firm and is subject to price stickiness a la 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "calvo1983staggered"
+literal "false"
+
+\end_inset
+
+.
+ Thus, a fraction of 
+\begin_inset Formula $1-\xi_{p}$
+\end_inset
+
+ firms reset their prices each period.
+ When choosing their optimal reset price, the intermediate firms maximize
+ their stock prices 
+\begin_inset Formula $p_{jt}$
+\end_inset
+
+ and dividends 
+\begin_inset Formula 
+\[
+D_{jt}=\left(\frac{P_{jt}}{P_{t}}-s_{t}\right)Y_{jt}
+\]
+
+\end_inset
+
+In contrast to 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "auclertMicroJumpsMacro2020"
+literal "false"
+
+\end_inset
+
+ there is no price indexation such that inflation, 
+\begin_inset Formula $\pi_{t}=log\left(\frac{P_{t}}{P_{t-1}}\right)$
+\end_inset
+
+, evolves according to the following New Keynesian Philipps Curve (NKPC)
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+See appendix 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "subsec:Derivation-NKPC"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ for an extended derivation.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\pi_{t}=\underset{\kappa}{\underbrace{\frac{\left(1-\xi_{p}\right)\left(1-\frac{\xi_{p}}{1+r}\right)}{\xi_{p}}\frac{\epsilon_{p}}{\epsilon_{p}-1}}}\left(s_{t}-\frac{\epsilon_{p}-1}{\epsilon_{p}}\right)+\frac{1}{1+r}\mathbb{E}_{t}\left[\pi_{t+1}\right]\label{eq:NKPC_main}
+\end{equation}
+
+\end_inset
+
+Inflation increases when firms expect markups 
+\begin_inset Formula $\frac{1}{s_{t}}$
+\end_inset
+
+ below their steady state value 
+\begin_inset Formula $\frac{\epsilon_{p}}{\epsilon_{p}-1}$
+\end_inset
+
+.
+ When resetting, they increase their price to bring markups back to their
+ desired value.
+\end_layout
+
+\begin_layout Subsubsection*
+Capital Firms
+\end_layout
+
+\begin_layout Standard
+Capital for the production of goods is provided by a capital firm that owns
+ the capital stock 
+\begin_inset Formula $K_{t}$
+\end_inset
+
+ and rents it out at rate 
+\begin_inset Formula $r_{t}^{k}$
+\end_inset
+
+.
+ The capital stock evolves according to
+\begin_inset Formula 
+\[
+K_{t+1}=\left(1-\delta\right)K_{t}+I_{t}
+\]
+
+\end_inset
+
+where 
+\begin_inset Formula $\delta$
+\end_inset
+
+ is depreciation and 
+\begin_inset Formula $I_{t}$
+\end_inset
+
+ investment.
+ 
+\begin_inset Newline newline
+\end_inset
+
+Investment takes one period to build up and is subject to quadratic and
+ convex adjustment costs 
+\begin_inset Formula 
+\[
+S\left(\frac{I_{t+1}}{I_{t}}\right)=\frac{\phi}{2}\left(\frac{I_{t+1}}{I_{t}}-1\right)^{2}
+\]
+
+\end_inset
+
+such that 
+\begin_inset Formula $S\left(1\right)=S'\left(1\right)=0$
+\end_inset
+
+ and 
+\begin_inset Formula $S''(1)=\phi$
+\end_inset
+
+.
+ This form implies that firms adjust investment continuously and smoothly,
+ where the degree of smoothness depends on the parameter 
+\begin_inset Formula $\phi$
+\end_inset
+
+.
+\begin_inset Newline newline
+\end_inset
+
+Firms maximize dividends 
+\begin_inset Formula 
+\[
+D_{t}^{K}=r_{t}^{K}K_{t}-I_{t}\left(1+S\left(\frac{I_{t}}{I_{t-1}}\right)\right)
+\]
+
+\end_inset
+
+and stock prices 
+\begin_inset Formula 
+\[
+p_{t}^{K}=\frac{D_{t+1}^{K}+p_{t+1}^{K}}{1+r}
+\]
+
+\end_inset
+
+by choosing next periods investment
+\begin_inset Formula 
+\[
+\underset{I_{t+1}}{max}\left\{ \mathbb{E}_{t}\left[D_{t+1}^{K}(K_{t+1},I_{t},I_{t+1})+\underset{I_{t+2}}{max}\,\,p_{t+1}^{K}\left(K_{t+2},I_{t+1},I_{t+2}\right)\right]\right\} 
+\]
+
+\end_inset
+
+Appendix C.4 in 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "auclertMicroJumpsMacro2020"
+literal "false"
+
+\end_inset
+
+ shows that investment dynamics are described by the following set of first
+ order conditions
+\begin_inset Formula 
+\begin{align}
+1+S\left(\frac{I_{t+1}}{I_{t}}\right)+\frac{I_{t+1}}{I_{t}}S'\left(\frac{I_{t+1}}{I_{t}}\right) & =Q_{t}+\mathbb{E}\left[\frac{1}{1+r_{t+1}}\left(\frac{I_{t+2}}{I_{t+1}}\right)^{2}S'\left(\frac{I_{t+2}}{I_{t+1}}\right)\right]\label{eq:Qs_55}\\
+Q_{t} & =\mathbb{E}\left[\frac{1}{1+r_{t+1}}(r_{t+2}^{K}+(1-\delta)Q_{t+1})\right]\nonumber 
+\end{align}
+
+\end_inset
+
+We can interpret 
+\begin_inset Formula $Q_{t}\equiv\mathbb{E}_{t}\left[\frac{\partial p_{t+1}^{K}}{\partial K_{t+2}}\right]$
+\end_inset
+
+ in the form of Tobin's Q.
+ Thus, when 
+\begin_inset Formula $Q>1$
+\end_inset
+
+ firms can increase their future stock price by building up more capital.
+ 
+\end_layout
+
+\begin_layout Subsubsection*
+Aggregate Firm Value
+\end_layout
+
+\begin_layout Standard
+Aggregate dividends are gives as
+\begin_inset Formula 
+\[
+D_{t}=\int D_{jt}dj+D_{t}^{K}=Y_{t}-w_{t}L_{t}-I_{t}\left(1+S\left(\frac{I_{t}}{I_{t-1}}\right)\right)
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Shares of intermediate and capital goods firms have unit mass such that
+ the aggregate stock market has value 
+\begin_inset Formula $p_{t}=\int p_{jt}dj+p_{t}^{K}$
+\end_inset
+
+ .
+ The arbitrage condition 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:arbitrage"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ ensures that 
+\begin_inset Formula 
+\[
+p_{jt}=\frac{1}{1+r_{t}}\mathbb{E}_{t}[D_{j,t+1}+p_{j,t+1}]
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+p_{t}^{K}=\frac{1}{1+r_{t}}\mathbb{E}_{t}[D_{t+1}^{K}+p_{t+1}^{K}]
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+and for the value of the aggregate stock market
+\begin_inset Formula 
+\[
+p_{t}=\frac{1}{1+r_{t}}\mathbb{E}_{t}[D_{t+1}+p_{t+1}]
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Unions
+\end_layout
+
+\begin_layout Standard
+Labour for the intermediate goods firm is provided by unions that package
+ households' labour services and set wages monopolistically subject to wage
+ stickiness a la 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "calvo1983staggered"
+literal "false"
+
+\end_inset
+
+.
+ The formulation differs from 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "auclertMicroJumpsMacro2020"
+literal "false"
+
+\end_inset
+
+ as unions do not index wages to past inflation, as for instance, in 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "galiMonetaryPolicyInflation2015"
+literal "false"
+
+\end_inset
+
+.
+ 
+\begin_inset Newline newline
+\end_inset
+
+There is a continuum of unions 
+\begin_inset Formula $j\in\left[0,1\right]$
+\end_inset
+
+ with mass one that bundle labour from households into a union-specific
+ task 
+\begin_inset Formula $N_{jt}$
+\end_inset
+
+.
+ Households supply hours 
+\begin_inset Formula $n_{ijt}$
+\end_inset
+
+ to the respective union 
+\begin_inset Formula $j$
+\end_inset
+
+ union such that 
+\begin_inset Formula $n_{it}=\int n_{ijt}di$
+\end_inset
+
+ and 
+\begin_inset Formula $N_{jt}=\int e\left(s_{it}\right)n_{ijt}di$
+\end_inset
+
+.
+ Total labour is then aggregated by a competitive labour packer such that
+ each union faces the demand schedule
+\begin_inset Formula 
+\[
+N_{jt}=N_{t}\left(\frac{W_{jt}}{W_{t}}\right)^{-\epsilon_{w}}
+\]
+
+\end_inset
+
+where 
+\begin_inset Formula $W_{t}$
+\end_inset
+
+ is the aggregate wage defined as 
+\begin_inset Formula 
+\[
+W_{t}=\left(\int W_{jt}^{1-\epsilon_{w}}dj\right)^{\frac{1}{1-\epsilon_{w}}}
+\]
+
+\end_inset
+
+The union specific wage 
+\begin_inset Formula $W_{jt}$
+\end_inset
+
+ set by unions and paid by firms, where 
+\begin_inset Formula $\epsilon_{w}$
+\end_inset
+
+ is the elasticity of substitution between labour types.
+ Unions can reset their wages with probability 
+\begin_inset Formula $1-\xi_{w}$
+\end_inset
+
+ each period leading to the New Keynesian Wage Phillips Curve
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+See appendix 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "subsec:Derivation-NKPC-Wage"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ for an extended derivation.
+\end_layout
+
+\end_inset
+
+
+\begin_inset Formula 
+\begin{equation}
+\pi_{w,t}=\underset{\kappa_{w}}{\underbrace{\frac{\left(1-\xi_{w}\right)\left(1-\beta^{w}\xi_{w}\right)}{\xi_{w}}\frac{\epsilon_{w}}{\epsilon_{w}-1}}}\left(s_{w,t}-\frac{\epsilon_{w}-1}{\epsilon_{w}}\right)+\beta^{w}\mathbb{E}_{t}\left[\pi_{w,t+1}\right]\label{eq:NKPC_w_main}
+\end{equation}
+
+\end_inset
+
+where 
+\begin_inset Formula $\pi_{w,t}=log\left(\frac{W_{t}}{W_{t-1}}\right)$
+\end_inset
+
+.
+ 
+\begin_inset Formula $s_{w.t}$
+\end_inset
+
+ is the inverse wage markup and 
+\begin_inset Formula $\beta^{w}$
+\end_inset
+
+ the discount factor specific to the wage NKPC.
+\end_layout
+
+\begin_layout Subsection
+Government
+\end_layout
+
+\begin_layout Standard
+The government conducts consumption spending of size 
+\begin_inset Formula $G_{t}$
+\end_inset
+
+ and pays lump-sum transfers 
+\begin_inset Formula $T_{t}$
+\end_inset
+
+ to households.
+ It finances these expenses by issuing long-term government bonds 
+\begin_inset Formula $B_{t}$
+\end_inset
+
+ and collecting labour income taxes 
+\begin_inset Formula $\tau_{t}$
+\end_inset
+
+ in the total amount of 
+\begin_inset Formula $\tau_{t}\frac{W_{t}}{P_{t}}N_{t}\mathbb{E}[\bar{e}_{g}e(s)]=\tau_{t}\frac{W_{t}}{P_{t}}N_{t}$
+\end_inset
+
+ such that the government budget constraint is fulfilled: 
+\begin_inset Formula 
+\[
+q_{t}B_{t}+\tau_{t}\frac{W_{t}}{P_{t}}N_{t}=G_{t}+T_{t}+(1+\delta q_{t})B_{t-1}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+When the government issues additional bonds at price 
+\begin_inset Formula $q_{t}$
+\end_inset
+
+ by issuing nominal bonds, the tax rate will adjust gradually to bring the
+ debt level back to its steady state following the rule
+\begin_inset Formula 
+\[
+\tau_{t}=\phi^{\tau}q^{ss}\frac{(B_{t-1}-B^{ss})}{Y^{ss}}+\tau^{ss}
+\]
+
+\end_inset
+
+where 
+\begin_inset Formula $\phi^{\tau}\in(0,1]$
+\end_inset
+
+ governs the rate of adjustment.
+ A higher 
+\begin_inset Formula $\phi^{\tau}$
+\end_inset
+
+ leads to a stronger tax rate adjustment and a faster transition back to
+ the steady state level of debt.
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+Ricardian equivalence does not hold in the model because households are
+ subject to idiosyncratic shocks to productivity.
+ Therefore, the path of government taxes matters for household consumption.
+ In case of a deficit financed spending increase, the households do not
+ fully internalize the future path of taxes.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Monetary policy is conducted by an independent central bank that sets the
+ nominal interest rate 
+\begin_inset Formula $i_{t}$
+\end_inset
+
+ according to the Taylor rule: 
+\begin_inset Formula 
+\[
+1+i_{t}=\rho_{m}i_{t-1}+\left(1-\rho_{m}\right)\left(r^{ss}+\phi^{\pi}\pi_{t}\right)
+\]
+
+\end_inset
+
+
+\begin_inset Formula $\rho_{m}$
+\end_inset
+
+ describes the persistence coefficient that smoothed the monetary reaction.
+ The reaction to inflation depends on the Taylor coefficient 
+\begin_inset Formula $\phi^{\pi}>1$
+\end_inset
+
+
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Monetary policy needs to react to inflation more than one for one (
+\begin_inset Formula $\phi^{\pi}>1$
+\end_inset
+
+) for the Taylor principle to hold and the model to yield a determinate
+ equilibrium (
+\begin_inset CommandInset citation
+LatexCommand cite
+key "galiMonetaryPolicyInflation2015"
+literal "false"
+
+\end_inset
+
+).
+\end_layout
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsection
+Equilibrium
+\end_layout
+
+\begin_layout Standard
+Under the competitive equilibrium, all agents optimize their behaviour while
+ markets clear.
+ Specifically, households, financial intermediary, firms and union act optimally
+ and the government and monetary policy follows their rules given the stochastic
+ sequence of prices 
+\begin_inset Formula $\left\{ P_{t},W_{t},\pi_{t},\pi_{t,w},w_{t},r_{t}^{k},s_{t}r_{t},r_{t}^{\ell},r_{t}^{a},p_{t},i_{t},q_{t},Q_{t}\right\} $
+\end_inset
+
+, aggregates 
+\begin_inset Formula $\left\{ Y_{t},N_{t},I_{t},K_{t},C_{t},L_{t},A_{t},G_{t},\tau_{t},D_{t}\right\} $
+\end_inset
+
+, policy rules for the households
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Formula $\left\{ c_{t}\left(\ell,a,a\__{k},s,k\right),\ell_{t+1}\left(\ell,a,a\__{k},s,k\right),a_{t+1}\left(\ell,a,a\__{k},s,k\right)\right\} $
+\end_inset
+
+, the distribution of agents 
+\begin_inset Formula $\mathcal{D}_{t}\left(\ell,a,a\__{k},s,k\right)$
+\end_inset
+
+ and market clearing.
+ Aggregate savings are given as
+\begin_inset Formula 
+\begin{align*}
+\sum_{s,k}\pi_{s}\left(1-\theta\right)\theta^{k}\int\ell\mathcal{D}_{t}\left(d\ell,da,da\__{k},s,k\right) & =L_{t}\\
+\sum_{s,k}\pi_{s}\left(1-\theta\right)\theta^{k}\int a\mathcal{D}_{t}\left(d\ell,da,da\__{k},s,k\right) & =A_{t}
+\end{align*}
+
+\end_inset
+
+As shown in Appendix C.6 in 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "auclertMicroJumpsMacro2020"
+literal "false"
+
+\end_inset
+
+ good market clear under Walras's Law, when the above conditions are satisfied
+ such that:
+\begin_inset Formula 
+\[
+C_{t}+G_{t}+I_{t}+I_{t}S\left(\frac{I_{t}}{I_{t-1}}\right)+\zeta L_{t-1}=Y_{t}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Calibration
+\end_layout
+
+\begin_layout Standard
+The model is calibrated in quarterly terms with values largely taken from
+ 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "auclertMicroJumpsMacro2020"
+literal "false"
+
+\end_inset
+
+.
+ The values are summarized in table 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "tab:Calibration"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+.
+ 
+\begin_inset Float table
+placement h
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Calibration values
+\begin_inset CommandInset label
+LatexCommand label
+name "tab:Calibration"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Tabular
+<lyxtabular version="3" rows="22" columns="5">
+<features tabularvalignment="middle">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<column alignment="center" valignment="top">
+<row>
+<cell alignment="center" valignment="top" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+Parameter
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+Frequency
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+Source
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+\begin_inset Formula $\text{\ensuremath{\nu}}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+EIS (Elasticity of Intertemporal Substitution)
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+1
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+\begin_inset CommandInset citation
+LatexCommand citet
+key "auclertMicroJumpsMacro2020"
+literal "false"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+\begin_inset Formula $\varsigma$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+Frisch elasticity
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+0.5
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+\begin_inset CommandInset citation
+LatexCommand citet
+key "auclertMicroJumpsMacro2020"
+literal "false"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+\begin_inset Formula $\beta$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+Discount factor
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+0.9993
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+q
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+Free parameter
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+\begin_inset Formula $\sigma_{e}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+Std.
+ for household income process
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+0.31
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+q
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+Free parameter
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+\begin_inset Formula $\rho_{e}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+Persistence for household income process
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+0.966
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+q
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+\begin_inset CommandInset citation
+LatexCommand citet
+key "mckayPowerForwardGuidance2016"
+literal "false"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+\begin_inset Formula $\theta$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+Household inattention
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+0.925
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+q
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+\begin_inset CommandInset citation
+LatexCommand citet
+key "auclertMicroJumpsMacro2020"
+literal "false"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+\begin_inset Formula $L/A$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+Liquid to illiquid assets ratio
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+0.089
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+\begin_inset CommandInset citation
+LatexCommand citet
+key "kaplanMonetaryPolicyAccording2018"
+literal "false"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+\begin_inset Formula $\frac{L+A}{Y}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+Household wealth to GDP
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+3.82
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+a
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+\begin_inset CommandInset citation
+LatexCommand citet
+key "auclertMicroJumpsMacro2020"
+literal "false"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+\begin_inset Formula $r$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+Real interest rate
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+0.05
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+a
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+\begin_inset CommandInset citation
+LatexCommand citet
+key "auclertMicroJumpsMacro2020"
+literal "false"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+\begin_inset Formula $\xi$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+Intermediation spread
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+0.065
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+a
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+\begin_inset CommandInset citation
+LatexCommand citet
+key "auclertMicroJumpsMacro2020"
+literal "false"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+\begin_inset Formula $K/Y$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+Capital to GDP
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+2.23
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+a
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+\begin_inset CommandInset citation
+LatexCommand citet
+key "auclertMicroJumpsMacro2020"
+literal "false"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+\begin_inset Formula $\delta_{K}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+Depreciation rate of capital
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+0.053
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+a
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+\begin_inset CommandInset citation
+LatexCommand citet
+key "auclertMicroJumpsMacro2020"
+literal "false"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+\begin_inset Formula $\mu_{p}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+Steady-state retail price markup
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+1.06
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+\begin_inset CommandInset citation
+LatexCommand citet
+key "auclertMicroJumpsMacro2020"
+literal "false"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+\begin_inset Formula $\zeta_{p}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+Calvo price stickiness
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+0.86
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+q
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+\begin_inset CommandInset citation
+LatexCommand citet
+key "hagedornFiscalMultiplier2019"
+literal "false"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+\begin_inset Formula $\zeta_{w}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+Calvo wage stickiness
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+0.86
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+q
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+\begin_inset CommandInset citation
+LatexCommand citet
+key "hagedornFiscalMultiplier2019"
+literal "false"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+\begin_inset Formula $\phi^{K}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+Investment adj.
+ cost parameter
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+5.74
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+\begin_inset CommandInset citation
+LatexCommand citet
+key "smetsShocksFrictionsUS207"
+literal "false"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+\begin_inset Formula $G/Y$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+Government spending to GDP
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+0.16
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+\begin_inset CommandInset citation
+LatexCommand citet
+key "auclertMicroJumpsMacro2020"
+literal "false"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+\begin_inset Formula $qB/Y$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+Government bonds to GDP
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+0.42
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+a
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+\begin_inset CommandInset citation
+LatexCommand citet
+key "auclertMicroJumpsMacro2020"
+literal "false"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+\begin_inset Formula $\frac{1+r}{1+r-\delta}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+Maturity of government debt
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+5
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+a
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+\begin_inset CommandInset citation
+LatexCommand citet
+key "auclertMicroJumpsMacro2020"
+literal "false"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+\begin_inset Formula $\psi$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+Response of tax rate to debt
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+0.1
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+a
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+\begin_inset CommandInset citation
+LatexCommand citet
+key "auclertMicroJumpsMacro2020"
+literal "false"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+\begin_inset Formula $\rho^{m}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+Taylor rule inertia
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+0.89
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+q
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\size footnotesize
+\begin_inset CommandInset citation
+LatexCommand citet
+key "auclertMicroJumpsMacro2020"
+literal "false"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Paragraph*
+Households
+\end_layout
+
+\begin_layout Standard
+Households have constant CES utility over consumption 
+\begin_inset Formula $u\left(c\right)=\frac{c^{1-\nu^{-1}}-1}{1-\nu^{-1}}$
+\end_inset
+
+ where 
+\begin_inset Formula $v$
+\end_inset
+
+ is the elasticity of intertemporal substitution (EIS).
+ Disutility from labour is 
+\begin_inset Formula $v\left(n\right)=v_{0}n^{1+\varsigma^{-1}}/\left(1+\varsigma^{-1}\right)$
+\end_inset
+
+ where 
+\begin_inset Formula $\varsigma$
+\end_inset
+
+ is the Frisch elasticity.
+ Labour hours 
+\begin_inset Formula $n$
+\end_inset
+
+ are determined through aggregate labour demand 
+\begin_inset Formula $N_{t}$
+\end_inset
+
+ and are the same for all households.
+\begin_inset Newline newline
+\end_inset
+
+I calibrate aggregate household wealth to its average in the data of 
+\begin_inset Formula $382\%$
+\end_inset
+
+ of GDP and to a ratio of liquid to illiquid assets of 9%, the preferred
+ estimate from 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "kaplanMonetaryPolicyAccording2018"
+literal "false"
+
+\end_inset
+
+.
+\begin_inset Newline newline
+\end_inset
+
+I omit permanent household heterogeneity compared to 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "auclertMicroJumpsMacro2020"
+literal "false"
+
+\end_inset
+
+.
+ Thus, all households have the same discount factor and illiquid asset target
+ corresponding to the average illiquid wealth in the economy.
+ Thus, I don't match the illiquid asset distribution, and the illiquid assets
+ target is significantly higher than the median wealth.
+ However, due to the distribution rule out of illiquid assets and a parameter
+ of 
+\begin_inset Formula $\chi=0.009$
+\end_inset
+
+, the consumption response to an increase in the illiquid asset rate is
+ muted.
+ If the annual illiquid asset rate increases by 50 basis points for one
+ year, annual consumption increases only by 0.44%.
+ So even though the steady-state wealth in illiquid assets is high, changes
+ in the illiquid asset return affect household consumption only marginally
+ but over an extended time horizon
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+See figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:chi_sensitivity"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ for an illustration of the adjustment in illiquid asset and consumption
+ following a shock to the illiquid asset interest rate.
+\end_layout
+
+\end_inset
+
+.
+ 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "auclertMicroJumpsMacro2020"
+literal "false"
+
+\end_inset
+
+ calibrate their model to match the same MPC for each household group.
+ As the aggregate redistribution to a marginal illiquid interest rate shock
+ is the same, sois the initial consumption response.
+\begin_inset Newline newline
+\end_inset
+
+Productivity follows a Markov process with a fixed probability 
+\begin_inset Formula $\pi_{ss'}$
+\end_inset
+
+ of moving from state 
+\begin_inset Formula $s$
+\end_inset
+
+ to state 
+\begin_inset Formula $s'$
+\end_inset
+
+.
+ This formulation represents a discrete approximation of a continuous income
+ process that follows an AR(1) process 
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+\begin_inset Formula 
+\[
+z_{t}=\rho_{e}z_{t-1}+\epsilon_{t}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+ with persistence 
+\begin_inset Formula $\rho_{e}$
+\end_inset
+
+ and innovations with standard deviation 
+\begin_inset Formula $\sigma_{e}$
+\end_inset
+
+.
+ I follow 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "mckayPowerForwardGuidance2016"
+literal "false"
+
+\end_inset
+
+ with 
+\begin_inset Formula $\rho_{e}=0.966$
+\end_inset
+
+ to match the quarterly persistence in earnings found in 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "flodenIdiosyncraticRiskUnited2001"
+literal "false"
+
+\end_inset
+
+.
+ I then use the discount factor 
+\begin_inset Formula $\beta$
+\end_inset
+
+ and the standard deviation of earnings 
+\begin_inset Formula $\sigma^{\epsilon}$
+\end_inset
+
+ as free parameters to achieve goods market clearing and an annual MPC out
+ of transfers of 
+\begin_inset Formula $0.525$
+\end_inset
+
+ to match the MPCs out of lottery earnings found by 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "fagerengMPCHeterogeneityHousehold2021"
+literal "false"
+
+\end_inset
+
+
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+While 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "auclertMicroJumpsMacro2020"
+literal "false"
+
+\end_inset
+
+ match the MPC out of aggregate after-tax labour income, I use the MPC out
+ of lump-sum transfers.
+ This definition better fits the empirical MPCs out of lottery earnings
+ by 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "fagerengMPCHeterogeneityHousehold2021"
+literal "false"
+
+\end_inset
+
+, which is the source of the MPC target.
+ Shocks to labour income are weighted by productivity before entering a
+ household's budget constraint, in contrast to the definition of lottery
+ earnings, which are independent of productivity.
+\end_layout
+
+\end_inset
+
+
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+The second difference to 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "auclertMicroJumpsMacro2020"
+literal "false"
+
+\end_inset
+
+ is that I use the standard deviation of earnings 
+\begin_inset Formula $\sigma^{e}$
+\end_inset
+
+ as a free parameter, while they use the ratio of liquid assets to GDP.
+ 
+\end_layout
+
+\end_inset
+
+.
+ This procedure yields 
+\begin_inset Formula $\beta=0.9988$
+\end_inset
+
+ and 
+\begin_inset Formula $\sigma^{\epsilon}=0.36$
+\end_inset
+
+.
+ The high value of the discount factor may seem remarkable, but the discount
+ factor only affects the results through the consumption function, which
+ targets specific characteristics.
+ In the steady states, the consumption function aligns the MPC target and
+ aggregate wealth through liquid wealth.
+ As such, it does not play a role for the illiquid asset.
+ Also, the negative value for the real rate of liquid assets requires a
+ high discount factor.
+ The standard deviation of earnings is slightly higher than the conventional
+ parameters used in the literature
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+\begin_inset CommandInset citation
+LatexCommand citet
+key "mckayPowerForwardGuidance2016"
+literal "false"
+
+\end_inset
+
+ use a lower standard deviation for innovation of 
+\begin_inset Formula $0.13$
+\end_inset
+
+, also based on 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "flodenIdiosyncraticRiskUnited2001"
+literal "false"
+
+\end_inset
+
+.
+ 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "guvenen2014nature"
+literal "false"
+
+\end_inset
+
+ find an annual standard deviation of around 0.6 which translates into a
+ quarterly value of 0.16 assuming an AR(1) process with 
+\begin_inset Formula $\rho_{e}=0.966$
+\end_inset
+
+.
+ Other papers, such as 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "auclertMicroJumpsMacro2020,auclertIntertemporalKeynesianCross2018a"
+literal "false"
+
+\end_inset
+
+, use the estimates of 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "kaplanMonetaryPolicyAccording2018"
+literal "false"
+
+\end_inset
+
+ that yield a standard deviation for the annual log gross earnings of 0.92
+ that translates to quarterly standard deviation of 0.25 given the annual
+ persistence of 
+\begin_inset Formula $0.91$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+Formula
+\begin_inset Formula 
+\begin{align*}
+Var\left(e_{t}^{q}\right) & =\frac{Var\left(e_{t}^{a}\right)}{\sum_{j=0}^{n-1}\left(\rho^{q}\right)^{2j}}\\
+\rho^{q} & =\left(\rho^{a}\right)^{1/4}
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+.
+ This yields a higher wage inequality as the discretization based on the
+ Rouwenhorst method results in more extreme productivity states at both
+ ends of the distribution.
+ However, this affects the consumption response to shocks only marginally,
+ as the MPCs are still matched.
+ For fiscal policy, this configuration leads to a slightly lower consumption
+ response to changes in after-tax labour income.
+ High productivity and low MPC households benefit more from an increase
+ in labour income, leading to lower second-round effects as a higher share
+ of this income increase goes into savings.
+\begin_inset Newline newline
+\end_inset
+
+Regarding household inattention, I use the parameter from 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "auclertMicroJumpsMacro2020"
+literal "false"
+
+\end_inset
+
+ with 
+\begin_inset Formula $\theta=0.935$
+\end_inset
+
+ as a baseline but illustrate the sensitivity to this parameter.
+ Fiscal policy shocks are likely to receive a different degree of attention.
+ Some fiscal adjustments, particularly transfers, are highly debated in
+ the media leading to a potentially lower inattention level.
+ Nevertheless, this does not imply that households can incorporate these
+ adjustments into their expectations.
+\end_layout
+
+\begin_layout Paragraph*
+Firms
+\end_layout
+
+\begin_layout Standard
+On the supply side, I calibrate hours worked to 
+\begin_inset Formula $N=1$
+\end_inset
+
+ using 
+\begin_inset Formula $v_{0}$
+\end_inset
+
+ and productivity 
+\begin_inset Formula $\Theta$
+\end_inset
+
+ to normalize 
+\begin_inset Formula $Y=1$
+\end_inset
+
+.
+ The annual real interest rate in the steady state is 
+\begin_inset Formula $r=5\%$
+\end_inset
+
+ which corresponds to the average real return on capital and government
+ bonds from 1969–2019.
+ The return on deposits minus inflation was negative at 
+\begin_inset Formula $r^{\ell}=-1.5\%$
+\end_inset
+
+ over this time, yielding an intermediation spread of 
+\begin_inset Formula $\xi=6.5\%$
+\end_inset
+
+ I calibrate the annual rate of capital depreciation to 
+\begin_inset Formula $\delta_{K}=5.3\%$
+\end_inset
+
+ which corresponds to the average ratio of depreciation to private fixed
+ assets
+\begin_inset Quotes erd
+\end_inset
+
+ 
+\begin_inset CommandInset citation
+LatexCommand citep
+after "p.19"
+key "auclertMicroJumpsMacro2020"
+literal "false"
+
+\end_inset
+
+ over 1969-2019.
+ To match a capital-to-output ratio of 
+\begin_inset Formula $223\%$
+\end_inset
+
+ I set the capital share to 
+\begin_inset Formula $\alpha=0.24$
+\end_inset
+
+.
+ The capitalized value of markups yields a steady-state markup of 
+\begin_inset Formula $\mu_{p}=\frac{\epsilon_{p}}{\epsilon_{p}-1}=\frac{1}{s^{ss}}=1.06$
+\end_inset
+
+
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+The capitalized value of markups describe the discounted steam of markups
+ that a firm earns over the life-cycle as 
+\begin_inset Formula $\mu_{p}=\sum_{t=1}\frac{D_{t}}{\left(1+r\right)^{t}}$
+\end_inset
+
+ which yields 
+\begin_inset Formula $\frac{D^{ss}}{r^{ss}}$
+\end_inset
+
+ in the steady state.
+ Without knowing the marginal costs 
+\begin_inset Formula $s_{t}$
+\end_inset
+
+, the dividends can be derived from the financial intermediary flow of funds
+ constraint as 
+\begin_inset Formula $D^{ss}=A^{ss}-L^{ss}-q^{ss}B^{ss}$
+\end_inset
+
+.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+.
+ As usual in the literature, the wage markup is set to the price markup
+ such that 
+\begin_inset Formula $\frac{\epsilon_{p}}{\epsilon_{p}-1}=\frac{\epsilon_{w}}{\epsilon_{w}-1}$
+\end_inset
+
+.
+ I set the investment adjustment cost parameter to 
+\begin_inset Formula $\phi^{K}=5.74$
+\end_inset
+
+ as in 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "smetsShocksFrictionsUS207"
+literal "false"
+
+\end_inset
+
+ 
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+The investment adjustment cost parameter differs from 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "auclertMicroJumpsMacro2020"
+literal "false"
+
+\end_inset
+
+, who have 
+\begin_inset Formula $\phi^{K}=9$
+\end_inset
+
+.
+ This value is outside of the spectrum usually found in the literature such
+ as 
+\begin_inset Formula $\phi^{K}=2.48$
+\end_inset
+
+ in the model with and 
+\begin_inset Formula $\phi^{K}=1.58$
+\end_inset
+
+ without variable capital utilization from 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "christiano2005nominal"
+literal "false"
+
+\end_inset
+
+.
+ 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "altigFirmspecificCapitalNominal2011"
+literal "false"
+
+\end_inset
+
+ also show that the estimate is higher if only monetary policy shocks are
+ considered, which is why I choose to use the value from 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "smetsShocksFrictionsUS207"
+literal "false"
+
+\end_inset
+
+ who consider a battery of shocks for their estimation.
+\end_layout
+
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Paragraph*
+Unions
+\end_layout
+
+\begin_layout Standard
+I follow 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "hagedornFiscalMultiplier2019"
+literal "false"
+
+\end_inset
+
+ in matching a Philipps curve parameter of 
+\begin_inset Formula $0.03$
+\end_inset
+
+ for the NKPC and wage NKPC, respectively.
+ This yields Calvo parameters of 
+\begin_inset Formula $\text{\ensuremath{\xi_{p}=\xi_{w}=0.86}}$
+\end_inset
+
+ which implies an average wage and price duration of 
+\begin_inset Formula $7$
+\end_inset
+
+ quarters
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+Average duration of a price is given by 
+\begin_inset Formula $\frac{1}{1-\xi_{p}}$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+.
+ Furthermore, I set the discounting factor in the wage Philips curve 
+\begin_inset Formula $\beta^{w}=\frac{1}{1+r^{ss}}$
+\end_inset
+
+ such that the degree of anticipation is in line with the literature.
+ I refrain from using the estimates of 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "auclertMicroJumpsMacro2020"
+literal "false"
+
+\end_inset
+
+ as this implies an average duration for prices and wages of 14 quarters,
+ which is significantly higher than values conventionally used in the literature
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Many papers follow 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "christiano2005nominal"
+literal "false"
+
+\end_inset
+
+ with 
+\begin_inset Formula $\xi_{w}=0.64$
+\end_inset
+
+ and 
+\begin_inset Formula $\xi_{p}=0.6$
+\end_inset
+
+ or 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "smetsShocksFrictionsUS207"
+literal "false"
+
+\end_inset
+
+ with 
+\begin_inset Formula $\xi_{w}=0.70$
+\end_inset
+
+ and 
+\begin_inset Formula $\xi_{p}=0.66$
+\end_inset
+
+.
+ 
+\end_layout
+
+\end_inset
+
+.
+ The degree of rigidities plays an important role in the model.
+ The degree of wage rigidities changes the speed of wage adjustment and
+ thus the income path of households.
+ The degree of price stickiness determines the path of real interest rates,
+ which are important factors in the transmission of fiscal policy.
+ The lower both Calvo parameters, the faster government consumption translates
+ into higher wages and inflation.
+\end_layout
+
+\begin_layout Paragraph*
+Government
+\end_layout
+
+\begin_layout Standard
+I set government spending 
+\begin_inset Formula $G/Y$
+\end_inset
+
+ to 
+\begin_inset Formula $16\%$
+\end_inset
+
+, the average of US consumption expenditures divided by GDP from 1969 till
+ 2019.
+ I set the value of government bonds to GDP to 
+\begin_inset Formula $qB/Y=0.42$
+\end_inset
+
+ and the maturity of government bonds to 5 years, which yields an annual
+ decay rate of 
+\begin_inset Formula $\delta=\left(1+r\right)\left(1-\frac{1}{5}\right)$
+\end_inset
+
+.
+ The tax rate follows from the government budget constraint in the steady
+ state and yields 
+\begin_inset Formula $\tau=0.25$
+\end_inset
+
+, which fits the 2021 tax wedge of 
+\begin_inset Formula $28\%$
+\end_inset
+
+ in the USA well 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "OECD:2023"
+literal "false"
+
+\end_inset
+
+
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+The tax wedge describes the ratio between labour income after and before
+ wages.
+\end_layout
+
+\end_inset
+
+.
+ The parameter of the fiscal rule is set to an annual value of 
+\begin_inset Formula $\phi^{\tau}=0.1$
+\end_inset
+
+, but sensitivity to this parameter is shown in appendix 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "subsec:Tax-rate-sensitivity"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+.
+ Transfers are zero in the steady state.
+\end_layout
+
+\begin_layout Paragraph*
+Monetary Policy
+\end_layout
+
+\begin_layout Standard
+The inertia in the Taylor rule is set to 
+\begin_inset Formula $\rho^{m}=0.89$
+\end_inset
+
+, following 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "auclertMicroJumpsMacro2020"
+literal "false"
+
+\end_inset
+
+ to account for sufficient smoothness in the nominal interest rate adjustment.
+ The Taylor rule coefficient is set to 
+\begin_inset Formula $1.25$
+\end_inset
+
+ in the baseline specification but varies in section 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "subsec:Monetary-Policy-Interaction"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Paragraph
+Steady-state model fit
+\end_layout
+
+\begin_layout Standard
+The model does not match the inequality in liquid asset perfectly (compare
+ to figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Wealth-distribution"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+) 
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Beta heterogeneity with permanent groups as in 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "auclertMicroJumpsMacro2020"
+literal "false"
+
+\end_inset
+
+ would help to do so, as formally shown in 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "carrollDistributionWealthMarginal2017"
+literal "false"
+
+\end_inset
+
+.
+\end_layout
+
+\end_inset
+
+.
+ However, I match the annual MPC, the key determinant of the consumption
+ reaction to fiscal policy shocks.
+ In the model, 40% of households have close to zero wealth.
+ These households are the main source of the high aggregate MPCs.
+ A distribution of MPCs over liquid wealth and productivity is shown in
+ figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:MPC_distr"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+.
+ Due to the calibration, the annual MPC out of a shock in the first year
+ is matched exactly.
+ In contrast, the annual MPC one and two years after the shock is slightly
+ lower than in the data but matched reasonably well (compare figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:A-MPC-matching-income"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+).
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+Equilibrium
+\end_layout
+
+\begin_layout Itemize
+2 asset markets must clear
+\end_layout
+
+\begin_layout Itemize
+then good market clears 
+\begin_inset Formula $C_{t}+G_{t}+I_{t}+I_{t}S\left(\frac{I_{t}}{I_{t-1}}\right)+\zeta L_{t-1}=Y_{t}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection*
+Block structure
+\end_layout
+
+\begin_layout Plain Layout
+The model can be summarized in a block structure such that the model equations
+ are summarized in a condenced fashion.
+ 
+\end_layout
+
+\begin_layout Plain Layout
+The model is solved based on the following shocks, unknowns and targets.
+\end_layout
+
+\begin_layout Enumerate
+Shocks: 
+\begin_inset Formula $Z=\{\epsilon^{G},\epsilon^{M}\}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+Unkowns: 
+\begin_inset Formula $U=\{Y,w,r,I^{p},Q\}$
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+where 
+\begin_inset Formula $I^{p}$
+\end_inset
+
+ is planned investment.
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Targets: Goods market clearing, Wage residual, Fisher equation, Investment
+ equation, Valuation equation
+\end_layout
+
+\begin_layout Plain Layout
+Writen as an equation system this corresponds to
+\begin_inset Formula 
+\[
+\boldsymbol{H}(\{Y_{t},w_{t},r_{t},Z_{t}\}_{t=0}^{T})=0
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Formula 
+\[
+\left[\begin{array}{c}
+\text{Good market clearing}\\
+\text{Wage residual }\\
+\text{Fisher residual}\\
+\text{ Investment equation}\\
+\text{Valuation equation}
+\end{array}\right]=0
+\]
+
+\end_inset
+
+
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+
+\backslash
+frac{
+\backslash
+epsilon_{p}-1}{
+\backslash
+epsilon_{p}}
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\strikeout default
+\xout default
+\uuline default
+\uwave default
+\noun default
+\color inherit
+
+\begin_inset Formula 
+\[
+\left[\begin{array}{c}
+C_{t}+G_{t}+I_{t}+I_{t}S\left(\frac{I_{t}}{I_{t-1}}\right)+\zeta L_{t-1}-Y_{t}\\
+log\left(\frac{w_{t}}{w_{t-1}}\right)-\left(\pi_{t}^{w}-\pi_{t}\right)\\
+1+i_{t}-(1+r_{t})\mathbb{E}_{t}\left[\frac{P_{t+1}}{P_{t}}\right]\\
+1+S\left(\frac{I_{t+1}}{I_{t}}\right)+\frac{I_{t+1}}{I_{t}}S'\left(\frac{I_{t+1}}{I_{t}}\right)-Q_{t}-\mathbb{E}\left[\frac{1}{1+r_{t+1}}\left(\frac{I_{t+2}}{I_{t+1}}\right)^{2}S'\left(\frac{I_{t+2}}{I_{t+1}}\right)\right]\\
+Q_{t}-\mathbb{E}\left[\frac{1}{1+r_{t+1}}(r_{t+2}^{K}+(1-\delta)Q_{t+1})\right]
+\end{array}\right]=0
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+and implicitely
+\begin_inset Formula 
+\begin{align*}
+L_{t} & =\int\ell(w,r^{\ell},r^{a})\mathcal{D}_{t}\\
+A_{t} & =\int a(r^{a})\mathcal{D}_{t}\\
+C_{t} & =\int c(w,r^{\ell},r^{a})\mathcal{D}_{t}
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Formula 
+\[
+r_{t+1}^{l}=r_{t}-\xi
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+q_{t}=\frac{\mathbb{E}_{t}[1+\delta q_{t+1}]}{1+r_{t}}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+r_{t}^{a}=\begin{cases}
+\frac{(1+\delta q_{t})B_{t-1}+\int(p_{jt}+D_{jt})v_{jt-1}dj-\xi L_{t-1}-(1+r_{t}^{l})L_{t-1}}{A_{t-1}}-1 & t=0\\
+r_{t-1} & t>0
+\end{cases}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+p_{jt}=\frac{1}{1+r_{t}}\mathbb{E}_{t}[D_{jt+1}+p_{jt+1}]
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+I_{t}=\begin{cases}
+I^{ss} & ,t=0\\
+I_{t-1}^{p} & ,t>0
+\end{cases}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+K_{t+1}=(1-\delta)K_{t}+I_{t}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\text{D_{t}}=\int D_{jt}dj+D_{t}^{K}=Y_{t}-w_{t}N_{t}-I_{t}\left(1+S(\left(\frac{I_{t}}{I_{t-1}}\right)\right)
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+D_{t}^{K}=r_{t}^{K}K_{t}-I_{t}\left(1+S\left(\frac{I_{t}}{I_{t-1}}\right)\right)
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+S\left(\frac{I_{t+1}}{I_{t}}\right)=\frac{\phi}{2}\left(\frac{I_{t+1}}{I_{t}}-1\right)^{2}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Formula 
+\[
+s_{t}=\frac{w_{t}*N_{t}}{Y_{t}}\frac{1}{1-\alpha}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+N_{t}=\left(\frac{Y}{\Theta K_{t}^{\alpha}}\right)^{\frac{1}{1-\alpha}}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\begin{align*}
+G_{t} & =G\left(1+e_{t}^{G}\right)\\
+G\epsilon_{t}^{G} & =\left(\phi^{G}q_{t}B_{t}+(1-\phi^{G})\tau_{t}\frac{W_{t}}{P_{t}}N_{t}\right)\epsilon_{t}^{G}
+\end{align*}
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\tau_{t}=\underset{\tau_{t}^{noShock}}{\underbrace{\frac{\left(1-\phi^{G}\right)G\epsilon_{t}^{G}}{\frac{W_{t}}{P_{t}}N_{t}}}}+\phi q^{ss}\frac{(B_{t-1}-B^{ss})}{Y^{ss}}+\tau^{ss}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+B_{t}=\frac{\phi^{G}\epsilon_{t}^{G}G}{q_{t}}+\frac{G+(1+\delta q_{t})B_{t-1}-\tau_{t}^{noShock}\frac{W_{t}}{P_{t}}N_{t}}{q_{t}}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\pi_{w,t}-\pi_{t-1}=\underset{\kappa_{w}}{\underbrace{\frac{\left(1-\beta\xi_{w}\right)\left(1-\xi_{w}\right)}{\xi_{w}}\frac{\epsilon_{w}}{\epsilon_{w}+v_{w}-1}}}\mathbb{E}_{t}\left[\sum_{k=0}\beta^{k}\left(s_{w,t+k}-\frac{\epsilon_{w}-1}{\epsilon_{w}}\right)\right]
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+s_{w,t}=\frac{\int v'(n_{it})di}{(1-\tau_{t})w_{t}\int\epsilon_{it}u'(c_{it})di}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\pi_{t}-\pi_{t-1}=\underset{\kappa}{\underbrace{\frac{\left(1-\xi_{p}\right)\left(1-\frac{\xi_{p}}{1+r}\right)}{\xi_{p}}\frac{\epsilon_{p}}{v_{p}+\epsilon_{p}-1}}}\mathbb{E}_{t}\left[\sum_{k=0}\left(\frac{1}{1+r}\right)^{k}\left(s_{t+k}-\frac{\epsilon_{p}-1}{\epsilon_{p}}\right)\right]
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+1+i_{t}=(1+r^{ss})^{1-\rho^{m}}(1+i_{t-1})^{\rho^{m}}\left(\frac{P_{t}}{P_{t-1}}\right)^{(1-\rho^{m})\phi}(1+\epsilon_{t}^{m})
+\]
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_body
+\end_document

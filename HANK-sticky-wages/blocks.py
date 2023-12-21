@@ -41,6 +41,7 @@ def government(par,ini,ss,G,chi,q,Y,B,tau):
     for t in range(par.T):
         
         B_lag = B[t-1] if t > 0 else ini.B
+
         tau[t] = ss.tau + par.omega*ss.q*(B_lag-ss.B)/ss.Y
         B[t] = ((1+par.delta*q[t])*B_lag + G[t] + chi[t] - tau[t]*Y[t])/q[t]
 

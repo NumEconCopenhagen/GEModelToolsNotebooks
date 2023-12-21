@@ -160,16 +160,51 @@
 \begin_layout Title
 
 \shape smallcaps
+\size large
+- GEModelTools -
 \size largest
-The Canonical HANK Model
+
 \begin_inset Newline newline
 \end_inset
 
-with Sticky Prices
+HANK with Sticky Wages
 \end_layout
 
-\begin_layout Section
+\begin_layout Author
+Jeppe Druedahl
+\end_layout
+
+\begin_layout Section*
 Model
+\end_layout
+
+\begin_layout Standard
+We consider a 
+\emph on
+closed
+\emph default
+ economy with heterogeneous agent and 
+\emph on
+flexible prices
+\emph default
+ and 
+\emph on
+sticky wages
+\emph default
+.
+\end_layout
+
+\begin_layout Standard
+Time is discrete and indexed by 
+\begin_inset Formula $t$
+\end_inset
+
+.
+ There is a continuum of households indexed 
+\begin_inset Formula $i$
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Paragraph*
@@ -177,21 +212,16 @@ Households.
 \end_layout
 
 \begin_layout Standard
-The model has a continuum of infinitely lived households indexed by 
-\begin_inset Formula $i\in[0,1]$
-\end_inset
-
-.
- Households are 
+Households are 
 \emph on
 ex post
 \emph default
  heterogeneous in terms of their time-varying stochastic productivity, 
-\begin_inset Formula $z_{t}$
+\begin_inset Formula $z_{it}$
 \end_inset
 
 , and their (end-of-period) savings, 
-\begin_inset Formula $a_{t-1}$
+\begin_inset Formula $a_{it-1}$
 \end_inset
 
 .
@@ -205,11 +235,11 @@ ex post
 
  afterwards.
  Households supply labor, 
-\begin_inset Formula $\ell_{t}$
+\begin_inset Formula $\ell_{it}$
 \end_inset
 
 , chosen by a union, and choose consumption, 
-\begin_inset Formula $c_{t}$
+\begin_inset Formula $c_{it}$
 \end_inset
 
 , on their own.
@@ -238,10 +268,10 @@ ex post
 The household problem is
 \begin_inset Formula 
 \begin{align}
-v_{t}(z_{t},a_{t-1}) & =\max_{c_{t}}\frac{c_{t}^{1-\sigma}}{1-\sigma}-\varphi\frac{\ell_{t}^{1+\nu}}{1+\nu}+\beta\mathbb{E}\left[v_{t+1}(z_{t+1},a_{t})\,|\,z_{t},a_{t}\right]\label{eq:Bellman}\\
-\text{s.t. }a_{t}+c_{t} & =(1+r_{t}^{a})a_{t-1}+(1-\tau_{t})w_{t}\ell_{t}z_{t}+\chi_{t}\nonumber \\
-\log z_{t+1} & =\rho_{z}\log z_{t}+\psi_{t+1}\,\,\,,\psi_{t}\sim\mathcal{N}(\mu_{\psi},\sigma_{\psi}),\,\mathbb{E}[z_{t}]=1\nonumber \\
-a_{t} & \geq0\nonumber 
+v_{t}(z_{it},a_{it-1}) & =\max_{c_{t}}\frac{c_{it}^{1-\sigma}}{1-\sigma}-\varphi\frac{\ell_{it}^{1+\nu}}{1+\nu}+\beta\mathbb{E}_{T}\left[v_{t+1}(z_{it+1},a_{it})\right]\label{eq:Bellman}\\
+\text{s.t. }a_{it}+c_{it} & =(1+r_{t}^{a})a_{it-1}+(1-\tau_{t})w_{it}\ell_{it}z_{it}+\chi_{t}\nonumber \\
+\log z_{it+1} & =\rho_{z}\log z_{it}+\psi_{it+1}\,\,\,,\psi_{it}\sim\mathcal{N}(\mu_{\psi},\sigma_{\psi}),\,\mathbb{E}[z_{it}]=1\nonumber \\
+a_{it} & \geq0\nonumber 
 \end{align}
 
 \end_inset
@@ -269,9 +299,9 @@ where
 Aggregate quantities are
 \begin_inset Formula 
 \begin{align}
-A_{t}^{hh} & =\int a_{t}d\boldsymbol{D}_{t}\label{eq:A_hh}\\
-L_{t}^{hh} & =\int\ell_{t}z_{t}d\boldsymbol{D}_{t}\label{eq:L_hh}\\
-C_{t}^{hh} & =\int c_{t}d\boldsymbol{D}_{t}\label{eq:C_hh}
+A_{t}^{hh} & =\int a_{t}^{\ast}\left(z_{it},a_{it-1}\right)d\boldsymbol{D}_{t}\label{eq:A_hh}\\
+L_{t}^{hh} & =\int\ell_{t}^{\ast}\left(z_{it},a_{it-1}\right)z_{it}d\boldsymbol{D}_{t}\label{eq:L_hh}\\
+C_{t}^{hh} & =\int c_{t}^{\ast}\left(z_{it},a_{it-1}\right)d\boldsymbol{D}_{t}\label{eq:C_hh}
 \end{align}
 
 \end_inset
@@ -347,7 +377,7 @@ A union chooses the labor supply of each household and sets wages.
  Each household is chosen to supply the same amount of labor,
 \begin_inset Formula 
 \begin{equation}
-\ell_{t}=L_{t}^{hh}\label{eq:ell}
+\ell_{it}=L_{t}^{hh}\label{eq:ell}
 \end{equation}
 
 \end_inset
@@ -359,7 +389,7 @@ New Keynesian Wage Philips Curve
 ,
 \begin_inset Formula 
 \begin{align}
-\pi_{t}^{w} & =\kappa\left(\varphi\left(L_{t}^{hh}\right)^{\nu}-\frac{1}{\mu}\left(1-\tau_{t}\right)w_{t}\left(C_{t}^{hh}\right)^{\text{-\sigma}}\right)+\beta\pi_{t+1}^{w}\label{eq:NKPWC}
+\pi_{t}^{w} & =\kappa\left(\underset{\text{mar. disutility of labor}}{\underbrace{\varphi\left(L_{t}^{hh}\right)^{\nu}}}-\frac{1}{\mu}\underset{\text{marg. utility of consumption}}{\underbrace{\left(1-\tau_{t}\right)w_{t}\left(C_{t}^{hh}\right)^{\text{-\sigma}}}}\right)+\beta\pi_{t+1}^{w}\label{eq:NKPWC}
 \end{align}
 
 \end_inset
@@ -594,8 +624,7 @@ Goods market:
 \end_layout
 
 \begin_layout Section*
-2.
- Calibration
+Calibration
 \end_layout
 
 \begin_layout Standard
@@ -723,8 +752,7 @@ We let
 \end_layout
 
 \begin_layout Section*
-3.
- Finding the steady state
+Finding the steady state
 \end_layout
 
 \begin_layout Enumerate
@@ -798,8 +826,7 @@ Check a remaining market clearing condition
 \begin_layout Section*
 
 \series bold
-4.
- Equation system
+Equation system
 \end_layout
 
 \begin_layout Standard

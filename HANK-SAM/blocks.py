@@ -109,31 +109,10 @@ def market_clearing(par,ini,ss,G,TFP,pi,i,C_hh,u,q,B,U_ALL_hh,U_UI_hh_guess,U_UI
 
     # a. asset market clearing
     qB[:] = q*B
-
-    if par.RA:
-
-        C_RA = Y - G
-        C_RA_plus = lead(C_RA,ss.C_hh)
-         
-        beta_RA = 1/(1+ss.r)
-
-        pi_plus = lead(pi,ss.pi)
-        R = (1+i)/(1+pi_plus)
-
-        Euler_LHS = C_RA**(-par.sigma)
-        Euler_RHS = beta_RA*R*C_RA_plus**(-par.sigma)
-
-        errors_assets[:] = Euler_LHS-Euler_RHS
-
-    else:
-
-        errors_assets[:] = qB-A_hh
+    errors_assets[:] = qB-A_hh
 
     # b. goods market clearing
-    if par.RA:
-        clearing_Y[:] = 0.0
-    else:
-        clearing_Y[:] = Y - (C_hh + G)
+    clearing_Y[:] = Y - (C_hh + G)
 
     # c. final targets
     errors_U[:] = u-U_ALL_hh
@@ -160,4 +139,4 @@ def ann(par,ini,ss,i,r,pi,i_ann,r_ann,pi_ann):
 
         i_ann[t] -= 1.0
         r_ann[t] -= 1.0
-        pi_ann[t] -= 1.0            
+        pi_ann[t] -= 1.0

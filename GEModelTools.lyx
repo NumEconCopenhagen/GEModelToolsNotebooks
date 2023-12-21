@@ -184,7 +184,7 @@ lstinline{GEModelTools}
 
 
 \series bold
- Package v0.1
+ Package v0.2
 \end_layout
 
 \begin_layout Author
@@ -809,7 +809,6 @@ aggregate risk
 Heterogeneous Agent Neo-Classical
 \emph default
  (HANC) is used as an example.
- Additional undocumented models are included in the example repository.
 \end_layout
 
 \begin_layout Subsection
@@ -1074,8 +1073,11 @@ truncation period
 
 \begin_layout Standard
 It is straightforward to numerically evaluate the model starting from the
- shocks and unknowns going forward block by block along the directed acyclical
- graph (DAG).
+ shocks and unknowns going forward block by block along the 
+\emph on
+directed acyclical graph
+\emph default
+ (DAG).
  Derivatives can also be calculated along this graph to construct Jacobians.
  Computationally, the central challenge is to compute the derivatives of
  the household block.
@@ -1201,7 +1203,7 @@ A representative firm rent capital,
 , to produce goods, with the production function
 \begin_inset Formula 
 \begin{equation}
-Y_{t}=\Gamma_{t}K_{t-1}^{\alpha}L_{t}^{1-\alpha},\label{eq:Y}
+Y_{t}=\Gamma_{t}K_{t-1}^{\alpha}L_{t}^{1-\alpha},\,\,\,\alpha\in(0,1)\label{eq:Y}
 \end{equation}
 
 \end_inset
@@ -1276,26 +1278,29 @@ Households.
 \end_layout
 
 \begin_layout Standard
-Households are heterogeneous ex ante with respect to their discount factor,
- 
+Households are heterogeneous 
+\emph on
+ex ante
+\emph default
+ with respect to their discount factor, 
 \begin_inset Formula $\beta_{i}$
 \end_inset
 
 , and ex post with respect to their productivity, 
-\begin_inset Formula $z_{t}$
+\begin_inset Formula $z_{it}$
 \end_inset
 
 , and assets, 
-\begin_inset Formula $a_{t-1}$
+\begin_inset Formula $a_{it-1}$
 \end_inset
 
 .
  Each period household exogenously supply 
-\begin_inset Formula $\ell_{t}=z_{t}$
+\begin_inset Formula $\ell_{it}=z_{it}$
 \end_inset
 
  units of labor, and choose consumption 
-\begin_inset Formula $c_{t}$
+\begin_inset Formula $c_{it}$
 \end_inset
 
  subject to a no-borrowing constraint.
@@ -1311,31 +1316,79 @@ perfect foresight
 , and solve the problem
 \begin_inset Formula 
 \begin{align}
-v_{t}(\beta_{i},z_{t},a_{t-1}) & =\max_{a_{t},c_{t}}\frac{c_{t}^{1-\sigma}}{1-\sigma}+\beta\mathbb{E}_{t}\left[v_{t+1}(\beta_{i},z_{t+1},a_{t})\right]\label{eq:Bellman_Aiyagari}\\
+v_{t}(\beta_{i},z_{it},a_{it-1}) & =\max_{a_{it},c_{it}}\frac{c_{it}^{1-\sigma}}{1-\sigma}+\beta\mathbb{E}_{t}\left[v_{t+1}(\beta_{i},z_{it+1},a_{it})\right]\label{eq:Bellman_HANC}\\
  & \text{s.t.}\nonumber \\
-\ell_{t} & =z_{t}\nonumber \\
-a_{t}+c_{t} & =(1+r_{t})a_{t-1}+w_{t}z_{t}\nonumber \\
-\log z_{t} & =\rho_{z}\log z_{t-1}+\psi_{t}\,\,\,,\psi_{t}\sim\mathcal{N}(\mu_{\psi},\sigma_{\psi}),\,\mathbb{E}[z_{t}]=1\,\nonumber \\
-a_{t} & \geq0,\nonumber 
+\ell_{it} & =z_{it}\nonumber \\
+a_{it}+c_{it} & =(1+r_{t})a_{it-1}+w_{it}z_{it}\nonumber \\
+\log z_{it} & =\rho_{z}\log z_{it-1}+\psi_{it}\,\,\,,\psi_{it}\sim\mathcal{N}(\mu_{\psi},\sigma_{\psi}),\,\mathbb{E}[z_{it}]=1\,\nonumber \\
+a_{it} & \geq0,\nonumber 
 \end{align}
 
 \end_inset
 
 where implicitly 
-\begin_inset Formula $v_{t}(\beta_{i},z_{t},a_{t-1})=v(\beta_{i},z_{t},a_{t-1},\{r_{\tau},w_{\tau}\}_{\tau=t}^{\infty})$
+\begin_inset Formula $v_{t}(\beta_{i},z_{it},a_{it-1})=v(\beta_{i},z_{it},a_{it-1},\{r_{\tau},w_{\tau}\}_{\tau=t}^{\infty})$
 \end_inset
 
 .
- We denote optimal policy functions by 
-\begin_inset Formula $a_{t}^{\ast}(\beta_{i},z_{t},a_{t-1})$
+ 
+\end_layout
+
+\begin_layout Standard
+We denote optimal policy functions by 
+\begin_inset Formula $a_{t}^{\ast}(\beta_{i},z_{it},a_{it-1})$
 \end_inset
 
 , 
-\begin_inset Formula $\ell_{t}^{\ast}(\beta_{i},z_{t},a_{t-1})$
+\begin_inset Formula $\ell_{t}^{\ast}(\beta_{i},z_{it},a_{it-1})$
 \end_inset
 
 , and 
-\begin_inset Formula $c_{t}^{\ast}(\beta_{i},z_{t},a_{t-1})$
+\begin_inset Formula $c_{t}^{\ast}(\beta_{i},z_{it},a_{it-1})$
+\end_inset
+
+.
+ The distribution of households 
+\emph on
+before
+\emph default
+ the realization of idiosyncratic shocks, i.e.
+ over 
+\begin_inset Formula $\beta_{i}$
+\end_inset
+
+, 
+\begin_inset Formula $z_{it-1}$
+\end_inset
+
+ and 
+\begin_inset Formula $a_{it-1}$
+\end_inset
+
+, is denoted 
+\begin_inset Formula $\underline{\boldsymbol{D}}_{t}$
+\end_inset
+
+.
+ The distribution of households 
+\emph on
+after
+\emph default
+ the realization idiosyncratic shocks, i.e.
+ over 
+\begin_inset Formula $\beta_{i}$
+\end_inset
+
+, 
+\begin_inset Formula $z_{it}$
+\end_inset
+
+ and 
+\begin_inset Formula $a_{it-1}$
+\end_inset
+
+, is denoted 
+\begin_inset Formula $\boldsymbol{D}_{t}$
 \end_inset
 
 .
@@ -1351,11 +1404,11 @@ The household problem is discretized, and optimal savings function,
 \end_inset
 
 , 
-\begin_inset Formula $z_{t}$
+\begin_inset Formula $z_{it}$
 \end_inset
 
  and 
-\begin_inset Formula $a_{t-1}$
+\begin_inset Formula $a_{it-1}$
 \end_inset
 
  generically denoted 
@@ -1556,14 +1609,14 @@ The aggregate supply of savings, labor supply and consumption can be calculated
  as
 \begin_inset Formula 
 \begin{align}
-A_{t}^{hh} & =\int a_{t}^{\ast}(\beta_{i},z_{t},a_{t-1})d\boldsymbol{D}_{t}\label{eq:A_hh}\\
- & =\sum_{i_{\beta}}\sum_{i_{z}}\sum_{i_{a}}a_{t}^{\ast}(\beta_{i},z_{t},a_{t-1})\boldsymbol{D}_{t}(\beta^{i_{\beta}},z^{i_{z}},a^{i_{a}})\nonumber \\
+A_{t}^{hh} & =\int a_{t}^{\ast}(\beta_{i},z_{it},a_{it-1})d\boldsymbol{D}_{t}\label{eq:A_hh}\\
+ & =\sum_{i_{\beta}}\sum_{i_{z}}\sum_{i_{a}}a_{t}^{\ast}(\beta_{i},z^{i_{z}},a^{i_{a}})\boldsymbol{D}_{t}(\beta^{i_{\beta}},z^{i_{z}},a^{i_{a}})\nonumber \\
  & =\boldsymbol{a}_{t}^{\ast\prime}\boldsymbol{D}_{t}\nonumber \\
-L_{t}^{hh} & =\int\ell_{t}^{\ast}(\beta_{i},z_{t},a_{t-1})d\boldsymbol{D}_{t}\label{eq:L_hh}\\
- & =\sum_{i_{\beta}}\sum_{i_{z}}\sum_{i_{a}}\ell_{t}^{\ast}(\beta_{i},z_{t},a_{t-1})\boldsymbol{D}_{t}(\beta^{i_{\beta}},z^{i_{z}},a^{i_{a}})\nonumber \\
- & =\boldsymbol{a}_{t}^{\ast\prime}\boldsymbol{D}_{t}\nonumber \\
-C_{t}^{hh} & =\int c_{t}^{\ast}(\beta_{i},z_{t},a_{t-1})d\boldsymbol{D}_{t}\label{eq:C_hh}\\
- & =\sum_{i_{\beta}}\sum_{i_{z}}\sum_{i_{a}}c_{t}^{\ast}(\beta_{i},z_{t},a_{t-1})\boldsymbol{D}_{t}(\beta^{i_{\beta}},z^{i_{z}},a^{i_{a}})\nonumber \\
+L_{t}^{hh} & =\int\ell_{t}^{\ast}(\beta_{i},z_{it},a_{it-1})d\boldsymbol{D}_{t}\label{eq:L_hh}\\
+ & =\sum_{i_{\beta}}\sum_{i_{z}}\sum_{i_{a}}\ell_{t}^{\ast}(\beta_{i},z^{i_{z}},a^{i_{a}})\boldsymbol{D}_{t}(\beta^{i_{\beta}},z^{i_{z}},a^{i_{a}})\nonumber \\
+ & =\boldsymbol{\ell}_{t}^{\ast\prime}\boldsymbol{D}_{t}\nonumber \\
+C_{t}^{hh} & =\int c_{t}^{\ast}(\beta_{i},z_{it},a_{it-1})d\boldsymbol{D}_{t}\label{eq:C_hh}\\
+ & =\sum_{i_{\beta}}\sum_{i_{z}}\sum_{i_{a}}c_{t}^{\ast}(\beta_{i},z^{i_{z}},a^{i_{a}})\boldsymbol{D}_{t}(\beta^{i_{\beta}},z^{i_{z}},a^{i_{a}})\nonumber \\
  & =\boldsymbol{c}_{t}^{\ast\prime}\boldsymbol{D}_{t}\nonumber 
 \end{align}
 
@@ -1636,11 +1689,11 @@ a distribution
 \end_inset
 
  over 
-\begin_inset Formula $z_{t-1}$
+\begin_inset Formula $z_{it-1}$
 \end_inset
 
  and 
-\begin_inset Formula $a_{t-1}$
+\begin_inset Formula $a_{it-1}$
 \end_inset
 
 
@@ -1648,15 +1701,15 @@ a distribution
 
 \begin_layout Enumerate
 and policy functions 
-\begin_inset Formula $a_{ss}^{\ast}(z_{t},a_{t-1})$
+\begin_inset Formula $a_{ss}^{\ast}(z_{it},a_{it-1})$
 \end_inset
 
 , 
-\begin_inset Formula $\ell_{ss}^{\ast}(z_{t},a_{t-1})$
+\begin_inset Formula $\ell_{ss}^{\ast}(z_{it},a_{it-1})$
 \end_inset
 
  and 
-\begin_inset Formula $c_{ss}^{\ast}(z_{t},a_{t-1})$
+\begin_inset Formula $c_{ss}^{\ast}(z_{it},a_{it-1})$
 \end_inset
 
 
@@ -2082,7 +2135,7 @@ and
 \begin_inset Formula $\epsilon_{t}\sim\mathcal{N}(0,1)$
 \end_inset
 
- and the general formular above applies.
+ and the general formula above applies.
 \begin_inset Newpage newpage
 \end_inset
 
@@ -7182,6 +7235,52 @@ status open
 
 
 \backslash
+lstinline{.test_ss(...)}
+\end_layout
+
+\end_inset
+
+:
+\begin_inset Newline newline
+\end_inset
+
+Test whether there a NaN values in 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{ss}
+\end_layout
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+vspace{-1mm}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
 lstinline{.test_hh_path(...)}
 \end_layout
 
@@ -7258,6 +7357,98 @@ lstinline{.test_jacs(...)}
 \end_inset
 
 Compare Jacobians calculated with a direct and the fake news algorithm.
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+vspace{-1mm}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{.set_ss_to_nan(...)}
+\end_layout
+
+\end_inset
+
+:
+\begin_inset Newline newline
+\end_inset
+
+Set all values in 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{ss}
+\end_layout
+
+\end_inset
+
+ to NaN (or zeros for integers).
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+vspace{-1mm}
+\end_layout
+
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{.set_path_to_nan(...)}
+\end_layout
+
+\end_inset
+
+:
+\begin_inset Newline newline
+\end_inset
+
+Set all values in 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+lstinline{path}
+\end_layout
+
+\end_inset
+
+ to NaN (or zeros for integers).
 \end_layout
 
 \begin_layout Enumerate

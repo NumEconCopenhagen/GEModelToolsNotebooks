@@ -1,0 +1,560 @@
+#LyX 2.3 created this file. For more info see http://www.lyx.org/
+\lyxformat 544
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass article
+\begin_preamble
+% general
+\usepackage[titletoc]{appendix}
+\usepackage{graphicx}
+\usepackage{placeins}
+\usepackage{tikz}
+
+% algorithm
+\usepackage[ruled,vlined,linesnumbered]{algorithm2e}
+\IncMargin{2.5cm}
+\DecMargin{2cm}
+\usepackage{fullwidth}
+\usepackage{enumitem}
+\setlist{leftmargin=1.7cm}
+
+% tables
+\usepackage{tabularx, siunitx, multirow, booktabs}
+\begingroup
+% Allow `_` and `:` in macro names (LaTeX3 style)
+\catcode`\_=11
+\catcode`\:=11
+% Internal code of `S`
+\gdef\tabularxcolumn#1{%
+    >{\__siunitx_table_collect_begin:Nn S{} }%
+    p{#1}%  <- this is different (is `c` in normal `S`)
+    <{\__siunitx_table_print:}%
+}
+\endgroup
+
+% figures
+\usepackage{subfig}
+\usepackage{caption}
+\captionsetup[subfloat]{position=top}
+
+% footnotes
+\setlength{\skip\footins}{1cm}
+\usepackage[hang,splitrule]{footmisc}
+\setlength{\footnotemargin}{0.3cm} %.5
+\setlength{\footnotesep}{0.4cm}
+
+% code
+\usepackage{xcolor}
+\usepackage{listings}
+
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{background}{HTML}{F5F5F5}
+\definecolor{keyword}{HTML}{4B69C6}
+\definecolor{string}{HTML}{448C27}
+\definecolor{comment}{HTML}{448C27}
+
+\usepackage{inconsolata}
+\lstdefinestyle{mystyle}{
+    commentstyle=\color{comment},
+    keywordstyle=\color{keyword},
+    stringstyle=\color{string},
+    basicstyle=\ttfamily,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,
+    tabsize=4,
+	showlines=true
+}
+
+\lstset{style=mystyle}
+
+% manual
+\usepackage{enumitem}
+\setlist[enumerate]{leftmargin=1cm}
+\setlist[itemize]{leftmargin=0.5cm}
+\end_preamble
+\use_default_options true
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman "palatino" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\use_microtype false
+\use_dash_ligatures false
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\float_placement H
+\paperfontsize 12
+\spacing onehalf
+\use_hyperref false
+\papersize default
+\use_geometry true
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 0
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine natbib
+\cite_engine_type authoryear
+\biblio_style plainnat
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date true
+\justification true
+\use_refstyle 0
+\use_minted 0
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\leftmargin 3cm
+\topmargin 2cm
+\rightmargin 3cm
+\bottommargin 2cm
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation skip
+\defskip smallskip
+\is_math_indent 0
+\math_numbering_side default
+\quotes_style danish
+\dynamic_quotes 0
+\papercolumns 1
+\papersides 1
+\paperpagestyle empty
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Title
+
+\shape smallcaps
+\size large
+- GEModelTools -
+\size largest
+
+\begin_inset Newline newline
+\end_inset
+
+HANC with Government
+\end_layout
+
+\begin_layout Author
+Jeppe Druedahl
+\end_layout
+
+\begin_layout Section*
+Model
+\end_layout
+
+\begin_layout Standard
+We consider a 
+\emph on
+endowment 
+\emph default
+economy with heterogeneous agents.
+\end_layout
+
+\begin_layout Standard
+Time is discrete and indexed by 
+\begin_inset Formula $t$
+\end_inset
+
+.
+ There is a continuum of households indexed 
+\begin_inset Formula $i$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Paragraph*
+Households.
+\end_layout
+
+\begin_layout Standard
+Households are 
+\emph on
+ex ante
+\emph default
+ homogeneous, but
+\emph on
+ ex post 
+\emph default
+with respect to their productivity, 
+\begin_inset Formula $z_{it}$
+\end_inset
+
+, and assets, 
+\begin_inset Formula $a_{it-1}$
+\end_inset
+
+.
+ Each period household get stochastic endowment
+\series bold
+ 
+\series default
+
+\begin_inset Formula $z_{it}$
+\end_inset
+
+ of consumption good, and choose consumption 
+\begin_inset Formula $c_{it}$
+\end_inset
+
+ subject to a no-borrowing constraint, 
+\begin_inset Formula $a_{it}\geq0$
+\end_inset
+
+.
+ The households pay proportional taxes 
+\begin_inset Formula $\tau_{t}$
+\end_inset
+
+ and can trade in government bonds at price 
+\begin_inset Formula $p_{t}^{B}$
+\end_inset
+
+.
+ Households have 
+\emph on
+perfect foresight
+\emph default
+ wrt.
+ to the aggregate variables, 
+\begin_inset Formula $\{p_{t}^{B},\tau_{t}\}_{t=0}^{\infty}$
+\end_inset
+
+, and solve the problem
+\begin_inset Formula 
+\begin{align}
+v_{t}(z_{it},a_{it-1}) & =\max_{c_{it}}\frac{c_{it}^{1-\sigma}}{1-\sigma}+\beta\mathbb{E}_{t}\left[v_{it+1}(z_{it+1},a_{it})\right]\label{eq:Bellman}\\
+\text{s.t. }p_{t}^{B}a_{it}+c_{it} & =a_{it-1}+(1-\tau_{t})z_{it}\geq0\nonumber \\
+\log z_{it+1} & =\rho_{z}\log z_{it}+\psi_{it+1}\,\,\,,\psi_{it}\sim\mathcal{N}(\mu_{\psi},\sigma_{\psi}),\,\mathbb{E}[z_{it}]=1,\nonumber 
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where implicitly 
+\begin_inset Formula $v_{t}(z_{it},a_{it-1})=v(z_{it},a_{it-1},\{p_{s}^{B},\tau_{s}\}_{s=t}^{\infty})$
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Standard
+We denote optimal policy functions by 
+\begin_inset Formula $a_{t}^{\ast}(\beta_{i},z_{it},a_{it-1})$
+\end_inset
+
+, and 
+\begin_inset Formula $c_{t}^{\ast}(\beta_{i},z_{it},a_{it-1})$
+\end_inset
+
+.
+ The distribution of households 
+\emph on
+before
+\emph default
+ the realization of idiosyncratic shocks, i.e.
+ over 
+\begin_inset Formula $z_{it-1}$
+\end_inset
+
+ and 
+\begin_inset Formula $a_{it-1}$
+\end_inset
+
+, is denoted 
+\begin_inset Formula $\underline{\boldsymbol{D}}_{t}$
+\end_inset
+
+.
+ The distribution of households 
+\emph on
+after
+\emph default
+ the realization idiosyncratic shocks, i.e.
+ over 
+\begin_inset Formula $z_{it}$
+\end_inset
+
+ and 
+\begin_inset Formula $a_{it-1}$
+\end_inset
+
+, is denoted 
+\begin_inset Formula $\boldsymbol{D}_{t}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Central aggregate variables are
+\begin_inset Formula 
+\begin{align}
+A_{t}^{hh} & =\int a_{t}^{\ast}(\beta_{i},z_{it},a_{it-1})d\boldsymbol{D}_{t}\label{eq:A_hh}\\
+ & =\boldsymbol{a}_{t}^{\ast\prime}\boldsymbol{D}_{t}\nonumber \\
+C_{t}^{hh} & =\int c_{t}^{\ast}(\beta_{i},z_{it},a_{it-1})d\boldsymbol{D}_{t}\label{eq:C_hh}\\
+ & =\boldsymbol{c}_{t}^{\ast\prime}\boldsymbol{D}_{t},\nonumber 
+\end{align}
+
+\end_inset
+
+To solve the model, we define the beginning-of-period value function as
+\begin_inset Formula 
+\begin{equation}
+\underline{v}_{t}\left(z_{it-1},a_{it-1}\right)=\mathbb{E}_{t}\left[v_{t}(z_{it},a_{it-1})\right],\label{eq:beginning-of-period-v}
+\end{equation}
+
+\end_inset
+
+The 
+\emph on
+envelope condition
+\emph default
+ implies
+\begin_inset Formula 
+\begin{equation}
+\underline{v}_{a,t}(z_{it-1},a_{it-1})=c_{it}^{-\sigma},\label{eq:Envelope}
+\end{equation}
+
+\end_inset
+
+The 
+\emph on
+first condition
+\emph default
+ for consumption implies
+\begin_inset Formula 
+\begin{equation}
+c_{it}^{-\sigma}=\beta\frac{\underline{v}_{a,t+1}(z_{it},a_{it})}{p_{t}^{B}},\label{eq:FOC}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Paragraph*
+Government.
+\end_layout
+
+\begin_layout Standard
+The government chooses government spending, collect taxes, 
+\begin_inset Formula $\tau_{t}$
+\end_inset
+
+, proportional to endowments, and issues bonds, which pays 
+\begin_inset Formula $1$
+\end_inset
+
+ consumption good in the next period.
+ The government budget constraint is
+\begin_inset Formula 
+\begin{equation}
+p_{t}^{B}B_{t}=B_{t-1}+G_{t}-\int\tau_{t}z_{it}d\boldsymbol{D}_{t}\label{eq:government_budget}
+\end{equation}
+
+\end_inset
+
+Taxes are set to ensure convergence to steady state debt, as
+\begin_inset Formula 
+\begin{align}
+\tau_{t} & =\tau_{ss}+\eta_{t}+\varphi\left(B_{t-1}-B_{ss}\right)\label{eq:tau}
+\end{align}
+
+\end_inset
+
+where 
+\begin_inset Formula $\eta_{t}$
+\end_inset
+
+ is a tax-shifter.
+\end_layout
+
+\begin_layout Paragraph*
+Market clearing.
+\end_layout
+
+\begin_layout Standard
+Market clearing requires
+\begin_inset Formula 
+\begin{align}
+\text{Bonds: }B_{t} & =A_{t}^{hh}\label{eq:clearing_A}\\
+\text{Goods: }C_{t}^{hh}+G_{t} & =\int z_{it}d\boldsymbol{D}_{t}=1\label{eq:clearing_Y}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Paragraph*
+Social welfare.
+\end_layout
+
+\begin_layout Standard
+Utilitarian social welfare can be calculated as the average expected discounted
+ utility,
+\begin_inset Formula 
+\begin{align}
+\text{SWF}_{t} & =\sum_{t=0}^{\infty}\beta^{t}\int u\left(c_{t}^{\ast}(\beta_{i},z_{it},a_{it-1})\right)d\boldsymbol{D}_{t}=U_{t}^{hh}.\label{eq:SWF}
+\end{align}
+
+\end_inset
+
+where 
+\begin_inset Formula $\underline{\boldsymbol{D}}_{0}$
+\end_inset
+
+ (and therefore 
+\begin_inset Formula $B_{-1}$
+\end_inset
+
+) is given.
+\end_layout
+
+\begin_layout Standard
+In steady state this simplifies to
+\begin_inset Formula 
+\begin{equation}
+\text{SWF}_{ss}=\frac{1}{1-\beta}U_{ss}^{hh}.\label{eq:SFW_ss}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage newpage
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section*
+Equation system
+\end_layout
+
+\begin_layout Enumerate
+Shocks: 
+\begin_inset Formula $\boldsymbol{Z}=\{\boldsymbol{G}\}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+Unknowns: 
+\begin_inset Formula $\boldsymbol{U}=\{\boldsymbol{p}^{B}\}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+Targets: 
+\begin_inset Formula $\{B_{t}-A_{t}^{hh}\}$
+\end_inset
+
+ (bond market clearing)
+\end_layout
+
+\begin_layout Enumerate
+Aggregate variables: 
+\begin_inset Formula $\boldsymbol{X}=\{\boldsymbol{\boldsymbol{G}},\boldsymbol{p}^{B},\boldsymbol{\tau},\boldsymbol{A}^{hh},\boldsymbol{C}^{hh},\boldsymbol{U}^{hh},\boldsymbol{B}\}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+Household inputs: 
+\begin_inset Formula $\boldsymbol{X}_{t}^{hh}=\{\boldsymbol{p}^{B},\boldsymbol{\tau}\}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+Household outputs: 
+\begin_inset Formula $\boldsymbol{Y}_{t}^{hh}=\{\boldsymbol{A}^{hh},\boldsymbol{C}^{hh},\boldsymbol{U}^{hh}\}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+This implies the equation system
+\size small
+
+\begin_inset Formula 
+\begin{align}
+\boldsymbol{H}(\boldsymbol{p}^{B},\boldsymbol{G}) & =\boldsymbol{0}\Leftrightarrow\label{eq:H}\\
+\left[\begin{array}{c}
+B_{t}-A_{t}^{hh}\end{array}\right] & =\left[\begin{array}{c}
+0\end{array}\right],\,\,\,\forall t\in\{0,1,\dots,T-1\},\nonumber 
+\end{align}
+
+\end_inset
+
+
+\size default
+where we have
+\begin_inset Formula 
+\begin{align*}
+\left[\begin{array}{c}
+\tau_{t}\\
+B_{t}
+\end{array}\right] & =\left[\begin{array}{c}
+\tau_{ss}+\phi\frac{B_{t-1}-B_{ss}}{Y_{ss}}\\
+\frac{B_{t-1}+G_{t}-\tau_{t}}{p_{t}^{B}}
+\end{array}\right]\text{ (forwards).}
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\end_body
+\end_document

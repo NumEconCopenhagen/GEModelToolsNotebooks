@@ -7,13 +7,20 @@ from consav.linear_interp import interp_1d_vec
 def solve_hh_backwards(par,z_trans,r,w,vbeg_a_plus,vbeg_a,a,c,l,ss=False):
     """ solve backwards with vbeg_a from previous iteration (here vbeg_a_plus) """
 
-    for i_fix in nb.prange(par.Nfix):
+    # par,z_trans: always inputs
+    # r,w: inputs because they are in .inputs_hh
+    # vbeg_a, vbeg_a_plus: input because vbeg_a is in .intertemps_hh
+    # a,c,l: outputs because they are in .outputs_hh
+
+    # ss = True is to get guess of vbeg_a
+
+    for i_fix in nb.prange(par.Nfix): # fixed types
 
         # a. solve step
-        for i_z in nb.prange(par.Nz):
+        for i_z in nb.prange(par.Nz): # stochastic discrete states
         
             ## i. labor supply
-            l[i_fix,i_z,:] = par.z_grid[i_z]
+            l[i_fix,i_z,:] = par.z_grid[i_z] # : is over the asset state
 
             ## ii. cash-on-hand
             m = (1+r)*par.a_grid + w*l[i_fix,i_z,:]
@@ -37,3 +44,10 @@ def solve_hh_backwards(par,z_trans,r,w,vbeg_a_plus,vbeg_a,a,c,l,ss=False):
         # b. expectation step
         v_a = (1+r)*c[i_fix]**(-par.sigma)
         vbeg_a[i_fix] = z_trans[i_fix]@v_a
+        
+        # # alternatively we write the matrix multiplication as a loop 
+        # for i_z_lag in nb.prange(par.Nz):
+        #     vbeg_a[i_fix,i_z_lag] = 0.0
+        #     for i_z in range(par.Nz):
+        #         vbeg_a[i_fix,i_z_lag] += z_trans[i_fix,i_z_lag,i_z]*v_a[i_fix,i_z]
+

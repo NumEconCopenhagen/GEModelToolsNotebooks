@@ -5,7 +5,10 @@ from consav.grids import equilogspace
 from consav.markov import log_rouwenhorst
 from consav.misc import elapsed
 
+# simple root finding
 import root_finding
+
+import household_problem
 
 def prepare_hh_ss(model):
     """ prepare the household block to solve for steady state """
@@ -29,12 +32,14 @@ def prepare_hh_ss(model):
     #############################################
     # 2. transition matrix initial distribution #
     #############################################
-    
+
     for i_fix in range(par.Nfix):
         ss.z_trans[i_fix,:,:] = z_trans
         ss.Dbeg[i_fix,:,0] = z_ergodic/par.Nfix # ergodic at a_lag = 0.0
         ss.Dbeg[i_fix,:,1:] = 0.0 # none with a_lag > 0.0
 
+    # note: arbitrary to start all with zero assets
+        
     ################################################
     # 3. initial guess for intertemporal variables #
     ################################################
@@ -47,6 +52,9 @@ def prepare_hh_ss(model):
     # b. expectation
     ss.vbeg_a[:] = ss.z_trans@v_a
 
+    # alternatively:
+    model.set_hh_initial_guess() # calls .solve_hh_backwards() with ss=True
+    
 def obj_ss(K_ss,model,do_print=False):
     """ objective when solving for steady state capital """
 
@@ -148,7 +156,7 @@ def find_ss_indirect(model,do_print=False):
     model.simulate_hh_ss(do_print=do_print) # give us ss.D (steady state distribution)
     if do_print: print('')
 
-    ss.A = ss.K = ss.A_hh
+    ss.A = ss.K = ss.A_hh # calibration choice -> infer delta consistent with this
     
     # c. back technology and depreciation rate
     ss.Gamma = ss.w / ((1-par.alpha)*(ss.K/ss.L)**par.alpha)

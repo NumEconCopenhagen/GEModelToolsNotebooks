@@ -160,8 +160,18 @@
 \begin_layout Title
 
 \shape smallcaps
+\size large
+- GEModelTools -
 \size largest
+
+\begin_inset Newline newline
+\end_inset
+
 A HANK-SAM Model
+\end_layout
+
+\begin_layout Author
+Jeppe Druedahl
 \end_layout
 
 \begin_layout Section*
@@ -340,7 +350,7 @@ where
 \end_layout
 
 \begin_layout Standard
-When employed the households earns a fixed wage 
+When employed the households earn a fixed wage 
 \begin_inset Formula $w_{ss}$
 \end_inset
 
@@ -670,11 +680,8 @@ q_{t}B_{t}=(1+q_{t}\delta_{q})B_{t-1}+X_{t}-\text{taxes}_{t}\label{eq:qB}
 \begin_layout Standard
 The government adjust taxes to so that the value of government debt returns
  to its steady state value,
-\end_layout
-
-\begin_layout Standard
-
 \size small
+
 \begin_inset Formula 
 \begin{align}
 \tilde{\tau}_{t} & =\frac{\left(1+q_{t}\delta_{q}\right)B_{t-1}+X_{t}-q_{ss}B_{ss}}{\Phi_{t}+w_{ss}(1-u_{t})}\label{eq:taut}\\

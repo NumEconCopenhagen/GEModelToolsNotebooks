@@ -135,11 +135,6 @@ class HANKSAMModelClass(EconModelClass,GEModelClass):
         par.py_blocks = False
         par.full_z_trans = True
 
-        ## DELETE ##
-        # j. extensions
-        par.RA = False
-        ## DELETE ##
-
     def allocate(self):
         """ allocate model """
         

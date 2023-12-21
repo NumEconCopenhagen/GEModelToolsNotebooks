@@ -28,7 +28,7 @@ class HANKModelClass(EconModelClass,GEModelClass):
         self.intertemps_hh = ['vbeg_a'] # intertemporal variables
 
         # c. GE
-        self.shocks = ['Z','istar','G'] # exogenous inputs
+        self.shocks = ['Gamma','istar','G'] # exogenous inputs
         self.unknowns = ['Y','w','pi'] # endogenous inputs
         self.targets = ['NKPC_res','clearing_N','clearing_A'] # targets
         self.blocks = [
@@ -48,8 +48,9 @@ class HANKModelClass(EconModelClass,GEModelClass):
 
         par = self.par
 
+        par.RA = False # representative agent
         par.Nfix = 1
-        par.r_target_ss = 0.005
+        par.r_target_ss = 0.01
 
         # a. preferences
         par.beta = 0.98 # discount factor (guess, calibrated in ss)
@@ -57,15 +58,18 @@ class HANKModelClass(EconModelClass,GEModelClass):
 
         par.sigma = 2.0 # inverse of intertemporal elasticity of substitution
         par.nu = 2.0 # inverse Frisch elasticity
-        
+
+        par.beta_RA = np.nan # discount factor for representative agent
+        par.varphi_RA = np.nan # disutility for representative agent
+
         # c. income parameters
-        par.rho_z = 0.966 # AR(1) parameter
+        par.rho_z = 0.965 # AR(1) parameter
         par.sigma_psi = np.sqrt(0.50**2*(1-par.rho_z**2)) # std. of psi
         par.Nz = 7 # number of productivity states
 
         # d. price setting
         par.mu = 1.2 # mark-up
-        par.kappa = 0.1 # slope of Phillips curve
+        par.kappa = 0.05 # slope of Phillips curve
 
         # e. government
         par.phi = 1.5 # Taylor rule coefficient on inflation
@@ -80,20 +84,20 @@ class HANKModelClass(EconModelClass,GEModelClass):
         par.Na = 500 # number of grid points
 
         # g. shocks
-        par.jump_Z = 0.01 # initial jump
-        par.rho_Z = 0.090 # AR(1) coefficeint
-        par.std_Z = 0.00 # std.
+        par.jump_Gamma = 0.01 # initial jump
+        par.rho_Gamma = 0.90 # AR(1) coefficeint
+        par.std_Gamma = 0.00 # std.
 
         par.jump_istar = -0.0025
-        par.rho_istar = 0.61
+        par.rho_istar = 0.60
         par.std_istar = 0.0025
 
         par.jump_G = 0.01
-        par.rho_G = 0.090
+        par.rho_G = 0.90
         par.std_G = 0.000
 
         # h. misc.
-        par.T = 500 # length of path        
+        par.T = 1000 # length of path        
         
         par.max_iter_solve = 50_000 # maximum number of iterations when solving
         par.max_iter_simulate = 50_000 # maximum number of iterations when simulating
@@ -118,3 +122,17 @@ class HANKModelClass(EconModelClass,GEModelClass):
 
     prepare_hh_ss = steady_state.prepare_hh_ss
     find_ss = steady_state.find_ss        
+
+# Reperesentative agent model
+class RANKModelClass(HANKModelClass):
+
+    # same settings
+    # same allocate 
+
+    def setup(self):
+
+        super().setup() # calls setup from HANKModelClass
+        self.par.RA = True
+
+    # note: the heterogenous households are still there, but does not matter for transition path
+    # this is a simple though not computationally efficient implementation

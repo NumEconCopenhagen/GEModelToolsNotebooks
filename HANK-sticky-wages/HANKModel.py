@@ -131,4 +131,4 @@ class HANKModelClass(EconModelClass,GEModelClass):
         denom = np.sum([(1+ss.r)**(-t)*(path.G[t]-ss.G) for t in range(par.T)])   
 
         fiscal_multiplier = nom/denom
-        print(f'{fiscal_multiplier = :.2f}')
+        print(f'{fiscal_multiplier = :.3f}')

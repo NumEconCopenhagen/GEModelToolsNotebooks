@@ -46,7 +46,7 @@ def evaluate_ss(model,do_print=False):
     ss = model.ss
 
     # a. fixed
-    ss.Z = 1.0
+    ss.Gamma = 1.0
     ss.N = 1.0
     ss.pi = 0.0
     
@@ -59,9 +59,9 @@ def evaluate_ss(model,do_print=False):
     ss.i = ss.istar = (1+ss.r)*(1+ss.pi)-1
 
     # d. firms
-    ss.Y = ss.Z*ss.N
-    ss.w = ss.Z/par.mu
-    ss.s = ss.w/ss.Z
+    ss.Y = ss.Gamma*ss.N
+    ss.w = ss.Gamma/par.mu
+    ss.s = ss.w/ss.Gamma
 
     ss.adjcost = 0.0
 
@@ -105,7 +105,11 @@ def find_ss(model,do_print=False):
     # final evaluation
     objective_ss(res.x,model)
 
-    # b. print
+    # b. RA - with same steady state
+    par.beta_RA = 1/(1+ss.r)
+    par.varphi_RA = ss.w*ss.C_hh**(-par.sigma)/ss.N_hh**par.nu
+
+    # c. print
     if do_print:
 
         print(f'steady state found in {elapsed(t0)}')
