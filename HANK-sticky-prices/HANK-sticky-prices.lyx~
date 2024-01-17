@@ -167,11 +167,7 @@
 \begin_inset Newline newline
 \end_inset
 
-Heterogeneous Agent 
-\begin_inset Newline newline
-\end_inset
-
-New Keynesian Model (HANK)
+HANK with sticky prices
 \end_layout
 
 \begin_layout Author
@@ -698,12 +694,15 @@ To ensure the same steady, we can choose the parameters by
 
 \end_inset
 
+Defining aggregate household income as 
+\begin_inset Formula $Y_{t}^{RA}=w_{t}N_{t}+d_{t}-\tau_{t}$
+\end_inset
 
+, the intertemporal budget constraint becomes
 \begin_inset Formula 
-\begin{align*}
-C_{0}+\frac{C_{1}}{1+r_{1}}+\dots & =\left(1+r_{0}\right)A_{-1}+Y_{0}^{RA}+\frac{Y_{1}^{RA}}{1+r_{1}}\dots\\
-Z_{t}^{RA} & =w_{t}N_{t}+d_{t}-\tau_{t}
-\end{align*}
+\begin{align}
+C_{0}+\frac{C_{1}}{1+r_{1}}+\dots & =\left(1+r_{0}\right)A_{-1}+Y_{0}^{RA}+\frac{Y_{1}^{RA}}{1+r_{1}}\dots\label{eq:IBC_RA}
+\end{align}
 
 \end_inset
 

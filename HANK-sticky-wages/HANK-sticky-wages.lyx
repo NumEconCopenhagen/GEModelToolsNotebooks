@@ -271,7 +271,7 @@ The household problem is
 v_{t}(z_{it},a_{it-1}) & =\max_{c_{t}}\frac{c_{it}^{1-\sigma}}{1-\sigma}-\varphi\frac{\ell_{it}^{1+\nu}}{1+\nu}+\beta\mathbb{E}_{T}\left[v_{t+1}(z_{it+1},a_{it})\right]\label{eq:Bellman}\\
 \text{s.t. }a_{it}+c_{it} & =(1+r_{t}^{a})a_{it-1}+(1-\tau_{t})w_{it}\ell_{it}z_{it}+\chi_{t}\nonumber \\
 \log z_{it+1} & =\rho_{z}\log z_{it}+\psi_{it+1}\,\,\,,\psi_{it}\sim\mathcal{N}(\mu_{\psi},\sigma_{\psi}),\,\mathbb{E}[z_{it}]=1\nonumber \\
-a_{it} & \geq0\nonumber 
+a_{it} & \geq0.\nonumber 
 \end{align}
 
 \end_inset
@@ -301,7 +301,7 @@ Aggregate quantities are
 \begin{align}
 A_{t}^{hh} & =\int a_{t}^{\ast}\left(z_{it},a_{it-1}\right)d\boldsymbol{D}_{t}\label{eq:A_hh}\\
 L_{t}^{hh} & =\int\ell_{t}^{\ast}\left(z_{it},a_{it-1}\right)z_{it}d\boldsymbol{D}_{t}\label{eq:L_hh}\\
-C_{t}^{hh} & =\int c_{t}^{\ast}\left(z_{it},a_{it-1}\right)d\boldsymbol{D}_{t}\label{eq:C_hh}
+C_{t}^{hh} & =\int c_{t}^{\ast}\left(z_{it},a_{it-1}\right)d\boldsymbol{D}_{t}.\label{eq:C_hh}
 \end{align}
 
 \end_inset
@@ -321,7 +321,7 @@ A representative firm hires labor,
 , to produce goods, with the production function
 \begin_inset Formula 
 \begin{equation}
-Y_{t}=\Gamma_{t}L_{t}\label{eq:production}
+Y_{t}=\Gamma_{t}L_{t}.\label{eq:production}
 \end{equation}
 
 \end_inset
@@ -334,7 +334,7 @@ where
  Profits are
 \begin_inset Formula 
 \begin{equation}
-\Pi_{t}=P_{t}Y_{t}-W_{t}L_{t}\label{eq:profits}
+\Pi_{t}=P_{t}Y_{t}-W_{t}L_{t}.\label{eq:profits}
 \end{equation}
 
 \end_inset
@@ -360,7 +360,7 @@ Inflation rates for wages and price are given by
 \begin_inset Formula 
 \begin{align}
 \pi_{t}^{w} & \equiv W_{t}/W_{t-1}-1\label{eq:pi_w}\\
-\pi_{t} & \equiv\frac{P_{t}}{P_{t-1}}-1=\frac{W_{t}/\Gamma_{t}}{W_{t-1}/\Gamma_{t-1}}-1=\frac{1+\pi_{t}^{w}}{\Gamma_{t}/\Gamma_{t-1}}-1\label{eq:pi}
+\pi_{t} & \equiv\frac{P_{t}}{P_{t-1}}-1=\frac{W_{t}/\Gamma_{t}}{W_{t-1}/\Gamma_{t-1}}-1=\frac{1+\pi_{t}^{w}}{\Gamma_{t}/\Gamma_{t-1}}-1.\label{eq:pi}
 \end{align}
 
 \end_inset
@@ -377,7 +377,7 @@ A union chooses the labor supply of each household and sets wages.
  Each household is chosen to supply the same amount of labor,
 \begin_inset Formula 
 \begin{equation}
-\ell_{it}=L_{t}^{hh}\label{eq:ell}
+\ell_{it}=L_{t}^{hh}.\label{eq:ell}
 \end{equation}
 
 \end_inset
@@ -389,7 +389,7 @@ New Keynesian Wage Philips Curve
 ,
 \begin_inset Formula 
 \begin{align}
-\pi_{t}^{w} & =\kappa\left(\underset{\text{mar. disutility of labor}}{\underbrace{\varphi\left(L_{t}^{hh}\right)^{\nu}}}-\frac{1}{\mu}\underset{\text{marg. utility of consumption}}{\underbrace{\left(1-\tau_{t}\right)w_{t}\left(C_{t}^{hh}\right)^{\text{-\sigma}}}}\right)+\beta\pi_{t+1}^{w}\label{eq:NKPWC}
+\pi_{t}^{w} & =\kappa\left(\underset{\text{mar. disutility of labor}}{\underbrace{\varphi\left(L_{t}^{hh}\right)^{\nu}}}-\frac{1}{\mu}\underset{\text{marg. utility of consumption}}{\underbrace{\left(1-\tau_{t}\right)w_{t}\left(C_{t}^{hh}\right)^{\text{-\sigma}}}}\right)+\beta\pi_{t+1}^{w}.\label{eq:NKPWC}
 \end{align}
 
 \end_inset
@@ -413,7 +413,7 @@ Central bank.
 The central bank follows a standard Taylor rule with persistence,
 \begin_inset Formula 
 \begin{equation}
-1+i_{t}=(1+i_{t-1})^{\rho_{i}}\left((1+r_{ss})\left(1+\pi_{t}\right)^{\phi_{\pi}}\right)^{1-\rho_{i}}\label{eq:Taylor}
+1+i_{t}=(1+i_{t-1})^{\rho_{i}}\left((1+r_{ss})\left(1+\pi_{t}\right)^{\phi_{\pi}}\right)^{1-\rho_{i}},\label{eq:Taylor}
 \end{equation}
 
 \end_inset
@@ -454,7 +454,7 @@ ex ante
 real interest rate is
 \begin_inset Formula 
 \begin{equation}
-1+r_{t}=\frac{1+i_{t}}{1+\pi_{t+1}}\label{eq:Fisher}
+1+r_{t}=\frac{1+i_{t}}{1+\pi_{t+1}}.\label{eq:Fisher}
 \end{equation}
 
 \end_inset
@@ -483,7 +483,7 @@ The government chooses spending,
  The total tax bill is
 \begin_inset Formula 
 \begin{align}
-\mathcal{T}_{t}\equiv\tau_{t}w_{t}L_{t}^{hh} & =\tau_{t}\Gamma_{t}L_{t}^{hh}=\tau_{t}Y_{t}\label{eq:curlyT}
+\mathcal{T}_{t}\equiv\tau_{t}w_{t}L_{t}^{hh} & =\tau_{t}\Gamma_{t}L_{t}^{hh}=\tau_{t}Y_{t}.\label{eq:curlyT}
 \end{align}
 
 \end_inset
@@ -512,7 +512,7 @@ The government can finance its expenses with long-term bonds,
 The budget constraint for the government then is
 \begin_inset Formula 
 \begin{align}
-q_{t}(B_{t}-\delta B_{t-1}) & =B_{t-1}+G_{t}+\chi_{t}-\tau_{t}Y_{t}\label{eq:B}
+q_{t}(B_{t}-\delta B_{t-1}) & =B_{t-1}+G_{t}+\chi_{t}-\tau_{t}Y_{t}.\label{eq:B}
 \end{align}
 
 \end_inset
@@ -533,7 +533,7 @@ Spending,
  The labor income tax follows the rule
 \begin_inset Formula 
 \begin{equation}
-\tau_{t}=\tau_{ss}+\omega q_{ss}\frac{B_{t-1}-B_{ss}}{Y_{ss}}\label{eq:tax_rule}
+\tau_{t}=\tau_{ss}+\omega q_{ss}\frac{B_{t-1}-B_{ss}}{Y_{ss}}.\label{eq:tax_rule}
 \end{equation}
 
 \end_inset
@@ -571,12 +571,12 @@ Arbitrage implies that all assets must give the same rate of return.
 , so we specifically have
 \begin_inset Formula 
 \begin{equation}
-\frac{1+\delta q_{t+1}}{q_{t}}=1+r_{t}\label{eq:arbitrage}
+\frac{1+\delta q_{t+1}}{q_{t}}=1+r_{t}.\label{eq:arbitrage}
 \end{equation}
 
 \end_inset
 
- The 
+The 
 \emph on
 ex post
 \emph default
@@ -591,7 +591,7 @@ ex post
  then is 
 \begin_inset Formula 
 \begin{equation}
-1+r_{t}^{a}=\frac{1+\delta q_{t}}{q_{t-1}}\label{eq:ra}
+1+r_{t}^{a}=\frac{1+\delta q_{t}}{q_{t-1}}.\label{eq:ra}
 \end{equation}
 
 \end_inset

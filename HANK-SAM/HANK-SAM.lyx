@@ -282,9 +282,9 @@ Each period the household chooses consumption,
 The recursive household problem is
 \begin_inset Formula 
 \begin{align}
-v_{t}(\beta_{i},u_{it},a_{it-1})= & \max_{c_{it},a_{it}}\frac{c_{it}^{1-\sigma}}{1-\sigma}+\beta_{i}\mathbb{E}_{t}\left[v_{t+1}\left(\beta_{i},u_{it+1},a_{it}\right)\right]\label{eq:v}\\
+V_{t}(\beta_{i},u_{it},a_{it-1})= & \max_{c_{it},a_{it}}\frac{c_{it}^{1-\sigma}}{1-\sigma}+\beta_{i}\mathbb{E}_{t}\left[V_{t+1}\left(\beta_{i},u_{it+1},a_{it}\right)\right]\label{eq:v}\\
 \text{s.t. } & a_{it}+c_{it}=(1+r_{t})a_{it-1}+(1-\tau_{t})y_{t}(u_{it})+\text{div}_{t}+\text{transfer}_{t}\nonumber \\
- & a_{it}\geq0\nonumber 
+ & a_{it}\geq0.\nonumber 
 \end{align}
 
 \end_inset
@@ -329,7 +329,7 @@ The employment/unemployment transition probabilities are
 \text{Pr}[u_{it+1}>1\,|\,u_{it}=0] & =0\nonumber \\
 \text{Pr}[u_{it+1}=0\,|\,u_{it}>0] & =\lambda_{t}^{u,s}s(u_{it-1})\nonumber \\
 \text{Pr}[u_{it+1}=u_{it}+1\,|\,u_{it}>0] & =1-\lambda_{t}^{u,s}s(u_{it-1})\nonumber \\
-\text{Pr}[u_{it+1}\notin\left\{ 0,u_{it}+1\right\} \,|\,u_{it}>0] & =0\nonumber 
+\text{Pr}[u_{it+1}\notin\left\{ 0,u_{it}+1\right\} \,|\,u_{it}>0] & =0.\nonumber 
 \end{align}
 
 \end_inset
@@ -382,7 +382,7 @@ y_{it}(u_{it}) & =w_{ss}\cdot\begin{cases}
 1 & \text{else }\text{if }u_{it}<\overline{u}_{t}\\
 0 & \text{else if }u_{it}>\overline{u}_{t}+1\\
 \overline{u}-\left(u_{it}-1\right) & \text{else}
-\end{cases}\nonumber 
+\end{cases}.\nonumber 
 \end{align}
 
 \end_inset
@@ -406,7 +406,7 @@ C_{t}^{hh} & =\int c_{it}d\boldsymbol{D}_{t}\label{eq:C_hh}\\
 A_{t}^{hh} & =\int a_{it}d\boldsymbol{D}_{t}\label{eq:A_hh}\\
 U_{t}^{hh} & =\int1\{u_{it}>0\}d\boldsymbol{D}_{t}\label{eq:U_hh}\\
 \text{UI}_{t}^{hh} & =\int\text{UI}_{it}d\boldsymbol{D}_{t}\label{eq:UI_hh}\\
-S_{t}^{hh} & =\int s(u_{it-1})d\underline{\boldsymbol{D}}_{t}\label{eq:S_hh}
+S_{t}^{hh} & =\int s(u_{it-1})d\underline{\boldsymbol{D}}_{t}.\label{eq:S_hh}
 \end{align}
 
 \end_inset
@@ -425,7 +425,7 @@ Intermediate-good producers hire labor in a frictional labor market with
  The Bellman equation for the value of a job is
 \begin_inset Formula 
 \begin{align}
-V_{t}^{j} & =p_{t}^{x}Z_{t}-w_{ss}+\beta^{\text{firm}}\mathbb{E}_{t}\left[(1-\delta_{ss})V_{t+1}^{j}\right]\label{eq:Vj}
+V_{t}^{j} & =p_{t}^{x}Z_{t}-w_{ss}+\beta^{\text{firm}}\mathbb{E}_{t}\left[(1-\delta_{ss})V_{t+1}^{j}\right].\label{eq:Vj}
 \end{align}
 
 \end_inset
@@ -458,7 +458,7 @@ where
  The value of a vacancy is
 \begin_inset Formula 
 \begin{equation}
-V_{t}^{v}=-\kappa+\lambda_{t}^{v}V_{t}^{j}+(1-\lambda_{t}^{v})(1-\delta_{ss})\beta^{\text{firm}}\mathbb{E}_{t}\left[V_{t+1}^{v}\right]\label{eq:Vv}
+V_{t}^{v}=-\kappa+\lambda_{t}^{v}V_{t}^{j}+(1-\lambda_{t}^{v})(1-\delta_{ss})\beta^{\text{firm}}\mathbb{E}_{t}\left[V_{t+1}^{v}\right].\label{eq:Vv}
 \end{equation}
 
 \end_inset
@@ -475,7 +475,7 @@ where
  The assumption of free entry implies 
 \begin_inset Formula 
 \begin{equation}
-V_{t}^{v}=0\label{eq:Vv_zero}
+V_{t}^{v}=0.\label{eq:Vv_zero}
 \end{equation}
 
 \end_inset
@@ -497,7 +497,7 @@ Wholesale firms buy intermediate goods and produce differentiated goods
  Together this implies a New Keynesian Phillips Curve, 
 \begin_inset Formula 
 \begin{equation}
-1-\epsilon+\epsilon p_{t}^{x}=\phi\pi_{t}(1+\pi_{t})-\phi\beta^{\text{firm}}\mathbb{E}_{t}\left[\pi_{t+1}(1+\pi_{t+1})\frac{Y_{t+1}}{Y_{t}}\right]\label{eq:NKPC}
+1-\epsilon+\epsilon p_{t}^{x}=\phi\pi_{t}(1+\pi_{t})-\phi\beta^{\text{firm}}\mathbb{E}_{t}\left[\pi_{t+1}(1+\pi_{t+1})\frac{Y_{t+1}}{Y_{t}}\right],\label{eq:NKPC}
 \end{equation}
 
 \end_inset
@@ -529,7 +529,7 @@ where
  is aggregate output given by 
 \begin_inset Formula 
 \begin{equation}
-Y_{t}=Z_{t}(1-u_{t})\label{eq:Y}
+Y_{t}=Z_{t}(1-u_{t}).\label{eq:Y}
 \end{equation}
 
 \end_inset
@@ -542,7 +542,7 @@ The adjustment costs are assumed to be virtual such that total dividends
  are
 \begin_inset Formula 
 \begin{equation}
-\text{div}_{t}=Z_{t}(1-u_{t})-w_{t}(1-u_{t})\label{eq:div}
+\text{div}_{t}=Z_{t}(1-u_{t})-w_{t}(1-u_{t}).\label{eq:div}
 \end{equation}
 
 \end_inset
@@ -558,17 +558,26 @@ Labor market dynamics.
 Labor market tightness is given by
 \begin_inset Formula 
 \begin{equation}
-\theta_{t}=\frac{v_{t}}{S_{t}}\label{eq:theta}
+\theta_{t}=\frac{v_{t}}{S_{t}},\label{eq:theta}
 \end{equation}
 
 \end_inset
 
-A Cobb-Douglas matching function implies that the job-finding and job-finding
+where 
+\begin_inset Formula $v_{t}$
+\end_inset
+
+ is vacancies and 
+\begin_inset Formula $S_{t}$
+\end_inset
+
+ is the number of searcher.
+ A Cobb-Douglas matching function implies that the job-finding and job-finding
  rates are 
 \begin_inset Formula 
 \begin{align}
 \lambda_{t}^{v} & =A\theta_{t}^{-\alpha}\label{eq:lambda_v}\\
-\lambda_{t}^{u,s} & =A\theta_{t}^{1-\alpha}\label{eq:lambda_u_s}
+\lambda_{t}^{u,s} & =A\theta_{t}^{1-\alpha}.\label{eq:lambda_u_s}
 \end{align}
 
 \end_inset
@@ -580,7 +589,7 @@ A Cobb-Douglas matching function implies that the job-finding and job-finding
 The law of motion for unemployment is
 \begin_inset Formula 
 \begin{equation}
-u_{t}=u_{t-1}+\delta_{t}(1-u_{t-1})-\lambda_{t}^{u,s}S_{t}\label{eq:u}
+u_{t}=u_{t-1}+\delta_{t}(1-u_{t-1})-\lambda_{t}^{u,s}S_{t}.\label{eq:u}
 \end{equation}
 
 \end_inset
@@ -606,7 +615,7 @@ The central bank controls the nominal interest rate from period
 , and follows a standard Taylor rule,
 \begin_inset Formula 
 \begin{equation}
-1+i_{t}=\left(1+i_{ss}\right)\left(\frac{1+\pi_{t}}{1+\pi_{ss}}\right)^{\delta_{\pi}}\label{eq:Taylor}
+1+i_{t}=\left(1+i_{ss}\right)\left(\frac{1+\pi_{t}}{1+\pi_{ss}}\right)^{\delta_{\pi}}.\label{eq:Taylor}
 \end{equation}
 
 \end_inset
@@ -641,7 +650,7 @@ The government can finance its expenses with long-term bonds,
  The expenses on unemployment insurance is
 \begin_inset Formula 
 \begin{equation}
-\Phi_{t}=w_{ss}\left(\overline{\phi}_{t}\text{UI}_{t}^{hh}+\underline{\phi}\left(u_{t}-\text{UI}_{t}^{hh}\right)\right)\label{eq:Phi}
+\Phi_{t}=w_{ss}\left(\overline{\phi}_{t}\text{UI}_{t}^{hh}+\underline{\phi}\left(u_{t}-\text{UI}_{t}^{hh}\right)\right).\label{eq:Phi}
 \end{equation}
 
 \end_inset
@@ -649,7 +658,7 @@ The government can finance its expenses with long-term bonds,
 Total expenses thus are
 \begin_inset Formula 
 \begin{equation}
-X_{t}=\Phi_{t}+G_{t}+\text{transfer}_{t}\label{eq:X}
+X_{t}=\Phi_{t}+G_{t}+\text{transfer}_{t}.\label{eq:X}
 \end{equation}
 
 \end_inset
@@ -657,7 +666,7 @@ X_{t}=\Phi_{t}+G_{t}+\text{transfer}_{t}\label{eq:X}
 Total taxes are
 \begin_inset Formula 
 \begin{equation}
-\text{taxes}_{t}=\tau_{t}\left(\Phi_{t}+w_{ss}(1-u_{t})\right)\label{eq:taxes}
+\text{taxes}_{t}=\tau_{t}\left(\Phi_{t}+w_{ss}(1-u_{t})\right).\label{eq:taxes}
 \end{equation}
 
 \end_inset
@@ -669,7 +678,7 @@ Total taxes are
 The government budget is
 \begin_inset Formula 
 \begin{equation}
-q_{t}B_{t}=(1+q_{t}\delta_{q})B_{t-1}+X_{t}-\text{taxes}_{t}\label{eq:qB}
+q_{t}B_{t}=(1+q_{t}\delta_{q})B_{t-1}+X_{t}-\text{taxes}_{t}.\label{eq:qB}
 \end{equation}
 
 \end_inset
@@ -685,7 +694,7 @@ The government adjust taxes to so that the value of government debt returns
 \begin_inset Formula 
 \begin{align}
 \tilde{\tau}_{t} & =\frac{\left(1+q_{t}\delta_{q}\right)B_{t-1}+X_{t}-q_{ss}B_{ss}}{\Phi_{t}+w_{ss}(1-u_{t})}\label{eq:taut}\\
-\tau_{t} & =\omega\tilde{\tau}_{t}+(1-\omega)\tau_{ss}\label{eq:tau}
+\tau_{t} & =\omega\tilde{\tau}_{t}+(1-\omega)\tau_{ss}.\label{eq:tau}
 \end{align}
 
 \end_inset
@@ -703,7 +712,7 @@ Financial markets.
 Arbitrage between government bonds and reserves implies that
 \begin_inset Formula 
 \begin{equation}
-\frac{1+\delta_{q}q_{t+1}}{q_{t}}=\frac{1+i_{t}}{1+\pi_{t+1}}\label{eq:q}
+\frac{1+\delta_{q}q_{t+1}}{q_{t}}=\frac{1+i_{t}}{1+\pi_{t+1}}.\label{eq:q}
 \end{equation}
 
 \end_inset
@@ -720,7 +729,7 @@ The ex post realized return on savings is
 1+r_{t}=\begin{cases}
 \frac{(1+\delta_{q}q_{0})B_{-1}}{A_{-1}^{hh}} & \text{if }t=0\\
 \frac{1+i_{t-1}}{1+\pi_{t}} & \text{else}
-\end{cases}\label{eq:r}
+\end{cases}.\label{eq:r}
 \end{equation}
 
 \end_inset
@@ -741,7 +750,7 @@ Asset and goods market clearing implies
 \begin_inset Formula 
 \begin{align}
 A_{t}^{hh} & =q_{t}B_{t}\label{eq:clearing_A}\\
-Y_{t} & =C_{t}^{hh}+G_{t}\label{eq:clearing_C}
+Y_{t} & =C_{t}^{hh}+G_{t}.\label{eq:clearing_C}
 \end{align}
 
 \end_inset

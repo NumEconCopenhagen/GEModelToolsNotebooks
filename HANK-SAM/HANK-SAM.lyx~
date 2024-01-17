@@ -282,7 +282,7 @@ Each period the household chooses consumption,
 The recursive household problem is
 \begin_inset Formula 
 \begin{align}
-v_{t}(\beta_{i},u_{it},a_{it-1})= & \max_{c_{it},a_{it}}\frac{c_{it}^{1-\sigma}}{1-\sigma}+\beta_{i}\mathbb{E}_{t}\left[v_{t+1}\left(\beta_{i},u_{it+1},a_{it}\right)\right]\label{eq:v}\\
+V_{t}(\beta_{i},u_{it},a_{it-1})= & \max_{c_{it},a_{it}}\frac{c_{it}^{1-\sigma}}{1-\sigma}+\beta_{i}\mathbb{E}_{t}\left[V_{t+1}\left(\beta_{i},u_{it+1},a_{it}\right)\right]\label{eq:v}\\
 \text{s.t. } & a_{it}+c_{it}=(1+r_{t})a_{it-1}+(1-\tau_{t})y_{t}(u_{it})+\text{div}_{t}+\text{transfer}_{t}\nonumber \\
  & a_{it}\geq0\nonumber 
 \end{align}
@@ -558,12 +558,21 @@ Labor market dynamics.
 Labor market tightness is given by
 \begin_inset Formula 
 \begin{equation}
-\theta_{t}=\frac{v_{t}}{S_{t}}\label{eq:theta}
+\theta_{t}=\frac{v_{t}}{S_{t}},\label{eq:theta}
 \end{equation}
 
 \end_inset
 
-A Cobb-Douglas matching function implies that the job-finding and job-finding
+where 
+\begin_inset Formula $v_{t}$
+\end_inset
+
+ is vacancies and 
+\begin_inset Formula $S_{t}$
+\end_inset
+
+ is the number of searcher.
+ A Cobb-Douglas matching function implies that the job-finding and job-finding
  rates are 
 \begin_inset Formula 
 \begin{align}
@@ -680,11 +689,8 @@ q_{t}B_{t}=(1+q_{t}\delta_{q})B_{t-1}+X_{t}-\text{taxes}_{t}\label{eq:qB}
 \begin_layout Standard
 The government adjust taxes to so that the value of government debt returns
  to its steady state value,
-\end_layout
-
-\begin_layout Standard
-
 \size small
+
 \begin_inset Formula 
 \begin{align}
 \tilde{\tau}_{t} & =\frac{\left(1+q_{t}\delta_{q}\right)B_{t-1}+X_{t}-q_{ss}B_{ss}}{\Phi_{t}+w_{ss}(1-u_{t})}\label{eq:taut}\\

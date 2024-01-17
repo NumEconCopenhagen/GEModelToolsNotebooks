@@ -20,7 +20,7 @@ def solve_hh_backwards(par,z_trans,r,w,vbeg_a_plus,vbeg_a,a,c,l,ss=False):
         for i_z in nb.prange(par.Nz): # stochastic discrete states
         
             ## i. labor supply
-            l[i_fix,i_z,:] = par.z_grid[i_z] # : is over the asset state
+            l[i_fix,i_z,:] = par.phi_grid[i_fix]*par.z_grid[i_z] # : is over the asset state
 
             ## ii. cash-on-hand
             m = (1+r)*par.a_grid + w*l[i_fix,i_z,:]

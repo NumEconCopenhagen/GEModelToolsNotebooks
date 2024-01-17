@@ -41,7 +41,8 @@ class HANCModelClass(EconModelClass,GEModelClass):
 
         par = self.par
 
-        par.Nfix = 3 # number of fixed discrete states (here discount factor)
+        par.Nbeta = 3 # number of patience types
+        par.Nphi = 1 # number of ability types
         par.Nz = 7 # number of stochastic discrete states (here productivity)
 
         # a. preferences
@@ -52,8 +53,10 @@ class HANCModelClass(EconModelClass,GEModelClass):
         # b. income parameters
         par.rho_z = 0.95 # AR(1) parameter
         par.sigma_psi = 0.30*(1.0-par.rho_z**2.0)**0.5 # std. of persistent shock
+        par.phi_delta = 0.0 # spread in ability
 
         # c. production and investment
+        par.Gamma_ss = np.nan # technology level [determined in ss]
         par.alpha = 0.36 # cobb-douglas
         par.delta = np.nan # depreciation [determined in ss]
 
@@ -93,8 +96,9 @@ class HANCModelClass(EconModelClass,GEModelClass):
         par = self.par
 
         # a. grids
-        par.Nbeta = par.Nfix
+        par.Nfix = par.Nbeta*par.Nphi
         par.beta_grid = np.zeros(par.Nbeta)
+        par.phi_grid = np.zeros(par.Nphi)
         
         # b. solution
         self.allocate_GE() # should always be called here

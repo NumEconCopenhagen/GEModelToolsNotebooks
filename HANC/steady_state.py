@@ -20,8 +20,18 @@ def prepare_hh_ss(model):
     # 1. grids #
     ############
     
-    # a. beta
-    par.beta_grid[:] = np.linspace(par.beta_mean-par.beta_delta,par.beta_mean+par.beta_delta,par.Nbeta)
+    # a. ability and beta
+    if par.Nphi == 1:
+        phi_grid = np.array([1.0])
+    elif par.Nphi == 3:
+        phi_grid = np.array([1-par.phi_delta,1,1+par.phi_delta])
+    else:
+        raise NotImplementedError
+
+    beta_grid = np.linspace(par.beta_mean-par.beta_delta,par.beta_mean+par.beta_delta,par.Nbeta)
+
+    par.phi_grid = np.tile(phi_grid,par.Nbeta)
+    par.beta_grid = np.repeat(beta_grid,par.Nphi)
 
     # b. a
     par.a_grid[:] = equilogspace(0.0,ss.w*par.a_max,par.Na)
@@ -62,6 +72,7 @@ def obj_ss(K_ss,model,do_print=False):
     ss = model.ss
 
     # a. production
+    ss.Gamma = par.Gamma_ss
     ss.A = ss.K = K_ss
     ss.L = 1.0 # by assumption
     ss.Y = ss.Gamma*ss.K**par.alpha*ss.L**(1-par.alpha)    
@@ -159,7 +170,7 @@ def find_ss_indirect(model,do_print=False):
     ss.A = ss.K = ss.A_hh # calibration choice -> infer delta consistent with this
     
     # c. back technology and depreciation rate
-    ss.Gamma = ss.w / ((1-par.alpha)*(ss.K/ss.L)**par.alpha)
+    ss.Gamma = par.Gamma_ss = ss.w / ((1-par.alpha)*(ss.K/ss.L)**par.alpha)
     ss.rK = par.alpha*ss.Gamma*(ss.K/ss.L)**(par.alpha-1)
     par.delta = ss.rK - ss.r
 

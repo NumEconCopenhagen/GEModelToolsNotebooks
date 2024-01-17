@@ -167,7 +167,7 @@
 \begin_inset Newline newline
 \end_inset
 
-Two-Asset HANK Model
+Two-Asset HANK Model with Capital
 \end_layout
 
 \begin_layout Author
@@ -178,10 +178,767 @@ Jeppe Druedahl
 Model
 \end_layout
 
-\begin_layout Standard
+\begin_layout Subsection*
+Households
+\end_layout
 
-\emph on
-To be added
+\begin_layout Standard
+A continuum of households of unit mass populates the economy.
+ Each household is subject to idiosyncratic risk through stochastic changes
+ in its productivity level.
+ The productivity levels 
+\begin_inset Formula $e$
+\end_inset
+
+ with states 
+\begin_inset Formula $z_{t}$
+\end_inset
+
+ behave according to a Markov process with a fixed transition matrix 
+\begin_inset Formula $\Pi$
+\end_inset
+
+.
+ Utility depends on consumption and hours worked through separable preferences
+ 
+\begin_inset Formula $u(c)-v(n)$
+\end_inset
+
+.
+ Households receive after-tax labour income 
+\begin_inset Formula $Z_{t}\equiv(1-\tau_{t})w_{t}N_{t}$
+\end_inset
+
+ that is then weighted by productivity 
+\begin_inset Formula $z_{t}\equiv Z_{t}e(z_{t})$
+\end_inset
+
+ and government lump-sum transfers 
+\begin_inset Formula $T_{t}$
+\end_inset
+
+.
+ They can invest in liquid assets 
+\begin_inset Formula $\ell_{t}$
+\end_inset
+
+ and illiquid assets 
+\begin_inset Formula $a_{t}$
+\end_inset
+
+ through a financial intermediary subject to a zero borrowing constraint.
+ The function 
+\begin_inset Formula $d\left(a_{t-1}\right)$
+\end_inset
+
+ governs the distribution from the illiquid account to the liquid account,
+\begin_inset Formula 
+\begin{align}
+d_{t}\left(a\__{k},k\right) & =\frac{r_{ss}^{a}}{1+r_{ss}^{a}}(1+r_{t}^{a})a_{t-1}+\chi\left((1-r_{t}^{a})a_{t-1}-\left(1+r_{ss}^{a}\right)\bar{a}\right)\label{eq:d_a}
+\end{align}
+
+\end_inset
+
+This formulation of the illiquid asset choice simplifies the household problem
+ as it leaves consumption or liquid assets as the only choice variable.
+ At the same time, it ensures to a low MPC out of illiquid assets.
+ The first term in 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:d_a"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ leads to a distribution to the liquid account when the return for illiquid
+ assets increases.
+ Households only distribute a fraction of the increased value to the liquid
+ account, ensuring a low MPC out of the illiquid assets.
+ The second term, with a value of 
+\begin_inset Formula $\chi$
+\end_inset
+
+ close to zero, leads to a slow transition back to the target value of illiquid
+ assets 
+\begin_inset Formula $\bar{a}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+This results in the following dynamic programming problem:
+\begin_inset Formula 
+\begin{align}
+V_{t}(z_{t},\ell_{t-1},a_{t-1}) & =\underset{c_{t},\ell_{t}}{\max}u(c_{t})-v(N_{t})+\beta\mathbb{E}_{t}\left[V_{t+1}(z_{t+1},l_{t},a_{t})\right]\label{eq:V_full}\\
+c_{t}+\ell_{t} & =\left(1+r_{t}^{\ell}\right)l_{t-1}+Z_{t}e(z_{t})+d\left(a_{t-1}\right)+T_{t}\nonumber \\
+a_{t} & =\left(1+r_{t}^{a}\right)a_{t-1}-d\left(a_{t-1}\right)\nonumber \\
+l_{t} & \geq0.\nonumber 
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection*
+Financial Intermediary
+\end_layout
+
+\begin_layout Standard
+The financial intermediary collects liquid and illiquid savings and performs
+ maturity transformation to invest the funds into long-term government bonds
+ 
+\begin_inset Formula $B_{t}$
+\end_inset
+
+ and shares in firms.
+ 
+\begin_inset Newline newline
+\end_inset
+
+Consistent with financial markets being sensitive to news, the financial
+ intermediary is perfectly attentive to news and updates his expectations
+ each period.
+ When depositing liquid funds, intermediation costs occur, with a share
+ of 
+\begin_inset Formula $\xi$
+\end_inset
+
+ that is fully passed on the deposit interest rate for liquid assets 
+\begin_inset Formula $r_{t}^{\ell}$
+\end_inset
+
+.
+ 
+\begin_inset Newline newline
+\end_inset
+
+There exists a continuum of shares 
+\begin_inset Formula $v_{jt}$
+\end_inset
+
+ in firms with price 
+\begin_inset Formula $p_{jt}$
+\end_inset
+
+ that each pays a dividend 
+\begin_inset Formula $D_{jt}$
+\end_inset
+
+.
+ Shares bought must then sum to one.
+ Government bonds pay a coupon of one unit of money each period and sell
+ at a discount afterwards.
+ Thus, they sell at a coupon rate of 
+\begin_inset Formula $\left(1+\delta q_{t+1}\right)$
+\end_inset
+
+ where 
+\begin_inset Formula $\delta$
+\end_inset
+
+ represents the discount for each year of maturity.
+\begin_inset Newline newline
+\end_inset
+
+The flow-of-funds constraint at the beginning of the period states that
+ the value of liabilities must be equal to the liquidation value of the
+ intermediaries portfolio:
+\begin_inset Formula 
+\[
+(1+r_{t}^{a})A_{t-1}+(1+r_{t}^{l})L_{t-1}=(1+\delta q_{t})B_{t-1}+\int(p_{jt}+D_{jt})v_{jt-1}dj-\xi L_{t-1}.
+\]
+
+\end_inset
+
+At the end of the period, the new investment in bonds and shares must equal
+ the intermediaries liabilities that equal aggregate savings (end-of-period
+ flow of funds constraint):
+\begin_inset Formula 
+\[
+\int p_{jt}v_{jt}dj+q_{t}B_{t}=A_{t}+L_{t}.
+\]
+
+\end_inset
+
+The financial intermediary maximizes the return on the illiquid assets 
+\begin_inset Formula $\mathbb{E}\left[1+r_{t+1}^{a}\right]$
+\end_inset
+
+ for the households by choosing 
+\begin_inset Formula $v_{jt},B_{t}$
+\end_inset
+
+ and 
+\begin_inset Formula $L_{t}$
+\end_inset
+
+ through adjusting the portfolio composition.
+ The asset pricing equation states that the expected return on the different
+ assets has to equal out as all arbitrage opportunities have to be exhausted:
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+For an extended derivation of the first-order conditions of the financial
+ intermediary problem, see Appendix C.2 in Auclert, Rognlie, Straub (2020).
+\end_layout
+
+\end_inset
+
+
+\begin_inset Formula 
+\begin{equation}
+\mathbb{E}_{t}[1+r_{t+1}^{a}]=\frac{\mathbb{E}_{t}[1+\delta q_{t+1}]}{q_{t}}=\frac{\mathbb{E}_{t}[p_{jt+1}+D_{jt+1}]}{p_{jt}}=1+r_{t+1}^{l}+\xi\equiv1+r_{t}.\label{eq:arbitrage}
+\end{equation}
+
+\end_inset
+
+where 
+\begin_inset Formula $r_{t}$
+\end_inset
+
+ is the ex-ante real interest rate, that is the rate before shocks have
+ realized.
+\begin_inset Newline newline
+\end_inset
+
+The model also contains nominal reserves in zero net supply with nominal
+ policy rate 
+\begin_inset Formula $i_{t}$
+\end_inset
+
+.
+ Equivalently to the asset pricing equation, the real return on the nominal
+ reserved has to equal out the ex-ante real return, which implies the Fisher
+ equation
+\begin_inset Formula 
+\[
+1+r_{t}=(1+i_{t})\mathbb{E}_{t}\left[\frac{P_{t+1}}{P_{t}}\right].
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection*
+Firms
+\end_layout
+
+\begin_layout Standard
+Output is produced by a final good producer that combines intermediate goods.
+ The monopolistic intermediate good firms utilize capital provided by a
+ capital firm and labour pooled by unions.
+\end_layout
+
+\begin_layout Subsubsection*
+Final Good Firm
+\end_layout
+
+\begin_layout Standard
+The competitive and representative final good firm produces a homogeneous
+ good 
+\begin_inset Formula $Y_{t}$
+\end_inset
+
+ with intermediate goods 
+\begin_inset Formula $Y_{jt}$
+\end_inset
+
+ using a CES aggregator
+\begin_inset Formula 
+\[
+Y_{t}=\left(\int_{0}^{1}Y_{jt}^{\frac{e_{p}-1}{e_{p}}}dj\right)^{\frac{e_{p}}{e_{p}-1}},
+\]
+
+\end_inset
+
+where 
+\begin_inset Formula $\epsilon_{p}$
+\end_inset
+
+ is the substitution elasticity between intermediary goods.
+\end_layout
+
+\begin_layout Subsubsection*
+Intermediate Good Firm
+\end_layout
+
+\begin_layout Standard
+There is a continuum of monopolistic intermediate good firms that produce
+ heterogeneous goods with constant productivity 
+\begin_inset Formula $\Theta$
+\end_inset
+
+ and the production function
+\begin_inset Formula 
+\[
+Y_{jt}=\Theta K_{jt}^{\alpha}N_{jt}^{1-\alpha}.
+\]
+
+\end_inset
+
+Because firms are identical and rent capital and labour from a common market,
+ they all have the same capital-to-labour ratio 
+\begin_inset Formula $\frac{K_{t}}{N_{t}}=\frac{K_{jt}}{N_{jt}}$
+\end_inset
+
+ and marginal costs 
+\begin_inset Formula $s_{t}$
+\end_inset
+
+.
+ Factor prices are taken as given and satisfy
+\begin_inset Formula 
+\begin{align}
+w_{t} & =s_{t}(1-\alpha)\Theta K_{t}^{\alpha}N_{t}^{-\alpha}=s_{t}(1-\alpha)\frac{Y_{t}}{N_{t}}\nonumber \\
+r_{t}^{K} & =s_{t}\alpha\Theta K_{t}^{\alpha-1}N_{t}^{1-\alpha}=s_{t}\alpha\frac{Y_{t}}{K_{t}}.\label{eq:rk}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Each firm sells its good for price 
+\begin_inset Formula $P_{jt}$
+\end_inset
+
+ to the final good firm and is subject to price stickiness a la Calvo.
+ Thus, a fraction of 
+\begin_inset Formula $1-\xi_{p}$
+\end_inset
+
+ firms reset their prices each period.
+ When choosing their optimal reset price, the intermediate firms maximize
+ their stock prices 
+\begin_inset Formula $p_{jt}$
+\end_inset
+
+ and dividends 
+\begin_inset Formula 
+\[
+D_{jt}=\left(\frac{P_{jt}}{P_{t}}-s_{t}\right)Y_{jt}.
+\]
+
+\end_inset
+
+Inflation, 
+\begin_inset Formula $\pi_{t}=log\left(\frac{P_{t}}{P_{t-1}}\right)$
+\end_inset
+
+, evolves according to the following New Keynesian Philipps Curve (NKPC)
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\pi_{t}=\underset{\kappa}{\underbrace{\frac{\left(1-\xi_{p}\right)\left(1-\frac{\xi_{p}}{1+r}\right)}{\xi_{p}}\frac{\epsilon_{p}}{\epsilon_{p}-1}}}\left(s_{t}-\frac{\epsilon_{p}-1}{\epsilon_{p}}\right)+\frac{1}{1+r}\mathbb{E}_{t}\left[\pi_{t+1}\right].\label{eq:NKPC_main}
+\end{equation}
+
+\end_inset
+
+Inflation increases when firms expect markups 
+\begin_inset Formula $\frac{1}{s_{t}}$
+\end_inset
+
+ below their steady state value 
+\begin_inset Formula $\frac{\epsilon_{p}}{\epsilon_{p}-1}$
+\end_inset
+
+.
+ When resetting, they increase their price to bring markups back to their
+ desired value.
+\end_layout
+
+\begin_layout Subsubsection*
+Capital Firms
+\end_layout
+
+\begin_layout Standard
+Capital for the production of goods is provided by a capital firm that owns
+ the capital stock 
+\begin_inset Formula $K_{t}$
+\end_inset
+
+ and rents it out at rate 
+\begin_inset Formula $r_{t}^{k}$
+\end_inset
+
+.
+ The capital stock evolves according to
+\begin_inset Formula 
+\[
+K_{t+1}=\left(1-\delta\right)K_{t}+I_{t},
+\]
+
+\end_inset
+
+where 
+\begin_inset Formula $\delta$
+\end_inset
+
+ is depreciation and 
+\begin_inset Formula $I_{t}$
+\end_inset
+
+ investment.
+ 
+\begin_inset Newline newline
+\end_inset
+
+Investment takes one period to build up and is subject to quadratic and
+ convex adjustment costs 
+\begin_inset Formula 
+\[
+S\left(\frac{I_{t+1}}{I_{t}}\right)=\frac{\phi}{2}\left(\frac{I_{t+1}}{I_{t}}-1\right)^{2},
+\]
+
+\end_inset
+
+such that 
+\begin_inset Formula $S\left(1\right)=S'\left(1\right)=0$
+\end_inset
+
+ and 
+\begin_inset Formula $S''(1)=\phi$
+\end_inset
+
+.
+ This form implies that firms adjust investment continuously and smoothly,
+ where the degree of smoothness depends on the parameter 
+\begin_inset Formula $\phi$
+\end_inset
+
+.
+\begin_inset Newline newline
+\end_inset
+
+Firms maximize dividends 
+\begin_inset Formula 
+\[
+D_{t}^{K}=r_{t}^{K}K_{t}-I_{t}\left(1+S\left(\frac{I_{t}}{I_{t-1}}\right)\right),
+\]
+
+\end_inset
+
+and stock prices 
+\begin_inset Formula 
+\[
+p_{t}^{K}=\frac{D_{t+1}^{K}+p_{t+1}^{K}}{1+r},
+\]
+
+\end_inset
+
+by choosing next periods investment
+\begin_inset Formula 
+\[
+\underset{I_{t+1}}{\max}\left\{ \mathbb{E}_{t}\left[D_{t+1}^{K}(K_{t+1},I_{t},I_{t+1})+\underset{I_{t+2}}{max}\,\,p_{t+1}^{K}\left(K_{t+2},I_{t+1},I_{t+2}\right)\right]\right\} 
+\]
+
+\end_inset
+
+Appendix C.4 in 
+\begin_inset CommandInset citation
+LatexCommand citet
+key "auclertMicroJumpsMacro2020"
+literal "false"
+
+\end_inset
+
+ shows that investment dynamics are described by the following set of first
+ order conditions
+\begin_inset Formula 
+\begin{align}
+1+S\left(\frac{I_{t+1}}{I_{t}}\right)+\frac{I_{t+1}}{I_{t}}S'\left(\frac{I_{t+1}}{I_{t}}\right) & =Q_{t}+\mathbb{E}\left[\frac{1}{1+r_{t+1}}\left(\frac{I_{t+2}}{I_{t+1}}\right)^{2}S'\left(\frac{I_{t+2}}{I_{t+1}}\right)\right]\label{eq:Qs_55}\\
+Q_{t} & =\mathbb{E}\left[\frac{1}{1+r_{t+1}}(r_{t+2}^{K}+(1-\delta)Q_{t+1})\right]\nonumber 
+\end{align}
+
+\end_inset
+
+We can interpret 
+\begin_inset Formula $Q_{t}\equiv\mathbb{E}_{t}\left[\frac{\partial p_{t+1}^{K}}{\partial K_{t+2}}\right]$
+\end_inset
+
+ in the form of Tobin's Q.
+ Thus, when 
+\begin_inset Formula $Q>1$
+\end_inset
+
+ firms can increase their future stock price by building up more capital.
+ 
+\end_layout
+
+\begin_layout Subsubsection*
+Aggregate Firm Value
+\end_layout
+
+\begin_layout Standard
+Aggregate dividends are gives as
+\begin_inset Formula 
+\[
+D_{t}=\int D_{jt}dj+D_{t}^{K}=Y_{t}-w_{t}L_{t}-I_{t}\left(1+S\left(\frac{I_{t}}{I_{t-1}}\right)\right).
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Shares of intermediate and capital goods firms have unit mass such that
+ the aggregate stock market has value 
+\begin_inset Formula $p_{t}=\int p_{jt}dj+p_{t}^{K}$
+\end_inset
+
+ .
+ The arbitrage condition 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "eq:arbitrage"
+plural "false"
+caps "false"
+noprefix "false"
+
+\end_inset
+
+ ensures that 
+\begin_inset Formula 
+\[
+p_{jt}=\frac{1}{1+r_{t}}\mathbb{E}_{t}[D_{j,t+1}+p_{j,t+1}]
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+p_{t}^{K}=\frac{1}{1+r_{t}}\mathbb{E}_{t}[D_{t+1}^{K}+p_{t+1}^{K}],
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+and for the value of the aggregate stock market
+\begin_inset Formula 
+\[
+p_{t}=\frac{1}{1+r_{t}}\mathbb{E}_{t}[D_{t+1}+p_{t+1}].
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection*
+Unions
+\end_layout
+
+\begin_layout Standard
+Labour for the intermediate goods firm is provided by unions that package
+ households' labour services and set wages monopolistically subject to wage
+ stickiness a la Calvo.
+\begin_inset Newline newline
+\end_inset
+
+There is a continuum of unions 
+\begin_inset Formula $j\in\left[0,1\right]$
+\end_inset
+
+ with mass one that bundle labour from households into a union-specific
+ task 
+\begin_inset Formula $N_{jt}$
+\end_inset
+
+.
+ Households supply hours 
+\begin_inset Formula $n_{ijt}$
+\end_inset
+
+ to the respective union 
+\begin_inset Formula $j$
+\end_inset
+
+ union such that 
+\begin_inset Formula $n_{it}=\int n_{ijt}di$
+\end_inset
+
+ and 
+\begin_inset Formula $N_{jt}=\int e\left(s_{it}\right)n_{ijt}di$
+\end_inset
+
+.
+ Total labour is then aggregated by a competitive labour packer such that
+ each union faces the demand schedule
+\begin_inset Formula 
+\[
+N_{jt}=N_{t}\left(\frac{W_{jt}}{W_{t}}\right)^{-\epsilon_{w}},
+\]
+
+\end_inset
+
+where 
+\begin_inset Formula $W_{t}$
+\end_inset
+
+ is the aggregate wage defined as 
+\begin_inset Formula 
+\[
+W_{t}=\left(\int W_{jt}^{1-\epsilon_{w}}dj\right)^{\frac{1}{1-\epsilon_{w}}}.
+\]
+
+\end_inset
+
+The union specific wage 
+\begin_inset Formula $W_{jt}$
+\end_inset
+
+ set by unions and paid by firms, where 
+\begin_inset Formula $\epsilon_{w}$
+\end_inset
+
+ is the elasticity of substitution between labour types.
+ Unions can reset their wages with probability 
+\begin_inset Formula $1-\xi_{w}$
+\end_inset
+
+ each period leading to the New Keynesian Wage Phillips Curve
+\begin_inset Formula 
+\begin{equation}
+\pi_{w,t}=\kappa_{w}\left(s_{w,t}-\frac{\epsilon_{w}-1}{\epsilon_{w}}\right)+\beta^{w}\mathbb{E}_{t}\left[\pi_{w,t+1}\right],\label{eq:NKPC_w_main}
+\end{equation}
+
+\end_inset
+
+where 
+\begin_inset Formula $\pi_{w,t}=log\left(\frac{W_{t}}{W_{t-1}}\right)$
+\end_inset
+
+.
+ 
+\begin_inset Formula $s_{w.t}$
+\end_inset
+
+ is the inverse wage markup and 
+\begin_inset Formula $\beta^{w}$
+\end_inset
+
+ the discount factor specific to the wage NKPC.
+\end_layout
+
+\begin_layout Subsection*
+Government
+\end_layout
+
+\begin_layout Standard
+The government conducts consumption spending of size 
+\begin_inset Formula $G_{t}$
+\end_inset
+
+ and pays lump-sum transfers 
+\begin_inset Formula $T_{t}$
+\end_inset
+
+ to households.
+ It finances these expenses by issuing long-term government bonds 
+\begin_inset Formula $B_{t}$
+\end_inset
+
+ and collecting labour income taxes 
+\begin_inset Formula $\tau_{t}$
+\end_inset
+
+ in the total amount of 
+\begin_inset Formula $\tau_{t}\frac{W_{t}}{P_{t}}N_{t}\mathbb{E}[\bar{e}_{g}e(s)]=\tau_{t}\frac{W_{t}}{P_{t}}N_{t}$
+\end_inset
+
+ such that the government budget constraint is fulfilled: 
+\begin_inset Formula 
+\[
+q_{t}B_{t}+\tau_{t}\frac{W_{t}}{P_{t}}N_{t}=G_{t}+T_{t}+(1+\delta q_{t})B_{t-1}.
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+When the government issues additional bonds at price 
+\begin_inset Formula $q_{t}$
+\end_inset
+
+ by issuing nominal bonds, the tax rate will adjust gradually to bring the
+ debt level back to its steady state following the rule
+\begin_inset Formula 
+\[
+\tau_{t}=\phi^{\tau}q^{ss}\frac{(B_{t-1}-B^{ss})}{Y^{ss}}+\tau^{ss},
+\]
+
+\end_inset
+
+where 
+\begin_inset Formula $\phi^{\tau}\in(0,1]$
+\end_inset
+
+ governs the rate of adjustment.
+ A higher 
+\begin_inset Formula $\phi^{\tau}$
+\end_inset
+
+ leads to a stronger tax rate adjustment and a faster transition back to
+ the steady state level of debt.
+\end_layout
+
+\begin_layout Standard
+Monetary policy is conducted by an independent central bank that sets the
+ nominal interest rate 
+\begin_inset Formula $i_{t}$
+\end_inset
+
+ according to the Taylor rule: 
+\begin_inset Formula 
+\[
+1+i_{t}=\rho_{m}i_{t-1}+\left(1-\rho_{m}\right)\left(r^{ss}+\phi^{\pi}\pi_{t}\right),
+\]
+
+\end_inset
+
+
+\begin_inset Formula $\rho_{m}$
+\end_inset
+
+ describes the persistence coefficient that smoothed the monetary reaction.
+ The reaction to inflation depends on the Taylor coefficient 
+\begin_inset Formula $\phi^{\pi}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsection*
+Market clearing
+\end_layout
+
+\begin_layout Standard
+The labor and asset market clear,
+\begin_inset Formula 
+\begin{align*}
+\int\ell_{t}d\boldsymbol{D}_{t} & =L_{t}\\
+\int a_{t}d\boldsymbol{D}_{t} & =A_{t}.
+\end{align*}
+
+\end_inset
+
+
 \end_layout
 
 \end_body

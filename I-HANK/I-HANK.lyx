@@ -290,7 +290,7 @@ The household problem in real terms is
 v_{t}(s_{i},z_{t},a_{t-1}) & =\max_{c_{it}}\frac{c_{it}^{1-\sigma}}{1-\sigma}-\varphi\frac{n_{it}^{1+\nu}}{1+\nu}+\beta_{t}\mathbb{E}_{t}\left[v_{t+1}(s_{i},z_{t+1},a_{t})\right]\label{eq:Bellman}\\
 \text{s.t. }a_{it}+c_{it} & =(1+r_{t}^{a})a_{it-1}+(1-\tau_{t})w_{s_{i},t}n_{s_{i},t}z_{it}\nonumber \\
 \log z_{it+1} & =\rho_{z}\log z_{it}+\psi_{it+1}\,\,\,,\psi_{it}\sim\mathcal{N}(\mu_{\psi},\sigma_{\psi}),\,\mathbb{E}[z_{it}]=1\nonumber \\
-a_{it} & \geq0\nonumber 
+a_{it} & \geq0.\nonumber 
 \end{align}
 
 \end_inset
@@ -320,7 +320,7 @@ Aggregate quantities are
 \begin{align}
 A_{t}^{hh} & =\int a_{it}d\boldsymbol{D}_{t}\label{eq:A_hh}\\
 C_{t}^{hh} & =\int c_{it}d\boldsymbol{D}_{t}\label{eq:C_hh}\\
-s\in\{TH,NT\}:\,S_{x}^{hh} & =\int1\{s_{it}=s\}d\boldsymbol{D}_{t}\label{eq:S_hh}
+s\in\{TH,NT\}:\,S_{x}^{hh} & =\int1\{s_{it}=s\}d\boldsymbol{D}_{t}.\label{eq:S_hh}
 \end{align}
 
 \end_inset
@@ -345,7 +345,7 @@ outer
 \begin_inset Formula 
 \begin{align}
 C_{T,t} & =\alpha_{T}\left(\frac{P_{T,t}}{P_{t}}\right)^{-\eta_{T,NT}}C_{t}^{hh}\label{eq:CT}\\
-C_{NT,t} & =(1-\alpha_{T})\left(\frac{P_{NT,t}}{P_{t}}\right)^{-\eta_{T,NT}}C_{t}^{hh}\label{eq:CNT}
+C_{NT,t} & =(1-\alpha_{T})\left(\frac{P_{NT,t}}{P_{t}}\right)^{-\eta_{T,NT}}C_{t}^{hh},\label{eq:CNT}
 \end{align}
 
 \end_inset
@@ -362,7 +362,7 @@ where
  The corresponding price index is
 \begin_inset Formula 
 \begin{equation}
-P_{t}=\left[\alpha_{T}P_{T,t}^{1-\eta_{T,NT}}+\left(1-\alpha_{T}\right)P_{NT,t}^{1-\eta_{T,NT}}\right]^{\frac{1}{1-\eta_{T,NT}}}\label{eq:P}
+P_{t}=\left[\alpha_{T}P_{T,t}^{1-\eta_{T,NT}}+\left(1-\alpha_{T}\right)P_{NT,t}^{1-\eta_{T,NT}}\right]^{\frac{1}{1-\eta_{T,NT}}}.\label{eq:P}
 \end{equation}
 
 \end_inset
@@ -384,7 +384,7 @@ inner
 \begin_inset Formula 
 \begin{align}
 C_{TF,t} & =\alpha_{F}\left(\frac{P_{F,t}}{P_{T,t}}\right)^{-\eta_{F,H}}C_{T,t}\label{eq:C_TF}\\
-C_{TH,t} & =\left(1-\alpha_{F}\right)\left(\frac{P_{TH,t}}{P_{T,t}}\right)^{-\eta_{F,H}}C_{T,t}\label{eq:CTH}
+C_{TH,t} & =\left(1-\alpha_{F}\right)\left(\frac{P_{TH,t}}{P_{T,t}}\right)^{-\eta_{F,H}}C_{T,t}.\label{eq:CTH}
 \end{align}
 
 \end_inset
@@ -425,7 +425,7 @@ A representative firm in each sector,
 , to produce goods, with the production function
 \begin_inset Formula 
 \begin{equation}
-Y_{s,t}=Z_{s,t}N_{s,t}\label{eq:production}
+Y_{s,t}=Z_{s,t}N_{s,t},\label{eq:production}
 \end{equation}
 
 \end_inset
@@ -438,7 +438,7 @@ where
  Profits are
 \begin_inset Formula 
 \begin{align}
-\Pi_{s,t} & =P_{s,t}Y_{s,t}-W_{s,t}N_{s,t}\label{eq:profits_T}
+\Pi_{s,t} & =P_{s,t}Y_{s,t}-W_{s,t}N_{s,t}.\label{eq:profits_T}
 \end{align}
 
 \end_inset
@@ -459,7 +459,7 @@ where
  The first order condition for labor implies that 
 \begin_inset Formula 
 \begin{align}
-P_{s,t} & =W_{s,t}/Z_{s,t}\label{eq:FOC_T}
+P_{s,t} & =W_{s,t}/Z_{s,t}.\label{eq:FOC_T}
 \end{align}
 
 \end_inset
@@ -471,7 +471,7 @@ P_{s,t} & =W_{s,t}/Z_{s,t}\label{eq:FOC_T}
 The real wage is
 \begin_inset Formula 
 \begin{equation}
-w_{s,t}=\frac{W_{s,t}}{P_{t}}\label{eq:real_wage}
+w_{s,t}=\frac{W_{s,t}}{P_{t}}.\label{eq:real_wage}
 \end{equation}
 
 \end_inset
@@ -489,7 +489,7 @@ A union in each sector chooses the labor supply of each household and sets
  Each household is chosen to supply the same amount of labor,
 \begin_inset Formula 
 \begin{equation}
-n_{s,t}=N_{s,t}^{hh},\,\,\,s\in\{T,NT\}\label{eq:ell}
+n_{s,t}=N_{s,t}^{hh},\,\,\,s\in\{T,NT\}.\label{eq:ell}
 \end{equation}
 
 \end_inset
@@ -501,7 +501,7 @@ New Keynesian Wage Philips Curve
 s,
 \begin_inset Formula 
 \begin{align}
-\pi_{s,t}^{w} & =\kappa\int\left(\varphi n_{s,t}^{-\nu}-\frac{1}{\mu}\left(1-\tau_{t}\right)w_{s,t}z_{it}c_{it}^{-\sigma}\right)1\{s_{it}=s\}d\boldsymbol{D}_{t}+\beta\pi_{s,t+1}^{w}\label{eq:NKPWC}
+\pi_{s,t}^{w} & =\kappa\frac{\int\left(\varphi n_{s,t}^{-\nu}-\frac{1}{\mu}\left(1-\tau_{t}\right)w_{s,t}z_{it}c_{it}^{-\sigma}\right)1\{s_{it}=s\}d\boldsymbol{D}_{t}}{\int1\{s_{it}=s\}d\boldsymbol{D}_{t}}+\beta\pi_{s,t+1}^{w},\label{eq:NKPWC}
 \end{align}
 
 \end_inset
@@ -529,7 +529,7 @@ Central bank.
 The central bank follows a standard Taylor rule
 \begin_inset Formula 
 \begin{equation}
-1+i_{t}=(1+i_{ss})\left(\frac{1+\pi_{t+1}}{1+\pi_{ss}}\right)^{\phi}+i_{t}^{\text{shock}}\label{eq:Taylor}
+1+i_{t}=(1+i_{ss})\left(\frac{1+\pi_{t+1}}{1+\pi_{ss}}\right)^{\phi}+i_{t}^{\text{shock}},\label{eq:Taylor}
 \end{equation}
 
 \end_inset
@@ -581,7 +581,7 @@ real interest rate from
  is
 \begin_inset Formula 
 \begin{equation}
-1+r_{t}=\frac{1+i_{t}}{1+\pi_{t+1}}\label{eq:Fisher_ex_ante}
+1+r_{t}=\frac{1+i_{t}}{1+\pi_{t+1}}.\label{eq:Fisher_ex_ante}
 \end{equation}
 
 \end_inset
@@ -605,7 +605,7 @@ ex post
  is
 \begin_inset Formula 
 \begin{equation}
-1+r_{t}^{a}=\frac{1+i_{t-1}}{1+\pi_{t}}\label{eq:Fisher_ex_post}
+1+r_{t}^{a}=\frac{1+i_{t-1}}{1+\pi_{t}}.\label{eq:Fisher_ex_post}
 \end{equation}
 
 \end_inset
@@ -630,7 +630,7 @@ The government chooses spending,
  The budget constraint for the government then is
 \begin_inset Formula 
 \begin{align*}
-B_{t} & =(1+r_{t}^{a})B_{t-1}+\frac{P_{NT,t}}{P_{t}}G_{t}-\tau_{t}\sum_{s\in\{TH,NT\}}w_{s,t},N_{s,t}
+B_{t} & =(1+r_{t}^{a})B_{t-1}+\frac{P_{NT,t}}{P_{t}}G_{t}-\tau_{t}\sum_{s\in\{TH,NT\}}w_{s,t},N_{s,t}.
 \end{align*}
 
 \end_inset
@@ -642,7 +642,7 @@ where government consumption is fully in terms of non-tradeable goods.
 The tax rule is
 \begin_inset Formula 
 \begin{equation}
-\tau_{t}=\tau_{ss}+\omega\frac{B_{t-1}-B_{ss}}{Y_{TH,ss}+Y_{NT,ss}}\label{eq:tax_rule}
+\tau_{t}=\tau_{ss}+\omega\frac{B_{t-1}-B_{ss}}{Y_{TH,ss}+Y_{NT,ss}}.\label{eq:tax_rule}
 \end{equation}
 
 \end_inset
@@ -669,7 +669,7 @@ The nominal exchange in home currency units per foreign currency unit is
  In home currency, the foreign price level is
 \begin_inset Formula 
 \begin{equation}
-P_{F,t}=P_{F,t}^{\ast}E_{t}\label{eq:PF}
+P_{F,t}=P_{F,t}^{\ast}E_{t}.\label{eq:PF}
 \end{equation}
 
 \end_inset
@@ -677,7 +677,7 @@ P_{F,t}=P_{F,t}^{\ast}E_{t}\label{eq:PF}
 The price of home tradeable goods in foreign currency is
 \begin_inset Formula 
 \begin{align}
-P_{TH,t}^{\ast} & =\frac{P_{TH,t}}{E_{t}}\label{eq:PTH_ast}
+P_{TH,t}^{\ast} & =\frac{P_{TH,t}}{E_{t}}.\label{eq:PTH_ast}
 \end{align}
 
 \end_inset
@@ -685,7 +685,7 @@ P_{TH,t}^{\ast} & =\frac{P_{TH,t}}{E_{t}}\label{eq:PTH_ast}
 The real exchange is
 \begin_inset Formula 
 \begin{equation}
-Q_{t}=\frac{P_{F,t}}{P_{t}}=\frac{E_{t}P_{F,t}^{\ast}}{P_{t}}\label{eq:Q}
+Q_{t}=\frac{P_{F,t}}{P_{t}}=\frac{E_{t}P_{F,t}^{\ast}}{P_{t}}.\label{eq:Q}
 \end{equation}
 
 \end_inset
@@ -697,7 +697,7 @@ Q_{t}=\frac{P_{F,t}}{P_{t}}=\frac{E_{t}P_{F,t}^{\ast}}{P_{t}}\label{eq:Q}
 The foreign demand for the home tradeable goods is
 \begin_inset Formula 
 \begin{equation}
-C_{TH,t}^{\ast}=\left(\frac{P_{TH,t}^{\ast}}{P_{F,t}^{\ast}}\right)^{-\eta^{\ast}}M_{t}^{\ast}=\left(\frac{1}{Q_{t}}\frac{P_{TH,t}}{P_{t}}\right)^{-\eta^{\ast}}M_{t}^{\ast}\label{eq:Armington}
+C_{TH,t}^{\ast}=\left(\frac{P_{TH,t}^{\ast}}{P_{F,t}^{\ast}}\right)^{-\eta^{\ast}}M_{t}^{\ast}=\left(\frac{1}{Q_{t}}\frac{P_{TH,t}}{P_{t}}\right)^{-\eta^{\ast}}M_{t}^{\ast},\label{eq:Armington}
 \end{equation}
 
 \end_inset
@@ -718,7 +718,7 @@ where
 Capital markets are free such that the uncovered interest parity must hold,
 \begin_inset Formula 
 \begin{equation}
-1+i_{t}=\left(1+i_{t}^{f}\right)\frac{E_{t+1}}{E_{t}}\label{eq:UIP}
+1+i_{t}=\left(1+i_{t}^{f}\right)\frac{E_{t+1}}{E_{t}}.\label{eq:UIP}
 \end{equation}
 
 \end_inset
@@ -731,7 +731,7 @@ where
  In real terms this is
 \begin_inset Formula 
 \begin{align}
-1+r_{t} & =\left(1+r_{t}^{f}\right)\frac{Q_{t+1}}{Q_{t}}\label{eq:UIP_real}
+1+r_{t} & =\left(1+r_{t}^{f}\right)\frac{Q_{t+1}}{Q_{t}}.\label{eq:UIP_real}
 \end{align}
 
 \end_inset
@@ -757,7 +757,7 @@ The market for home tradeable goods and the market for non-tradeable goods
 \begin_inset Formula 
 \begin{align}
 Y_{T,t} & =C_{TH,t}+C_{TH,t}^{\ast}\label{eq:YT_clearing}\\
-Y_{NT,t} & =C_{NT,t}+G_{t}\label{eq:YNT_clearing}
+Y_{NT,t} & =C_{NT,t}+G_{t}.\label{eq:YNT_clearing}
 \end{align}
 
 \end_inset
@@ -776,7 +776,7 @@ We define the following variables,
 \text{Gross domestic product: }GDP_{t} & =\frac{P_{TH,t}Y_{TH,t}+P_{NT,t}Y_{NT}}{P_{t}}\label{eq:GDP}\\
 \text{Net exports: }NX_{t} & =GDP_{t}-C_{t}^{hh}-\frac{P_{NT,t}}{P_{t}}G_{t}\label{eq:NX}\\
 \text{Net foreign assets: }NFA_{t} & =A_{t}^{hh}-B_{t}\label{eq:NFA}\\
-\text{Current account: }CA_{t} & =NX_{t}+r_{t}^{a}NFA_{t-1}\label{eq:CA}
+\text{Current account: }CA_{t} & =NX_{t}+r_{t}^{a}NFA_{t-1}.\label{eq:CA}
 \end{align}
 
 \end_inset
@@ -788,7 +788,7 @@ We define the following variables,
 Walras' law then implies
 \begin_inset Formula 
 \begin{equation}
-NFA_{t}-NFA_{t-1}=CA_{t}\label{eq:Walras}
+NFA_{t}-NFA_{t-1}=CA_{t},\label{eq:Walras}
 \end{equation}
 
 \end_inset
@@ -801,7 +801,7 @@ A_{t}^{hh} & =(1+r_{t}^{a})A_{t-1}^{hh}+(1-\tau_{t})\sum_{s\in\{TH,NT\}}w_{s,t},
  & =(1+r_{t}^{a})A_{t-1}^{hh}+GDP_{t}-C_{t}^{hh}-\tau_{t}\sum_{s\in\{TH,NT\}}w_{s,t},N_{s,t}\\
  & =(1+r_{t}^{a})A_{t-1}^{hh}+GDP_{t}-C_{t}^{hh}+\left(B_{t}-(1+r_{t}^{a})B_{t-1}+\frac{P_{NT,t}}{P_{t}}G_{t}\right)\\
  & =(1+r_{t}^{a})NFA_{t-1}+NX_{T}+B_{t}\Leftrightarrow\\
-NFA_{t}-NFA_{t-1} & =r_{t}^{a}NFA_{t-1}+NX_{t}
+NFA_{t}-NFA_{t-1} & =r_{t}^{a}NFA_{t-1}+NX_{t}.
 \end{align*}
 
 \end_inset

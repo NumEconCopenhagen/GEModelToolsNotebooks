@@ -809,16 +809,5 @@ NFA_{t}-NFA_{t-1} & =r_{t}^{a}NFA_{t-1}+NX_{t}
 
 \end_layout
 
-\begin_layout Standard
-\begin_inset Newpage newpage
-\end_inset
-
-
-\end_layout
-
-\begin_layout Section*
-Equation system
-\end_layout
-
 \end_body
 \end_document
