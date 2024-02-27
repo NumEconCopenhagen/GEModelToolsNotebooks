@@ -14,8 +14,6 @@ class HANCGovModelClass(EconModelClass,GEModelClass):
         # a. namespaces (typically not changed)
         self.namespaces = ['par','ini','ss','path','sim']
 
-        # not used today: .sim and .path
-        
         # b. household
         self.grids_hh = ['a'] # grids
         self.pols_hh = ['a'] # policy functions
@@ -76,8 +74,6 @@ class HANCGovModelClass(EconModelClass,GEModelClass):
     def allocate(self):
         """ allocate model """
 
-        par = self.par
-
         self.allocate_GE() # should always be called here
 
     prepare_hh_ss = steady_state.prepare_hh_ss
@@ -90,7 +86,6 @@ class HANCGovModelClass(EconModelClass,GEModelClass):
         ss = self.ss
         
         return np.sum([par.beta**t*ss.U_hh for t in range(par.T)])
-
 
     def v_path(self):
         """ social welfare in transition path """

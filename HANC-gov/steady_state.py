@@ -63,7 +63,7 @@ def obj_ss(pB,model,do_print=False):
     return ss.clearing_B
 
 def find_ss(model,tau,do_print=False,pB_min=0.965,pB_max=0.985,Nr=5):
-    """ find steady state using the direct or indirect method """
+    """ find steady state using the direct method """
 
     t0 = time.time()
 
@@ -84,6 +84,8 @@ def find_ss(model,tau,do_print=False,pB_min=0.965,pB_max=0.985,Nr=5):
     clearing_B = np.zeros(pB_vec.size) # asset market errors
 
     for i,pB in enumerate(pB_vec):
+        
+        if do_print: print(f'{pB = :12.8f}\n')
         
         try:
             clearing_B[i] = obj_ss(pB,model,do_print=do_print)

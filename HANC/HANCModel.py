@@ -97,8 +97,8 @@ class HANCModelClass(EconModelClass,GEModelClass):
 
         # a. grids
         par.Nfix = par.Nbeta*par.Nphi
-        par.beta_grid = np.zeros(par.Nbeta)
-        par.phi_grid = np.zeros(par.Nphi)
+        par.beta_grid = np.zeros(par.Nfix)
+        par.phi_grid = np.zeros(par.Nfix)
         
         # b. solution
         self.allocate_GE() # should always be called here

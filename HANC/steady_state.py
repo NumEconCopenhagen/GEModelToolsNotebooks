@@ -30,8 +30,8 @@ def prepare_hh_ss(model):
 
     beta_grid = np.linspace(par.beta_mean-par.beta_delta,par.beta_mean+par.beta_delta,par.Nbeta)
 
-    par.phi_grid = np.tile(phi_grid,par.Nbeta)
-    par.beta_grid = np.repeat(beta_grid,par.Nphi)
+    par.phi_grid[:] = np.tile(phi_grid,par.Nbeta)
+    par.beta_grid[:] = np.repeat(beta_grid,par.Nphi)
 
     # b. a
     par.a_grid[:] = equilogspace(0.0,ss.w*par.a_max,par.Na)
@@ -54,15 +54,6 @@ def prepare_hh_ss(model):
     # 3. initial guess for intertemporal variables #
     ################################################
 
-    # a. raw value
-    y = ss.w*par.z_grid
-    c = m = (1+ss.r)*par.a_grid[np.newaxis,:] + y[:,np.newaxis]
-    v_a = (1+ss.r)*c**(-par.sigma)
-
-    # b. expectation
-    ss.vbeg_a[:] = ss.z_trans@v_a
-
-    # alternatively:
     model.set_hh_initial_guess() # calls .solve_hh_backwards() with ss=True
     
 def obj_ss(K_ss,model,do_print=False):
