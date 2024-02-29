@@ -53,8 +53,8 @@ def market_clearing(par,ini,ss,A,B,N,Y,G,adjcost,N_hh,A_hh,C_hh,r,w,clearing_N,c
         C_plus = lead(C,ss.C_hh)
         r_plus = lead(r,ss.r)
 
-        clearing_N[:] = N**par.nu - w/par.varphi_RA*C**(-par.sigma) # Euler equation
-        clearing_A[:] = C**(-par.sigma) - par.beta_RA*(1+r_plus)*C_plus**(-par.sigma) # FOC for labor supply
+        clearing_N[:] = N**par.nu - w/par.varphi_RA*C**(-par.sigma) # FOC for labor supply
+        clearing_A[:] = C**(-par.sigma) - par.beta_RA*(1+r_plus)*C_plus**(-par.sigma) # Euler equation
         clearing_Y[:] = 0.0 # from using ressource constraint
 
     else:
