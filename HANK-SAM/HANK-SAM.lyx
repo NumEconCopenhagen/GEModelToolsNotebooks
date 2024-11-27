@@ -1,5 +1,5 @@
-#LyX 2.3 created this file. For more info see http://www.lyx.org/
-\lyxformat 544
+#LyX 2.4 created this file. For more info see https://www.lyx.org/
+\lyxformat 620
 \begin_document
 \begin_header
 \save_transient_properties true
@@ -79,13 +79,16 @@
 \usepackage{enumitem}
 \setlist[enumerate]{leftmargin=1cm}
 \setlist[itemize]{leftmargin=0.5cm}
+% Added by lyx2lyx
+\setlength{\parskip}{\smallskipamount}
+\setlength{\parindent}{0pt}
 \end_preamble
 \use_default_options true
-\maintain_unincluded_children false
+\maintain_unincluded_children no
 \language english
 \language_package default
-\inputencoding auto
-\fontencoding global
+\inputencoding auto-legacy
+\fontencoding auto
 \font_roman "palatino" "default"
 \font_sans "default" "default"
 \font_typewriter "default" "default"
@@ -93,7 +96,9 @@
 \font_default_family default
 \use_non_tex_fonts false
 \font_sc false
-\font_osf false
+\font_roman_osf false
+\font_sans_osf false
+\font_typewriter_osf false
 \font_sf_scale 100 100
 \font_tt_scale 100 100
 \use_microtype false
@@ -128,7 +133,9 @@
 \suppress_date true
 \justification true
 \use_refstyle 0
+\use_formatted_ref 0
 \use_minted 0
+\use_lineno 0
 \index Index
 \shortcut idx
 \color #008000
@@ -139,8 +146,8 @@
 \bottommargin 2.7cm
 \secnumdepth 3
 \tocdepth 3
-\paragraph_separation skip
-\defskip smallskip
+\paragraph_separation indent
+\paragraph_indentation default
 \is_math_indent 0
 \math_numbering_side default
 \quotes_style danish
@@ -148,11 +155,16 @@
 \papercolumns 1
 \papersides 1
 \paperpagestyle empty
+\tablestyle default
 \tracking_changes false
 \output_changes false
+\change_bars false
+\postpone_fragile_content false
 \html_math_output 0
 \html_css_as_file 0
 \html_be_strict false
+\docbook_table_output 0
+\docbook_mathml_prefix 1
 \end_header
 
 \begin_body
@@ -239,11 +251,14 @@ Households are
 \emph on
 ex post
 \emph default
- heterogeneous in terms of their unemployment status, 
+ heterogeneous in terms of their unemployment status,
+ 
 \begin_inset Formula $u_{it}$
 \end_inset
 
-, and lagged end-of-period savings, 
+,
+ and lagged end-of-period savings,
+ 
 \begin_inset Formula $a_{it-1}$
 \end_inset
 
@@ -265,11 +280,14 @@ ex post
 \end_layout
 
 \begin_layout Standard
-Each period the household chooses consumption, 
+Each period the household chooses consumption,
+ 
 \begin_inset Formula $c_{it}$
 \end_inset
 
-, and savings, 
+,
+ and savings,
+ 
 \begin_inset Formula $a_{it}$
 \end_inset
 
@@ -301,19 +319,23 @@ where
 \begin_inset Formula $t$
 \end_inset
 
-, 
+,
+ 
 \begin_inset Formula $y_{t}(u_{it})$
 \end_inset
 
- is labor market income (including unemployment insurance), 
+ is labor market income (including unemployment insurance),
+ 
 \begin_inset Formula $\tau_{t}$
 \end_inset
 
- is the tax rate on labor market income, 
+ is the tax rate on labor market income,
+ 
 \begin_inset Formula $\text{div}_{t}$
 \end_inset
 
- is dividends, and 
+ is dividends,
+ and 
 \begin_inset Formula $\text{transfer}_{t}$
 \end_inset
 
@@ -324,8 +346,8 @@ where
 The employment/unemployment transition probabilities are
 \begin_inset Formula 
 \begin{align}
-\text{Pr}[u_{it+1}=0\,|\,u_{it}=0] & =1-\delta_{t}\label{eq:z_trans}\\
-\text{Pr}[u_{it+1}=1\,|\,u_{it}=0] & =\delta_{t}\nonumber \\
+\text{Pr}[u_{it+1}=0\,|\,u_{it}=0] & =1-\delta_{ss}\label{eq:z_trans}\\
+\text{Pr}[u_{it+1}=1\,|\,u_{it}=0] & =\delta_{ss}\nonumber \\
 \text{Pr}[u_{it+1}>1\,|\,u_{it}=0] & =0\nonumber \\
 \text{Pr}[u_{it+1}=0\,|\,u_{it}>0] & =\lambda_{t}^{u,s}s(u_{it-1})\nonumber \\
 \text{Pr}[u_{it+1}=u_{it}+1\,|\,u_{it}>0] & =1-\lambda_{t}^{u,s}s(u_{it-1})\nonumber \\
@@ -335,14 +357,16 @@ The employment/unemployment transition probabilities are
 \end_inset
 
 where 
-\begin_inset Formula $\delta_{t}$
+\begin_inset Formula $\delta_{ss}$
 \end_inset
 
- is the separation rate, 
+ is the separation rate,
+ 
 \begin_inset Formula $\lambda_{t}^{u,s}$
 \end_inset
 
- is the job-finding rate per effective searcher, and 
+ is the job-finding rate per effective searcher,
+ and 
 \begin_inset Formula $s(u_{it-1})$
 \end_inset
 
@@ -379,8 +403,8 @@ y_{it}(u_{it}) & =w_{ss}\cdot\begin{cases}
 \end{cases}\label{eq:y}\\
 \text{UI}_{it} & =\begin{cases}
 0 & \text{if }u_{it}=0\\
-1 & \text{else }\text{if }u_{it}<\overline{u}_{t}\\
-0 & \text{else if }u_{it}>\overline{u}_{t}+1\\
+1 & \text{else }\text{if }u_{it}<\overline{u}\\
+0 & \text{else if }u_{it}>\overline{u}+1\\
 \overline{u}-\left(u_{it}-1\right) & \text{else}
 \end{cases}.\nonumber 
 \end{align}
@@ -419,8 +443,7 @@ Intermediate-good producers.
 \end_layout
 
 \begin_layout Standard
-Intermediate-good producers hire labor in a frictional labor market with
- search and matching frictions.
+Intermediate-good producers hire labor in a frictional labor market with search and matching frictions.
  Matches produce a homogeneous good sold in a perfectly competitive market.
  The Bellman equation for the value of a job is
 \begin_inset Formula 
@@ -438,19 +461,23 @@ where
 \begin_inset Formula $p_{t}^{x}$
 \end_inset
 
- is the intermediary goods price, 
+ is the intermediary goods price,
+ 
 \begin_inset Formula $Z_{t}$
 \end_inset
 
- is aggregate TFP, 
+ is aggregate TFP,
+ 
 \begin_inset Formula $w_{ss}$
 \end_inset
 
- is the wage rate, 
+ is the wage rate,
+ 
 \begin_inset Formula $\beta^{\text{firm}}$
 \end_inset
 
- is the firm discount factor, and 
+ is the firm discount factor,
+ and 
 \begin_inset Formula $\delta_{ss}$
 \end_inset
 
@@ -467,7 +494,8 @@ where
 \begin_inset Formula $\kappa$
 \end_inset
 
- is flow cost of posting vacancies, and 
+ is flow cost of posting vacancies,
+ and 
 \begin_inset Formula $\lambda_{t}^{v}$
 \end_inset
 
@@ -488,13 +516,12 @@ Whole-sale and final-good producers.
 \end_layout
 
 \begin_layout Standard
-Wholesale firms buy intermediate goods and produce differentiated goods
- that they sell in a market with monopolistic competition.
- The wholesale firms set their prices subject to a Rotemberg adjustment
- cost.
- Final-good firms buy goods from wholesale firms and bundle them in a final
- good, which is sold in a perfectly competitive market.
- Together this implies a New Keynesian Phillips Curve, 
+Wholesale firms buy intermediate goods and produce differentiated goods that they sell in a market with monopolistic competition.
+ The wholesale firms set their prices subject to a Rotemberg adjustment cost.
+ Final-good firms buy goods from wholesale firms and bundle them in a final good,
+ which is sold in a perfectly competitive market.
+ Together this implies a New Keynesian Phillips Curve,
+ 
 \begin_inset Formula 
 \begin{equation}
 1-\epsilon+\epsilon p_{t}^{x}=\phi\pi_{t}(1+\pi_{t})-\phi\beta^{\text{firm}}\mathbb{E}_{t}\left[\pi_{t+1}(1+\pi_{t+1})\frac{Y_{t+1}}{Y_{t}}\right],\label{eq:NKPC}
@@ -506,11 +533,13 @@ where
 \begin_inset Formula $\epsilon$
 \end_inset
 
- is the elasticity of substitution between the differentiated goods, 
+ is the elasticity of substitution between the differentiated goods,
+ 
 \begin_inset Formula $\phi$
 \end_inset
 
- is the Rotemberg adjustment cost, 
+ is the Rotemberg adjustment cost,
+ 
 \begin_inset Formula $\pi_{t}$
 \end_inset
 
@@ -522,7 +551,8 @@ where
 \begin_inset Formula $t$
 \end_inset
 
-, and 
+,
+ and 
 \begin_inset Formula $Y_{t}$
 \end_inset
 
@@ -538,8 +568,7 @@ Y_{t}=Z_{t}(1-u_{t}).\label{eq:Y}
 \end_layout
 
 \begin_layout Standard
-The adjustment costs are assumed to be virtual such that total dividends
- are
+The adjustment costs are assumed to be virtual such that total dividends are
 \begin_inset Formula 
 \begin{equation}
 \text{div}_{t}=Z_{t}(1-u_{t})-w_{t}(1-u_{t}).\label{eq:div}
@@ -571,9 +600,8 @@ where
 \begin_inset Formula $S_{t}$
 \end_inset
 
- is the number of searcher.
- A Cobb-Douglas matching function implies that the job-finding and job-finding
- rates are 
+ is the number of searchers.
+ A Cobb-Douglas matching function implies that the job-finding and job-finding rates are 
 \begin_inset Formula 
 \begin{align}
 \lambda_{t}^{v} & =A\theta_{t}^{-\alpha}\label{eq:lambda_v}\\
@@ -612,7 +640,8 @@ The central bank controls the nominal interest rate from period
 \begin_inset Formula $t+1$
 \end_inset
 
-, and follows a standard Taylor rule,
+,
+ and follows a standard Taylor rule,
 \begin_inset Formula 
 \begin{equation}
 1+i_{t}=\left(1+i_{ss}\right)\left(\frac{1+\pi_{t}}{1+\pi_{ss}}\right)^{\delta_{\pi}}.\label{eq:Taylor}
@@ -630,11 +659,13 @@ Government.
 \end_layout
 
 \begin_layout Standard
-The government can finance its expenses with long-term bonds, 
+The government can finance its expenses with long-term bonds,
+ 
 \begin_inset Formula $B_{t}$
 \end_inset
 
-, with a geometrically declining payment stream of 
+,
+ with a geometrically declining payment stream of 
 \begin_inset Formula $1,\delta,\delta^{2},\dots$
 \end_inset
 
@@ -687,8 +718,7 @@ q_{t}B_{t}=(1+q_{t}\delta_{q})B_{t-1}+X_{t}-\text{taxes}_{t}.\label{eq:qB}
 \end_layout
 
 \begin_layout Standard
-The government adjust taxes to so that the value of government debt returns
- to its steady state value,
+The government adjust taxes to so that the value of government debt returns to its steady state value,
 \size small
 
 \begin_inset Formula 

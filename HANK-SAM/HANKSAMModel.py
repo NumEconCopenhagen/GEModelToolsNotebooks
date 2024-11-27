@@ -26,7 +26,7 @@ class HANKSAMModelClass(EconModelClass,GEModelClass):
         self.pols_hh = ['a']
         self.inputs_hh = ['w','r','tau','div','transfer']
         self.inputs_hh_z = ['delta','lambda_u_s']
-        self.outputs_hh = ['a','c','u_ALL','u_UI']
+        self.outputs_hh = ['a','c','u_ALL','u_UI','y']
         self.intertemps_hh = ['vbeg_a']
 
         # c. GE

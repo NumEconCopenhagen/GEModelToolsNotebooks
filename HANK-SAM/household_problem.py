@@ -6,7 +6,7 @@ from consav.linear_interp import interp_1d_vec
 @nb.njit
 def solve_hh_backwards(par,z_trans,
     delta,lambda_u_s,w,r,tau,div,transfer,
-    vbeg_a_plus,vbeg_a,a,c,u_ALL,u_UI,ss=False):
+    vbeg_a_plus,vbeg_a,a,c,u_ALL,u_UI,y,ss=False):
 
     s = np.zeros_like(a)
     
@@ -29,10 +29,10 @@ def solve_hh_backwards(par,z_trans,
             u_UI[i_fix,i_z,:] = u_UI_
 
             # ii. income after tax
-            y = (1-tau)*yt + div + transfer
+            y[i_fix,i_z,:] = (1-tau)*yt + div + transfer
 
             # iii. EGM
-            m = (1+r)*par.a_grid + y
+            m = (1+r)*par.a_grid + y[i_fix,i_z,:]
 
             # iv. consumption-saving
             if i_fix == 0:

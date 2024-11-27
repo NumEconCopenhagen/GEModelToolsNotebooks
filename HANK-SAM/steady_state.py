@@ -95,7 +95,6 @@ def find_ss(model,do_print=False,fix_RealR=False):
     # c. zero errors
     ss.errors_Vj = 0.0
     ss.errors_Vv = 0.0
-    #ss.errors_vt = 0.0
     ss.errors_u = 0.0
     ss.errors_pi = 0.0
     ss.errors_assets = 0.0
