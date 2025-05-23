@@ -64,7 +64,6 @@ def evaluate_ss(model,do_print=False):
     ss.s = ss.w/ss.Gamma
 
     ss.adjcost = 0.0
-
     ss.d = (1-ss.s)*ss.Y-ss.adjcost
     
     # e. government
@@ -100,7 +99,7 @@ def find_ss(model,do_print=False):
 
     # a. find steady state
     t0 = time.time()
-    res = optimize.root(objective_ss,[par.beta, par.varphi],method='hybr',tol=par.tol_ss,args=(model))
+    res = optimize.root(objective_ss,[par.beta,par.varphi],method='hybr',tol=par.tol_ss,args=(model))
 
     # final evaluation
     objective_ss(res.x,model)

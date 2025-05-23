@@ -56,10 +56,11 @@ def NKWC(par,ini,ss,pi_w,L,tau,w,C_hh,NKWC_res):
     NKWC_res[:] = LHS-RHS
 
 @nb.njit
-def market_clearing(par,ini,ss,G,q,B,Y,C_hh,A_hh,A,clearing_A,clearing_Y):
+def market_clearing(par,ini,ss,G,q,B,Y,C_hh,A_hh,A,clearing_A,clearing_Y,Z_hh,z_res):
         
     # a. aggregates
     A[:] = q*B
+    z_res[:] = Z_hh - 1. 
 
     # b. market clearing
     clearing_A[:] = A-A_hh

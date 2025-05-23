@@ -22,15 +22,15 @@ class HANKModelClass(EconModelClass,GEModelClass):
         # b. household
         self.grids_hh = ['a'] # grids
         self.pols_hh = ['a'] # policy functions
-        self.inputs_hh = ['w','ra','L','tau','chi'] # direct inputs
-        self.inputs_hh_z = [] # transition matrix inputs
-        self.outputs_hh = ['a','c'] # outputs
+        self.inputs_hh = ['w','ra','L','tau','chi','z_scale'] # direct inputs
+        self.inputs_hh_z = ['L'] # transition matrix inputs
+        self.outputs_hh = ['a','c','z'] # outputs
         self.intertemps_hh = ['vbeg_a'] # intertemporal variables
 
         # c. GE
         self.shocks = ['G','chi','Gamma'] # exogenous inputs
-        self.unknowns = ['pi_w','L'] # endogenous inputs
-        self.targets = ['NKWC_res','clearing_A'] # targets
+        self.unknowns = ['pi_w','L','z_scale'] # endogenous inputs
+        self.targets = ['NKWC_res','clearing_A','z_res'] # targets
         
         # d. all variables
         self.blocks = [
@@ -64,8 +64,11 @@ class HANKModelClass(EconModelClass,GEModelClass):
         par.sigma_psi = 0.10 # std. of psi
         par.Nz = 7 # number of productivity states
 
+        par.upsilon = 0.0 # cyclical incidence of household income 
+        par.use_tauchen = False # use Tauchen method for z grid
+        
         # d. price setting
-        par.kappa = 0.1 # slope of wage Phillips curve
+        par.kappa = 0.10 # slope of wage Phillips curve
         par.mu = 1.2 # mark-up
 
         # e. government
@@ -100,11 +103,15 @@ class HANKModelClass(EconModelClass,GEModelClass):
         par.tol_solve = 1e-12 # tolerance when solving
         par.tol_simulate = 1e-12 # tolerance when simulating
         par.tol_broyden = 1e-10 # tolerance when solving eq. system
-        
+
     def allocate(self):
         """ allocate model """
 
         par = self.par
+        par.z_ergodic = np.zeros(par.Nz)
+        par.z_trans_ss = np.zeros((par.Nfix,par.Nz,par.Nz))
+        par.z_log_grid = np.zeros(par.Nz)
+
         self.allocate_GE()
 
     prepare_hh_ss = steady_state.prepare_hh_ss
@@ -127,8 +134,10 @@ class HANKModelClass(EconModelClass,GEModelClass):
         ss = self.ss
         path = self.path
 
-        nom = np.sum([(1+ss.r)**(-t)*(path.Y[t]-ss.Y) for t in range(par.T)])        
-        denom = np.sum([(1+ss.r)**(-t)*(path.G[t]-ss.G) for t in range(par.T)])   
+        nom = [(1+ss.r)**(-t)*(path.Y[t,0]-ss.Y) for t in range(par.T)]       
+        denom = [(1+ss.r)**(-t)*(path.G[t,0]-ss.G) for t in range(par.T)]
 
-        fiscal_multiplier = nom/denom
-        print(f'{fiscal_multiplier = :.3f}')
+        cumulative = np.sum(nom)/np.sum(denom)
+        impact = nom[0]/denom[0]
+
+        print(f'Y/G: {impact = :.3f}, {cumulative = :.3f}')

@@ -50,14 +50,15 @@ class HANKModelClass(EconModelClass,GEModelClass):
 
         par.RA = False # representative agent
         par.Nfix = 1
-        par.r_target_ss = 0.01
+        par.r_target_ss = 0.01 # target real interest rate in steady state 
+        # note: high, but else might need more periods with RANK
 
         # a. preferences
         par.beta = 0.98 # discount factor (guess, calibrated in ss)
         par.varphi = 0.80 # disutility of labor (guess, calibrated in ss)
 
         par.sigma = 2.0 # inverse of intertemporal elasticity of substitution
-        par.nu = 2.0 # inverse Frisch elasticity
+        par.nu = 1.0 # inverse Frisch elasticity
 
         par.beta_RA = np.nan # discount factor for representative agent
         par.varphi_RA = np.nan # disutility for representative agent
@@ -76,7 +77,7 @@ class HANKModelClass(EconModelClass,GEModelClass):
         par.phi_y = 0.0 # Taylor rule coefficient on output
         
         par.G_target_ss = 0.0 # government spending
-        par.B_target_ss = 5.6 # bond supply
+        par.B_target_ss = 4.0 # bond supply
 
         # f. grids         
         par.a_min = 0.0 # maximum point in grid for a
@@ -84,17 +85,17 @@ class HANKModelClass(EconModelClass,GEModelClass):
         par.Na = 500 # number of grid points
 
         # g. shocks
-        par.jump_Gamma = 0.01 # initial jump
-        par.rho_Gamma = 0.90 # AR(1) coefficeint
-        par.std_Gamma = 0.00 # std.
-
-        par.jump_istar = -0.0025
-        par.rho_istar = 0.60
-        par.std_istar = 0.0025
+        par.jump_istar = -0.0025 # initial jump
+        par.rho_istar = 0.60 # AR(1) coefficeint
+        par.std_istar = 0.0025 # std.
 
         par.jump_G = 0.01
         par.rho_G = 0.90
         par.std_G = 0.000
+
+        par.jump_Gamma = 0.01 
+        par.rho_Gamma = 0.90 
+        par.std_Gamma = 0.00
 
         # h. misc.
         par.T = 1000 # length of path        
@@ -108,8 +109,8 @@ class HANKModelClass(EconModelClass,GEModelClass):
         par.tol_simulate = 1e-12 # tolerance when simulating
         par.tol_broyden = 1e-10 # tolerance when solving eq. system
         
-        par.py_hh = False # call solve_hh_backwards in Python-model
-        par.py_block = True # call blocks in Python-model
+        par.py_hh = False # call solve_hh_backwards in Python-mode
+        par.py_block = False # call blocks in Python-mode
         par.full_z_trans = False # let z_trans vary over endogenous states
 
     def allocate(self):
