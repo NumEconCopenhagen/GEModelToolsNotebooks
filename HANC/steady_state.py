@@ -129,8 +129,8 @@ def find_ss_direct(model,do_print=False,K_min=1.0,K_max=10.0,NK=10):
     # b. determine search bracket
     if do_print: print(f'### step 2: determine search bracket ###\n')
 
-    K_max = np.min(K_ss_vec[clearing_A < 0])
-    K_min = np.max(K_ss_vec[clearing_A > 0])
+    K_max = np.max(K_ss_vec[clearing_A < 0])
+    K_min = np.min(K_ss_vec[clearing_A > 0])
 
     if do_print: print(f'K in [{K_min:12.8f},{K_max:12.8f}]\n')
 

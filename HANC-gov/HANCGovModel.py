@@ -18,14 +18,14 @@ class HANCGovModelClass(EconModelClass,GEModelClass):
         self.grids_hh = ['a'] # grids
         self.pols_hh = ['a'] # policy functions
         self.inputs_hh = ['pB','tau'] # direct inputs
-        self.inputs_hh_z = [] # transition matrix inputs (not used today)
+        self.inputs_hh_z = [] # transition matrix input
         self.outputs_hh = ['a','c','u'] # outputs
         self.intertemps_hh = ['vbeg_a'] # intertemporal variables
 
         # c. GE
         self.shocks = ['G','eta'] # exogenous shocks
         self.unknowns = ['pB'] # endogenous unknowns
-        self.targets = ['clearing_B'] # targets = 0 (not used today)
+        self.targets = ['clearing_B'] # targets = 0
 
         # d. all variables
         self.blocks = [ # list of strings to block-functions
