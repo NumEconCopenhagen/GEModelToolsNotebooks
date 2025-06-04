@@ -104,6 +104,9 @@ class HANKModelClass(EconModelClass,GEModelClass):
         par.tol_simulate = 1e-12 # tolerance when simulating
         par.tol_broyden = 1e-10 # tolerance when solving eq. system
 
+        par.py_hh = False # use Python for household problem
+        par.py_blocks = False # use Python for blocks
+
     def allocate(self):
         """ allocate model """
 
@@ -123,9 +126,37 @@ class HANKModelClass(EconModelClass,GEModelClass):
         par = self.par
         ss = self.ss
 
-        MPC = np.sum(ss.D[:,:,:-1]*(ss.c[:,:,1:]-ss.c[:,:,:-1])/((1+ss.ra)*(par.a_grid[1:]-par.a_grid[:-1])))
+        a_grid = par.a_grid
+        c = ss.c
+        a = ss.a
+        ra = ss.ra
+
+        # a. simple
+        MPC_mat = np.empty_like(ss.D)
+        MPC_mat[:,:,:-1] = (c[:,:,1:]-c[:,:,:-1]) / ((1+ss.ra)*(par.a_grid[1:]-par.a_grid[:-1]))
+        MPC_mat[:,:,-1] = MPC_mat[:,:,-2] 
+        MPC = np.sum(ss.D*MPC_mat)
+
+        # b. detailed (Rognlie)
+        MPC_mat_alt = np.empty_like(ss.D)
+
+        # symmetric differences away from boundaries
+        MPC_mat_alt[:,:,1:-1] = (c[:,:,2:] - c[:,:,0:-2]) / (par.a_grid[2:] - par.a_grid[:-2]) / (1+ss.ra)
+
+        # asymmetric first differences at boundaries
+        MPC_mat_alt[:,:,0]  = (c[:,:,1] - c[:,:,0]) / (par.a_grid[1] - par.a_grid[0]) / (1+ss.ra)
+        MPC_mat_alt[:,:,-1] = (c[:,:,-1] - c[:,:,-2]) / (par.a_grid[-1] - par.a_grid[-2]) / (1+ss.ra)
+
+        # special case of constrained, enforce MPC = 1
+        MPC_mat_alt[a == par.a_grid[0]] = 1
+        
+        MPC_alt = np.sum(ss.D*MPC_mat_alt)
+
+        # c. iMPC
         iMPC = self.jac_hh[('C_hh','chi')]
-        print(f'{MPC = :.2f}, {iMPC[0,0] = :.2f}')  
+
+        # d. print results
+        print(f'{MPC = :.2f}, {MPC_alt = :.2f}, {iMPC[0,0] = :.2f}')  
 
     def calc_fiscal_multiplier(self):
         """ fiscal multiplier """

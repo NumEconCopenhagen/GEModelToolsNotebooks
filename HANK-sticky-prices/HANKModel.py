@@ -110,7 +110,7 @@ class HANKModelClass(EconModelClass,GEModelClass):
         par.tol_broyden = 1e-10 # tolerance when solving eq. system
         
         par.py_hh = False # call solve_hh_backwards in Python-mode
-        par.py_block = False # call blocks in Python-mode
+        par.py_blocks = False # call blocks in Python-mode
         par.full_z_trans = False # let z_trans vary over endogenous states
 
     def allocate(self):

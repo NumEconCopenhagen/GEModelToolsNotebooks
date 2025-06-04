@@ -86,7 +86,7 @@ class HANCModelClass(EconModelClass,GEModelClass):
         par.tol_broyden = 1e-10 # tolerance when solving eq. system
         
         par.py_hh = False # call solve_hh_backwards in Python-model
-        par.py_block = True # call blocks in Python-model
+        par.py_blocks = True # call blocks in Python-model
         par.full_z_trans = False # let z_trans vary over endogenous states
         par.warnings = True # print warnings if nans are encountered
 

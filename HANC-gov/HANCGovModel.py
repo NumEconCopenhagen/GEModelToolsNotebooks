@@ -67,10 +67,12 @@ class HANCGovModelClass(EconModelClass,GEModelClass):
         par.tol_solve = 1e-12 # tolerance when solving household problem
         par.tol_simulate = 1e-12 # tolerance when simulating household problem
 
-        # for transition path
         par.max_iter_broyden = 100 # maximum number of iteration when solving eq. system
         par.tol_broyden = 1e-10 # tolerance when solving eq. system
-          
+
+        par.py_hh = False # call solve_hh_backwards in Python-mode
+        par.py_blocks = False # call blocks in Python-mode
+
     def allocate(self):
         """ allocate model """
 
